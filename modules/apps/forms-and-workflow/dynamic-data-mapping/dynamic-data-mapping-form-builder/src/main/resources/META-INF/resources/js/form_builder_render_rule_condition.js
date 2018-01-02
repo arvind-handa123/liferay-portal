@@ -478,6 +478,8 @@ AUI.add(
 			_renderFirstOperand: function(index, condition, container) {
 				var instance = this;
 
+				var fixedFields = [];
+
 				var value = [];
 
 				if (condition) {
