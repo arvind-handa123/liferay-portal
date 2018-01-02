@@ -806,7 +806,7 @@ AUI.add(
 							}
 						];
 					}
-
+					secondOperandType.cleanSelect();
 					secondOperandType.set('options', options);
 				}
 			},
