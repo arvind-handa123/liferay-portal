@@ -96,7 +96,7 @@ AUI.add(
 
 				new renderer(context, container);
 
-				return container.firstChild.outerHTML;
+				return container.firstChild.firstElementChild.innerHTML;
 			},
 
 			_renderList: function(options) {
