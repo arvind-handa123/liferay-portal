@@ -114,20 +114,17 @@
 				</div>
 
 				{if not $readOnly}
-					<div class="dropdown-section">
-						<div class="drop-chosen {$open ? '' : 'hide'}">
-							<div class="search-chosen">
-								<div class="select-search-container">
-									{if $selectSearchIcon}
-										<a class="" href="javascript:;">{$selectSearchIcon}</a>
-									{/if}
-								</div>
-								<input autocomplete="off" class="drop-chosen-search" placeholder="{$strings.search}" type="text">
+					<div class="drop-chosen {$open ? '' : 'hide'}">
+						<div class="search-chosen">
+							<div class="select-search-container">
+								{if $selectSearchIcon}
+									<a class="" href="javascript:;">{$selectSearchIcon}</a>
+								{/if}
 							</div>
-							{call .select_options data="all" /}
+							<input autocomplete="off" class="drop-chosen-search" placeholder="{$strings.search}" type="text">
 						</div>
+						{call .select_options data="all" /}
 					</div>
-
 				{/if}
 			</div>
 		</div>
@@ -231,19 +228,19 @@
  */
 {template .select_options}
 	{@param options: list<[label: string, value: string]>}
-	{@param? fixedOptions: list<[label: string, value: string]>}
 	{@param strings: [chooseAnOption: string, chooseOptions: string, search: string, emptyList: string]}
 	{@param value: list<string>}
+	{@param? fixedOptions: list<[label: string, value: string]>}
 	{@param? multiple: bool}
 
 	<ul class="dropdown-menu dropdown-visible results-chosen">
 		{if length($options) > 0}
 			<div class="inline-scroller">
 				{call .plot_dropdown_rows}
-					{param options: $options /}
-					{param multiple: $multiple /}
-					{param value: $value /}
 					{param fixed: false /}
+					{param multiple: $multiple /}
+					{param options: $options /}
+					{param value: $value /}
 				{/call}
 			</div>
 		{/if}
@@ -252,10 +249,10 @@
 				<div class="dropdown-divider"></div>
 			{/if}
 			{call .plot_dropdown_rows}
-				{param options: $fixedOptions /}
-				{param multiple: $multiple /}
-				{param value: $value /}
 				{param fixed: true /}
+				{param multiple: $multiple /}
+				{param options: $fixedOptions /}
+				{param value: $value /}
 			{/call}
 		{/if}
 		{if length($options) == 0}
@@ -274,8 +271,8 @@
 {template .plot_dropdown_rows}
 	{@param options: list<[label: string, value: string]>}
 	{@param value: list<string>}
-	{@param? multiple: bool}
 	{@param? fixed: bool}
+	{@param? multiple: bool}
 
 	{foreach $option in $options}
 		{let $selected kind="text"}
@@ -288,7 +285,33 @@
 			{/if}
 		{/let}
 
-		<li class="dropdown-item select-option-item {if $fixed}fixed{else}unfixed{/if} {if $selected == 'selected'}option-selected{/if}" data-option-index="{index($option)}" data-option-selected="{if $selected == 'selected'}true{/if}" data-option-value="{$option.value}">
+		{let $attributes kind="attributes"}
+			class="
+				dropdown-item
+
+				{sp}select-option-item
+
+				{if $fixed}
+					{sp}fixed
+				{else}
+					{sp}unfixed
+				{/if}
+
+				{if $selected}
+					{sp}option-selected
+				{/if}
+			"
+			data-option-index="{index($option)}"
+
+			data-option-selected="
+			{if $selected}
+				true
+			{/if}"
+
+			data-option-value="{$option.value}"
+		{/let}
+
+		<li {$attributes}>
 			{if $multiple}
 				<input type="checkbox" value="" {if $selected == 'selected'}checked{/if}>
 			{/if}
