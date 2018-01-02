@@ -488,11 +488,12 @@ AUI.add(
 
 				var fields = instance.get('fields').slice();
 
-				fields.unshift(currentUser);
+				fixedFields.push(currentUser);
 
 				var field = instance.createSelectField(
 					{
 						fieldName: index + '-condition-first-operand',
+						fixedOptions: fixedFields,
 						label: instance.get('strings').if,
 						options: fields,
 						showLabel: false,
