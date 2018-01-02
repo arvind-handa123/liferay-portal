@@ -29,12 +29,10 @@
 	{@param? selectSearchIcon: html}
 	{@param? showLabel: bool}
 	{@param? tip: string}
-
 	{let $displayValue: length($value) > 0 ? $value : length($predefinedValue) > 0 ? $predefinedValue : null /}
 
 	<div class="form-group{$visible ? '' : ' hide'}" data-fieldname="{$name}">
 		<div class="input-select-wrapper">
-
 			{if $showLabel}
 				{call .select_label data="all" /}
 			{/if}
