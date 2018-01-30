@@ -775,12 +775,15 @@ AUI.add(
 						var instance = this;
 
 						var field = event.currentTarget.getData('field-instance');
+						var settingsPanel = instance.getFieldSettingsPanel();
 
 						if (event.target.ancestor('.' + FIELD_ACTIONS)) {
 							return;
 						}
 
-						instance.editField(field);
+						if (settingsPanel.get('field') !== field) {
+							instance.editField(field);
+						}
 					},
 
 					_afterFieldListChange: function() {
