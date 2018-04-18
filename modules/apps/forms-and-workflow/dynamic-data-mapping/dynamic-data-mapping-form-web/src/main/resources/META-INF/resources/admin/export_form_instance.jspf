@@ -21,8 +21,8 @@ if (Validator.isNotNull(ddmFormAdminDisplayContext.getCSVExport())) {
 	csvExport = ddmFormAdminDisplayContext.getCSVExport();
 }
 
-boolean showCSVWarning = StringUtil.equals("enabled-with-warning", csvExport);
 boolean csvExportDisabled = StringUtil.equals("disabled", csvExport);
+boolean showCSVWarning = StringUtil.equals("enabled-with-warning", csvExport);
 %>
 
 <div class="hide" id="<portlet:namespace />exportFormInstance">
@@ -63,9 +63,9 @@ boolean csvExportDisabled = StringUtil.equals("disabled", csvExport);
 
 			var fileExtensionSelect = A.one('#<portlet:namespace />fileExtension');
 
-			var csvWarning = A.one('#<portlet:namespace />csvWarning');
-
 			var showCSVWarning = function() {
+				var csvWarning = A.one('#<portlet:namespace />csvWarning');
+
 				if ((fileExtensionSelect.val() === 'csv') && <%= showCSVWarning %>) {
 					csvWarning.show();
 
