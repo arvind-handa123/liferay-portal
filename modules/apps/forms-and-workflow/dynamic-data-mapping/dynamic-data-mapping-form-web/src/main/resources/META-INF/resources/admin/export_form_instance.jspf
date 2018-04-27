@@ -83,7 +83,7 @@ boolean showCSVWarning = StringUtil.equals("enabled-with-warning", csvExport);
 				else {
 					csvWarning.hide();
 				}
-			}
+			};
 
 			if (content) {
 				if (fileExtensionSelect) {
@@ -101,7 +101,6 @@ boolean showCSVWarning = StringUtil.equals("enabled-with-warning", csvExport);
 				{
 					dialog: {
 						bodyContent: form,
-						height: 275,
 						resizable: false,
 						toolbars: {
 							footer: [
@@ -127,7 +126,7 @@ boolean showCSVWarning = StringUtil.equals("enabled-with-warning", csvExport);
 								}
 							]
 						},
-						width: 300
+						width: 600
 					},
 					title: '<%= UnicodeLanguageUtil.get(request, "export") %>'
 				}
