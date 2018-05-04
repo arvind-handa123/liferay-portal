@@ -55,8 +55,12 @@ AUI.add(
 					initializer: function() {
 						var instance = this;
 
+						var evaluator = instance.get('evaluator');
+
 						instance._eventHandlers.push(
+							evaluator.after('evaluationEnded', A.bind('_loadValidationFieldType', instance)),
 							instance.after('valueChange', A.bind('_afterValueChange', instance)),
+							instance.after('render', instance._loadValidationFieldType, instance),
 							instance.bindContainerEvent('change', A.bind('_setErrorMessage', instance), '.message-input'),
 							instance.bindContainerEvent('change', A.bind('_setParameterValue', instance), '.parameter-input'),
 							instance.bindContainerEvent('change', A.bind('_syncValidationUI', instance), '.enable-validation'),
@@ -79,14 +83,6 @@ AUI.add(
 
 						var strings = instance.get('strings');
 
-						var parameterMessage = '';
-
-						var selectedValidation = instance.get('selectedValidation');
-
-						if (selectedValidation) {
-							parameterMessage = selectedValidation.parameterMessage;
-						}
-
 						var value = instance.get('value');
 
 						return A.merge(
@@ -95,7 +91,6 @@ AUI.add(
 								enableValidationValue: !!(value && value.expression),
 								errorMessagePlaceholder: strings.errorMessageGoesHere,
 								errorMessageValue: instance.get('errorMessageValue'),
-								parameterMessagePlaceholder: parameterMessage,
 								parameterValue: instance.get('parameterValue'),
 								validationMessage: strings.validation,
 								validationsOptions: instance._getValidationsOptions()
@@ -163,7 +158,7 @@ AUI.add(
 
 						var container = instance.get('container');
 
-						var parameterNode = container.one('.parameter-input');
+						var parameterNode = container.one('.validation-input input');
 
 						return parameterNode.val();
 					},
@@ -215,6 +210,26 @@ AUI.add(
 								};
 							}
 						);
+					},
+
+					_loadValidationFieldType: function() {
+						var instance = this;
+
+						var container = instance.get('container');
+
+						var fieldSettingsForm = instance.get('parent');
+
+						var currentField = fieldSettingsForm.get('field');
+
+						var dataType = currentField.get('dataType');
+
+						if (instance._validationField) {
+							instance._validationField.destroy();
+						}
+
+						instance._validationField = instance._createField(dataType);
+
+						instance._validationField.render(container.one('.validation-input'));
 					},
 
 					_setErrorMessage: function(event) {
