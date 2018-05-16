@@ -155,7 +155,9 @@ AUI.add(
 
 									var currentPageInput = formNode.one('#' + instance.get('portletNamespace') + 'currentPage');
 
-									currentPageInput.set('value', instance.getCurrentPage());
+									if (currentPageInput) {
+										currentPageInput.set('value', instance.getCurrentPage());
+									}
 
 									instance.showLoadingFeedback();
 
