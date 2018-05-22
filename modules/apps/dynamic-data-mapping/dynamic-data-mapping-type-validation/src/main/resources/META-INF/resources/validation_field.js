@@ -266,7 +266,7 @@ AUI.add(
 
 						var container = instance.get('container');
 
-						var parameterNode = container.one('.parameter-input');
+						var parameterNode = container.one('.validation-input input');
 
 						return parameterNode.val();
 					},
