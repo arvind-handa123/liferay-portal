@@ -284,14 +284,30 @@ AUI.add(
 						inputGroup.insert(container.one('.' + CSS_HELP_BLOCK), 'after');
 					},
 
-					toggleList: function() {
+					toggleList: function(event) {
 						var instance = this;
+
+						var container = instance.get('container');
+
+						var selectTrigger = container.one('.select-field-trigger');
 
 						if (instance._isListOpen()) {
 							instance.closeList();
 						}
-						else {
+						else if (!selectTrigger.hasAttribute('disabled')) {
 							instance.openList();
+
+							var userView = container.ancestor('.ddm-user-view-content');
+
+							if (userView) {
+								var selectInputNode = event.currentTarget.one('.input-select-wrapper')._node;
+
+								var dropdownMenu = event.currentTarget.one('.dropdown-menu');
+
+								var dropdownMenuNode = dropdownMenu._node;
+
+								instance.alignPosition(selectInputNode, dropdownMenuNode, dropdownMenu);
+							}
 						}
 					},
 
@@ -420,7 +436,7 @@ AUI.add(
 								return;
 							}
 
-							instance.toggleList();
+							instance.toggleList(event);
 						}
 					},
 
