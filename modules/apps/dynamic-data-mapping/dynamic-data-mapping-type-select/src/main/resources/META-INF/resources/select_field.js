@@ -118,6 +118,30 @@ AUI.add(
 						}
 					},
 
+					alignPosition: function(selectInputNode, dropdownMenuNode, dropdownMenu) {
+						var Align = DDMSelect.Align;
+
+						var dropdownHeight = dropdownMenuNode.clientHeight;
+
+						var scrollHeight = document.querySelector('body').scrollHeight;
+
+						Align.align(
+							dropdownMenuNode,
+							selectInputNode,
+							Align.Bottom
+						);
+
+						if (document.querySelector('body').scrollHeight < scrollHeight) {
+							Align.align(
+								dropdownMenuNode,
+								selectInputNode,
+								Align.Top,
+								false
+							);
+							dropdownMenu.setStyle('height', dropdownHeight);
+						}
+					},
+
 					cleanSelect: function() {
 						var instance = this;
 
