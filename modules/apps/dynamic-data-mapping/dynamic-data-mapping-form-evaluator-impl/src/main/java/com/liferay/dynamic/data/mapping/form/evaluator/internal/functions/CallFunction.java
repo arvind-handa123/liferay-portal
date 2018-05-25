@@ -273,24 +273,12 @@ public class CallFunction extends BaseDDMFormRuleFunction {
 	}
 
 	protected void setDDMFormFieldValue(String ddmFormFieldName, String value)
-		{
-
+	{
 		DDMFormFieldEvaluationResult ddmFormFieldEvaluationResult =
 			getDDMFormFieldEvaluationResult(ddmFormFieldName);
-
-			JSONArray valueJson = null;
-
-			try {
-				valueJson = _jsonFactory.createJSONArray(value);
-			}
-			catch (JSONException jsone) {
-				jsone.printStackTrace();
-			}
-
-			if (ddmFormFieldEvaluationResult != null &&
-				ddmFormFieldEvaluationResult.getValue() != null &&
-				!ddmFormFieldEvaluationResult.getValue().equals(
-					valueJson.get(0))) {
+			
+		if (ddmFormFieldEvaluationResult != null &&
+			!getDDMFormFieldValue(ddmFormFieldName).equals(value)) {
 
 			ddmFormFieldEvaluationResult.setValue(value);
 
