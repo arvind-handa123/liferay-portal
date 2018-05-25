@@ -114,8 +114,11 @@ AUI.add(
 						boundingBox.one('.additional-info-' + index).empty();
 						
 						if (!event.newVal || !event.newVal[0]) {
-							
-							instance._outputParameters[0].field.set('value',[]);
+
+							instance._outputParameters.forEach(function(param) {
+								param.field.set('value',[]);
+							});
+
 							return;
 						}
 
@@ -274,15 +277,12 @@ AUI.add(
 								}
 							).render(outputParametersContainer.one('.container-input-field-' + i));
 							
-							if (instance._outputParameters.length == 0) {
-								instance._outputParameters.push(
-										{
-											field: outputParameterField,
-											parameter: name
-										}
-									);
-							}
-							
+							instance._outputParameters.push(
+									{
+										field: outputParameterField,
+										parameter: name
+									}
+								);
 							outputParameterField.setValue(value);
 						}
 					},

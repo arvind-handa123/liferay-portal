@@ -131,7 +131,13 @@ AUI.add(
 								return !AObject.isEmpty(outputs) && !AObject.isEmpty(inputs) && instance._checkRequiredInputIsFilled(inputs, requiredInputs);
 							}
 
-							valid = !AObject.isEmpty(outputs.Name);
+							AObject.keys(outputs).forEach(function(key) {
+								if (outputs[key] == null) {
+									valid = false;
+								} else {
+									valid = true;
+								}
+							});
 						}
 						else if (action.action === 'calculate') {
 							valid = action.expression && action.target;
