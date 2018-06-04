@@ -56,17 +56,27 @@ AUI.add(
 					initializer: function() {
 						var instance = this;
 
-						var sortableList = instance.get('sortableList');
-
 						instance._eventHandlers.push(
 							instance.on('liferay-ddm-form-field-key-value:destroy', instance._onDestroyOption),
 							instance.after('liferay-ddm-form-field-key-value:render', instance._afterRenderOption),
 							instance.after('liferay-ddm-form-field-key-value:blur', instance._afterBlur),
 							instance.after('liferay-ddm-form-field-key-value:valueChange', instance._afterOptionValueChange),
-							instance.after('editableChange', instance._afterEditableChange),
-							sortableList.after('drag:end', A.bind('_afterSortableListDragEnd', instance)),
-							sortableList.after('drag:start', A.bind('_afterSortableListDragStart', instance))
+							instance.after('editableChange', instance._afterEditableChange)
 						);
+
+						var builder = instance.get('builder');
+
+						if (builder.isEditMode()) {
+							instance.set('sortable', false);
+						}
+						else {
+							var sortableList = instance.get('sortableList');
+
+							instance._eventHandlers.push(
+								sortableList.after('drag:end', A.bind('_afterSortableListDragEnd', instance)),
+								sortableList.after('drag:start', A.bind('_afterSortableListDragStart', instance))
+							);
+						}
 
 						instance._createMainOption();
 					},
@@ -590,7 +600,11 @@ AUI.add(
 					_onOptionClickClose: function(option) {
 						var instance = this;
 
-						instance.removeOption(option);
+						var builder = instance.get('builder');
+
+						if (!builder.isEditMode()) {
+							instance.removeOption(option);
+						}
 					},
 
 					_renderOptions: function() {
@@ -692,9 +706,11 @@ AUI.add(
 
 						container.toggleClass('last-option', addLastOptionClass);
 
-						var sortableList = instance.get('sortableList');
+						if (!instance.get('builder').isEditMode()) {
+							var sortableList = instance.get('sortableList');
 
-						sortableList.add(container);
+							sortableList.add(container);
+						}
 					},
 
 					_valueSortableList: function() {
