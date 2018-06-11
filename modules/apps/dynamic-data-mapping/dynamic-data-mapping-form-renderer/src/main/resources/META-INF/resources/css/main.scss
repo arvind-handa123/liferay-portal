@@ -35,6 +35,16 @@ body .ddm-user-view-content {
 	.multi-step-indicator-label {
 		margin-top: -28px;
 	}
+
+	.form-group {
+		.form-check-inline {
+			margin-right: 16px;
+		}
+
+		.custom-control-inline + .custom-control-inline {
+			margin-left: 16px;
+		}
+	}
 }
 
 .portlet-forms .ddm-form-basic-info .ddm-form-name {
