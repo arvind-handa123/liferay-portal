@@ -287,6 +287,7 @@ renderResponse.setTitle((formInstance == null) ? LanguageUtil.get(request, "new-
 			fieldContext,
 			fieldsList,
 			modules: Liferay.MODULES,
+			rulesList: <%= serializedDDMFormRules %>,
 			spritemap
 		},
 		'#<portlet:namespace />-container',
