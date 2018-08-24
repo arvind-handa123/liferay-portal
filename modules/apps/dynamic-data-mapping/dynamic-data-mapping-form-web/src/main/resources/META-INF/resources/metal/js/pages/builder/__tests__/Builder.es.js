@@ -1,7 +1,9 @@
 import Builder from '../Builder.es';
+import {dom as MetalTestUtil} from 'metal-dom';
 
 let component;
 const spritemap = 'icons.svg';
+let addButton;
 
 describe(
 	'Builder',
@@ -9,6 +11,10 @@ describe(
 		beforeEach(
 			() => {
 				jest.useFakeTimers();
+
+				MetalTestUtil.enterDocument('<button id="addFieldButton"></button>');
+
+				addButton = document.querySelector('#addFieldButton');
 
 				component = new Builder(
 					{
@@ -20,6 +26,7 @@ describe(
 
 		afterEach(
 			() => {
+				MetalTestUtil.exitDocument(addButton);
 				if (component) {
 					component.dispose();
 				}
@@ -119,6 +126,19 @@ describe(
 
 				expect(spy).toHaveBeenCalled();
 				expect(spy).toHaveBeenCalledWith('duplicateField', expect.anything());
+			}
+		);
+
+		it(
+			'should open sidebar when addField button is gets clicked',
+			() => {
+				console.log('addButton', addButton.id);
+
+				MetalTestUtil.triggerEvent(addButton, 'click', {});
+
+				const sidebar = document.querySelector('.sidebar-container.show');
+
+				expect(sidebar).not.toBe(null);
 			}
 		);
 	}
