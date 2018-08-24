@@ -66,6 +66,7 @@
 		"clay-management-toolbar": "^2.2.0",
 		"clay-radio": "^2.2.0",
 		"metal-drag-drop": "^3.1.0",
+		"metal-events": "^2.16.5",
 		"metal-jsx": "^2.16.5"
 	},
 	"devDependencies": {
