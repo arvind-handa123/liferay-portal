@@ -1,5 +1,6 @@
 import Component from 'metal-jsx';
 import dom from 'metal-dom';
+import {EventHandler} from 'metal-events';
 import LayoutRenderer from '../../components/Layout/index.es';
 import Sidebar from '../../components/Sidebar/index.es';
 
@@ -87,7 +88,17 @@ class Builder extends Component {
 	}
 
 	attached() {
-		dom.on('#addFieldButton', 'click', this._handleCreationButtonClicked.bind(this));
+		this._eventHandler.add(
+			dom.on('#addFieldButton', 'click', this._handleCreationButtonClicked.bind(this))
+		);
+	}
+
+	created() {
+		this._eventHandler = new EventHandler();
+	}
+
+	dispose() {
+		this._eventHandler.removeAllListeners();
 	}
 
 	/**
