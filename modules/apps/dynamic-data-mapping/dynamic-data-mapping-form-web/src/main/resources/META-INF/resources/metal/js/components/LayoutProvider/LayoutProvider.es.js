@@ -346,11 +346,7 @@ class LayoutProvider extends Component {
 		const {children, spritemap} = this.props;
 		const {context, focusedField, mode} = this.state;
 
-		let child;
-
 		if (children.length) {
-			const Child = children[0];
-
 			const events = {
 				deleteField: this._handleDeleteField.bind(this),
 				duplicateField: this._handleDuplicatedField.bind(this),
@@ -360,22 +356,24 @@ class LayoutProvider extends Component {
 				fieldMoved: this._handleFieldMoved.bind(this)
 			};
 
-			Object.assign(
-				Child.props,
-				{
-					...this.otherProps(),
-					context,
-					events,
-					focusedField,
-					mode,
-					spritemap
-				}
-			);
+			for (let index = 0; index < children.length; index++) {
+				const child = children[index];
 
-			child = Child;
+				Object.assign(
+					child.props,
+					{
+						...this.otherProps(),
+						context,
+						events,
+						focusedField,
+						mode,
+						spritemap
+					}
+				);
+			}
 		}
 
-		return child;
+		return children;
 	}
 }
 
