@@ -125,6 +125,16 @@ class Form extends Component {
 		 * @type {!array}
 		 */
 
+		rolesURL: Config.string().required(),
+
+		/**
+		 * The rules of a form.
+		 * @default undefined
+		 * @instance
+		 * @memberof Form
+		 * @type {!array}
+		 */
+
 		rules: Config.array(),
 
 		/**
@@ -399,7 +409,7 @@ class Form extends Component {
 			<div class={'ddm-form-builder'}>
 				<LayoutProvider {...layoutProviderProps}>
 					{showRuleBuilder && (
-						<RuleBuilder functionsMetadata={this.props.functionsMetadata} pages={context.pages} rules={this.props.rules} spritemap={spritemap} />
+						<RuleBuilder functionsMetadata={this.props.functionsMetadata} pages={context.pages} rules={this.props.rules} spritemap={spritemap} url={this.props.rolesURL} />
 					)}
 					{!showRuleBuilder && (
 						<Builder namespace={this.props.namespace} ref="builder" />
