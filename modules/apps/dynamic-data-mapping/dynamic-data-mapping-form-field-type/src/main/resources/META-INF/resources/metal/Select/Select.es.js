@@ -40,6 +40,32 @@ class Select extends Component {
 		 * @default undefined
 		 * @instance
 		 * @memberof Select
+		 * @type {?(string|undefined)}
+		 */
+
+		fixedOptions: Config.arrayOf(
+			Config.shapeOf(
+				{
+					dataType: Config.string(),
+					name: Config.string(),
+					options: Config.arrayOf(
+						Config.shapeOf(
+							{
+								label: Config.string(),
+								value: Config.string()
+							}
+						)
+					),
+					type: Config.string(),
+					value: Config.string()
+				}
+			)
+		).value([]),
+
+		/**
+		 * @default undefined
+		 * @instance
+		 * @memberof Select
 		 * @type {?array<object>}
 		 */
 
@@ -57,14 +83,7 @@ class Select extends Component {
 				}
 			)
 		).value(
-			[
-				{
-					value: 'Option 1'
-				},
-				{
-					value: 'Option 2'
-				}
-			]
+			[]
 		),
 
 		/**
@@ -92,7 +111,7 @@ class Select extends Component {
 		 * @type {?string}
 		 */
 
-		placeholder: Config.string().value('Choose an Option'),
+		placeholder: Config.string(),
 
 		/**
 		 * @default undefined
