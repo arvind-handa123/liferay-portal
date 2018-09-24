@@ -166,7 +166,6 @@ renderResponse.setTitle((formInstance == null) ? LanguageUtil.get(request, "new-
 					if (context.pages.length === 0 && sessionPages) {
 						context.pages = sessionPages;
 					}
-
 					packageName.DDMForm(
 						{
 							context: context,
@@ -179,6 +178,7 @@ renderResponse.setTitle((formInstance == null) ? LanguageUtil.get(request, "new-
 							localizedName: <%= ddmFormAdminDisplayContext.getFormLocalizedName() %>,
 							modules: Liferay.MODULES,
 							namespace: '<portlet:namespace />',
+							rolesURL: '<%= rolesURL %>',
 							rules: <%= serializedDDMFormRules %>,
 							spritemap: '<%= themeDisplay.getPathThemeImages() %>/clay/icons.svg',
 							strings: {
