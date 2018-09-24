@@ -293,6 +293,29 @@ textarea[class^="form-builder-page-header"] {
 	padding: 0;
 }
 
+.liferay-ddm-form-rule-builder-timeline {
+	margin-bottom: 0;
+
+	&.can-remove-item {
+		.timeline-item:hover > .container-trash {
+			display: block;
+		}
+	}
+
+	.container-trash {
+		cursor: pointer;
+		display: none;
+		padding: 10px;
+		position: absolute;
+		right: 10px;
+		top: 13px;
+
+		&:hover {
+			color: #65B6F0;
+		}
+	}
+}
+
 .ddm-form-builder {
 	.modal {
 		display: none;
