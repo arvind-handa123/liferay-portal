@@ -6,6 +6,16 @@
 	{@param? readOnly: bool}
 	{@param? tip: string}
 	{@param? id: string}
+	{@param? fixedOptions: list<[
+		checked: bool,
+		disabled: bool,
+		id: string,
+		inline: bool,
+		label: string,
+		name: string,
+		showLabel: bool,
+		value: string
+	]>}
 	{@param? options: list<[
 		checked: bool,
 		disabled: bool,
@@ -32,6 +42,7 @@
 				{param _handleClick: $_handleClick /}
 				{param readOnly: $readOnly /}
 				{param id: $id /}
+				{param fixedOptions: $fixedOptions /}
 				{param options: $options /}
 				{param open: $open /}
 				{param placeholder: $placeholder /}
@@ -55,6 +66,16 @@
 	{@param? _handleClick: any}
 	{@param? readOnly: bool}
 	{@param? id: string}
+	{@param? fixedOptions: list<[
+		checked: bool,
+		disabled: bool,
+		id: string,
+		inline: bool,
+		label: string,
+		name: string,
+		showLabel: bool,
+		value: string
+	]>}
 	{@param? options: list<[
 		checked: bool,
 		disabled: bool,
@@ -101,6 +122,8 @@
 
 	{call .listItems}
 		{param _handleItemClicked: $_handleItemClicked /}
+		{param fixedOptions: $fixedOptions /}
+		{param placeholder: $placeholder /}
 		{param options: $options /}
 		{param open: $open /}
 	{/call}
@@ -108,6 +131,16 @@
 
 {template .listItems}
 	{@param? _handleItemClicked: any}
+	{@param? fixedOptions: list<[
+		checked: bool,
+		disabled: bool,
+		id: string,
+		inline: bool,
+		label: string,
+		name: string,
+		showLabel: bool,
+		value: string
+	]>}
 	{@param? options: list<[
 		checked: bool,
 		disabled: bool,
@@ -118,7 +151,7 @@
 		showLabel: bool,
 		value: string
 	]>}
-
+	{@param? placeholder: string}
 	{@param? open: bool}
 
 	{let $attributes kind="attributes"}
@@ -135,10 +168,18 @@
 	{if $options}
 		<div {$attributes}>
 			<ul class="list-unstyled">
-				<li class="dropdown-item" data-option-value="">Choose an option</li>
-				{foreach $option in $options}
-					<li class="dropdown-item" data-option-value="{$option.name}">{$option.value}</li>
-				{/foreach}
+				<li class="dropdown-item" data-option-value="">{$placeholder}</li>
+				{if length($options) > 0}
+					{foreach $option in $options}
+						<li class="dropdown-item" data-option-value="{$option.name}">{$option.value}</li>
+					{/foreach}
+				{/if}
+				{if $fixedOptions and length($fixedOptions) > 0}
+					<li class="dropdown-divider"></li>
+					{foreach $fixedOption in $fixedOptions}
+						<li class="dropdown-item"  data-option-value="{$fixedOption.name}">{$fixedOption.value}</li>
+					{/foreach}
+				{/if}
 			</ul>
 		</div>
 	{/if}
