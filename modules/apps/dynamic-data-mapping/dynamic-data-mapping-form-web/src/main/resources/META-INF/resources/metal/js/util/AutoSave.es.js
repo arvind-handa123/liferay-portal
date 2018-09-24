@@ -2,14 +2,16 @@
 
 import {Config} from 'metal-state';
 import objectHash from 'object-hash';
-import URLEncodedFetcher from './URLEncodedFetcher.es';
+import {makeFetch} from './fetch.es';
+import Component from 'metal-jsx';
 
-class AutoSave extends URLEncodedFetcher {
+class AutoSave extends Component {
 	static PROPS = {
 		form: Config.any(),
 		interval: Config.number().setter('_setInterval'),
 		saveAsDraft: Config.bool().value(true),
-		stateSyncronizer: Config.any()
+		stateSyncronizer: Config.any(),
+		url: Config.string()
 	};
 
 	created() {
@@ -85,26 +87,30 @@ class AutoSave extends URLEncodedFetcher {
 
 		stateSyncronizer.syncInputs();
 
-		this._pendingRequest = this.fetch(this._getFormData(saveAsDraft))
-			.then(
-				responseData => {
-					this._pendingRequest = null;
+		this._pendingRequest = makeFetch(
+			{
+				body: this._getFormData(saveAsDraft),
+				url: this.props.url
+			}
+		).then(
+			responseData => {
+				this._pendingRequest = null;
 
-					this._defineIds(responseData);
+				this._defineIds(responseData);
 
-					this.saveStateHash(currentState);
+				this.saveStateHash(currentState);
 
-					this.emit(
-						'autosaved',
-						{
-							modifiedDate: responseData.modifiedDate,
-							savedAsDraft: saveAsDraft
-						}
-					);
+				this.emit(
+					'autosaved',
+					{
+						modifiedDate: responseData.modifiedDate,
+						savedAsDraft: saveAsDraft
+					}
+				);
 
-					return responseData;
-				}
-			)
+				return responseData;
+			}
+		)
 			.catch (
 				() => {
 					this._pendingRequest = null;
