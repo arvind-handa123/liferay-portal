@@ -4,7 +4,6 @@
  * Prints the DDM rule settings.
  */
 {template .render}
-	{@param strings: ?}
 	{@param conditions: list<[
 			operator: string,
 			operands: list<[
@@ -14,17 +13,6 @@
 			]>
 		]>
 	}
-	{@param? operatorsList:  list<[
-			value: string,
-			name: string,
-			parameterTypes: list<string>,
-			returnType: string
-		]>
-	}
-	{@param? _handleFirstOperandSelection: any}
-	{@param? _handleOperatorSelection: any}
-	{@param? _handleTypeSelection: any}
-	{@param? _handleSecondOperandSelection: any}
 	{@param firstOperandList : list<[
 			value: string,
 			type: string,
@@ -35,21 +23,54 @@
 			]>
 		]>
 	}
+	{@param fixedOptions : list<[
+			value: string,
+			type: string,
+			name: string,
+			options: list<[
+				label: string,
+				value: string
+			]>
+		]>
+	}
+	{@param logicalOperator: string}
+	{@param readOnly: bool}
+	{@param strings: ?}
+	{@param visibleModal: bool}
+	{@param? _handleAddNewCondition: any}
+	{@param? _handleDeleteCondition: any}
+	{@param? _handleFirstOperandSelection: any}
+	{@param? _handleLogicalOperationChange: any}
+	{@param? _handleOperatorSelection: any}
+	{@param? _handleSecondOperandSelection: any}
+	{@param? _handleTypeSelection: any}
+	{@param? _handleModalButtonClicked: any}
+	{@param? operatorsList:  list<[
+			value: string,
+			name: string,
+			parameterTypes: list<string>,
+			returnType: string
+		]>
+	}
+	{@param? roles: list<[
+			name: string,
+			id: string
+		]>
+	}
 	{@param? secondOperandTypeList: list<[
 			value: string,
 			name: string
 		]>
 	}
 	{@param? secondOperandTypeSelectedList: list<[
+			id: string,
 			value: string,
 			name: string
 		]>
 	}
-	{@param logicalOperator: string}
 	{@param? spritemap: string}
-	{@param readOnly: bool}
 
-	<div class="form-builder-rule-builder">
+	<div class="form-builder-rule-builder liferay-ddm-form-builder-rule-builder-content">
 		<h2 class="form-builder-section-title text-default">{$strings.title}</h2>
 		<h4 class="text-default">{$strings.description}</h4>
 
@@ -58,9 +79,10 @@
 			{call .rulesHeader}
 				{param extraContent kind="html"}
 					{call .logicalOperatorDropDown}
+						{param _handleLogicalOperationChange: $_handleLogicalOperationChange /}
+						{param enableLogicalOperator: $enableLogicalOperator /}
 						{param logicalOperator: $strings[$logicalOperator] /}
 						{param strings: $strings /}
-						{param enableLogicalOperator: $enableLogicalOperator /}
 					{/call}
 				{/param}
 				{param logicalOperator: $strings[$logicalOperator] /}
@@ -69,43 +91,83 @@
 			{foreach $condition in $conditions}
 
 				{call .condition}
+					{param _handleDeleteCondition: $_handleDeleteCondition /}
 					{param _handleFirstOperandSelection: $_handleFirstOperandSelection /}
 					{param _handleOperatorSelection: $_handleOperatorSelection /}
-					{param _handleTypeSelection: $_handleTypeSelection /}
 					{param _handleSecondOperandSelection: $_handleSecondOperandSelection /}
+					{param _handleTypeSelection: $_handleTypeSelection /}
+					{param chooseAnOption: $strings.chooseAnOption /}
 					{param firstOperandList: $firstOperandList /}
-					{param secondOperandTypeList: $secondOperandTypeList /}
-					{param secondOperandTypeSelectedList: $secondOperandTypeSelectedList /}
-					{param if: $strings.if /}
-					{param operatorsList: $operatorsList /}
-					{param index: index($condition) /}
+					{param firstOperandTypeSelected: $condition.operands[0].type /}
 					{param firstOperandValueSelected: $condition.operands[0].value /}
-					{param operatorSelected: $condition.operator /}
-					{param secondOperandTypeSelected: $condition.operands[0].type /}
-					{param secondOperandTypeValue: isNonnull($condition.operands[1]) ? $condition.operands[1].value : '' /}
-					{param secondOperandTypeName: '' /}
+					{param fixedOptions: $fixedOptions /}
+					{param if: $strings.if /}
+					{param index: index($condition) /}
 					{param logicalOperator: $strings[$logicalOperator] /}
-					{param spritemap: $spritemap /}
+					{param operatorSelected: $condition.operator /}
+					{param operatorsList: $operatorsList /}
 					{param readOnly: $readOnly /}
+					{param roles: $roles /}
+					{param secondOperandTypeList: $secondOperandTypeList /}
+					{param secondOperandTypeName: '' /}
+					{param secondOperandTypeSelected: $condition.operands[0].type /}
+					{param secondOperandTypeSelectedList: $secondOperandTypeSelectedList /}
+					{param secondOperandTypeValue: isNonnull($condition.operands[1]) ? $condition.operands[1].value : '' /}
+					{param spritemap: $spritemap /}
 				{/call}
 				{ifempty}
 					{call .condition}
+						{param _handleDeleteCondition: $_handleDeleteCondition /}
 						{param _handleFirstOperandSelection: $_handleFirstOperandSelection /}
 						{param _handleOperatorSelection: $_handleOperatorSelection /}
-						{param _handleTypeSelection: $_handleTypeSelection /}
 						{param _handleSecondOperandSelection: $_handleSecondOperandSelection /}
+						{param _handleTypeSelection: $_handleTypeSelection /}
+						{param chooseAnOption: $strings.chooseAnOption /}
 						{param firstOperandList: $firstOperandList /}
-						{param secondOperandTypeList: $secondOperandTypeList /}
-						{param operatorsList: $operatorsList /}
+						{param fixedOptions: $fixedOptions /}
 						{param if: $strings.if /}
 						{param index: 0 /}
 						{param logicalOperator: $strings[$logicalOperator] /}
+						{param operatorsList: $operatorsList /}
+						{param readOnly: $readOnly /}
+						{param roles: $roles /}
+						{param secondOperandTypeList: $secondOperandTypeList /}
 						{param secondOperandTypeName: '' /}
 						{param spritemap: $spritemap /}
-						{param readOnly: $readOnly /}
 					{/call}
 			{/foreach}
 		</ul>
+		{call .btnAddNewTimelineItem}
+			{param _handleAddNewCondition: $_handleAddNewCondition /}
+			{param spritemap: $spritemap /}
+		{/call}
+
+		{call ClayModal.render}
+			{param body kind="html"}
+				<h4>{$strings.deleteConditionQuestion}</h4>
+			{/param}
+			{param events: [
+				'clickButton': $_handleModalButtonClicked
+			]/}
+			{param footerButtons: [
+				[
+					'alignment': 'right',
+					'label':'dismiss',
+					'style': 'primary',
+					'type': 'close'
+				],
+				[
+					'alignment': 'right',
+					'label': 'delete',
+					'style': 'primary',
+					'type': 'button'
+				]
+			] /}
+			{param size: 'sm' /}
+			{param spritemap: $spritemap /}
+			{param title: $strings.deleteCondition /}
+			{param visible: $visibleModal /}
+		{/call}
 	</div>
 {/template}
 
@@ -120,28 +182,31 @@
 			]>
 		]>
 	}
+	{@param if: string}
+	{@param index: int}
+	{@param readOnly: bool}
 	{@param? secondOperandTypeList : list<[
 			value: string,
 			name: string
 		]>
 	}
 	{@param? secondOperandTypeSelectedList : list<[
+			id: string,
 			value: string,
 			name: string
 		]>
 	}
-	{@param? firstOperandValueSelected: string}
-	{@param? operatorSelected: string}
-	{@param? secondOperandTypeValue: any }
-	{@param? secondOperandTypeName: string }
+	{@param? _handleDeleteCondition: any}
 	{@param? _handleFirstOperandSelection: any}
 	{@param? _handleOperatorSelection: any}
-	{@param? _handleTypeSelection: any}
 	{@param? _handleSecondOperandSelection: any}
-	{@param if: string}
-	{@param readOnly: bool}
-	{@param index: int}
-	{@param? spritemap: string}
+	{@param? _handleTypeSelection: any}
+	{@param? chooseAnOption: string}
+	{@param? firstOperandTypeSelected: string}
+	{@param? firstOperandValueSelected: string}
+	{@param? fixedOptions: any}
+	{@param? logicalOperator: string}
+	{@param? operatorSelected: string}
 	{@param? operatorsList:  list<[
 			value: string,
 			name: string,
@@ -149,6 +214,14 @@
 			returnType: string
 		]>
 	}
+	{@param? roles: list<[
+			name: string,
+			id: string
+		]>
+	}
+	{@param? secondOperandTypeName: string }
+	{@param? secondOperandTypeValue: any }
+	{@param? spritemap: string}
 
 	<li class="form-builder-rule-condition-container timeline-item" condition-index="{$index}">
 		<div class="panel panel-default">
@@ -167,8 +240,10 @@
 							{param events: [
 								'fieldEdited': $_handleFirstOperandSelection
 							] /}
-							{param ref: 'conditionIf' /}
+							{param fixedOptions: $fixedOptions /}
 							{param options: $firstOperandList /}
+							{param placeholder: $chooseAnOption /}
+							{param ref: 'conditionIf' + $index /}
 							{param spritemap: $spritemap /}
 							{param value: [$firstOperandValueSelected]   /}
 						{/delcall}
@@ -176,59 +251,97 @@
 
 					{call .operatorsList}
 						{param _handleOperatorSelection: $_handleOperatorSelection /}
+						{param chooseAnOption: $chooseAnOption /}
+						{param firstOperandTypeSelected: $firstOperandTypeSelected /}
+						{param index: $index /}
+						{param operatorSelected: $operatorSelected /}
 						{param operatorsList: $operatorsList /}
-						{param index: $index /}
 						{param spritemap: $spritemap /}
-						{param operatorSelected: $operatorSelected /}
 					{/call}
 
-					{call .secondOperandTypeList}
-						{param _handleTypeSelection: $_handleTypeSelection /}
-						{param secondOperandTypeList: $secondOperandTypeList /}
-						{param index: $index /}
-						{param spritemap: $spritemap /}
-						{param operatorSelected: $operatorSelected /}
-						{param secondOperandTypeSelectedList: $secondOperandTypeSelectedList /}
-					{/call}
+					{if $firstOperandTypeSelected != 'user'}
+						{call .secondOperandTypeList}
+							{param _handleTypeSelection: $_handleTypeSelection /}
+							{param chooseAnOption: $chooseAnOption /}
+							{param index: $index /}
+							{param operatorSelected: $operatorSelected /}
+							{param secondOperandTypeList: $secondOperandTypeList /}
+							{param secondOperandTypeSelectedList: $secondOperandTypeSelectedList /}
+							{param spritemap: $spritemap /}
+						{/call}
+					{else}
+						{call .rolesList}
+							{param _handleSecondOperandSelection: $_handleSecondOperandSelection /}
+							{param chooseAnOption: $chooseAnOption /}
+							{param index: $index /}
+							{param operatorSelected: $operatorSelected /}
+							{param roles: $roles  /}
+							{param secondOperandTypeValue: $secondOperandTypeValue /}
+							{param spritemap: $spritemap /}
+						{/call}
+					{/if}
 
-					{let $visibleTextField: isNonnull($secondOperandTypeSelectedList) and ($secondOperandTypeSelectedList[$index].name == 'text') ? true : false /}
+					{let $visibleTextField: (isNonnull($secondOperandTypeSelectedList) and length($secondOperandTypeSelectedList) > 0) and isNull($secondOperandTypeSelectedList[$index].name) and ($firstOperandTypeSelected == 'text') ? true : false /}
 					<div class="condition-type-value form-group-item {if not $visibleTextField}hide{/if}" condition-type-value-index="{$index}">
 						{delcall PageRenderer.RegisterFieldType variant="'text'"}
 							{param events: [
 								'fieldEdited': $_handleSecondOperandSelection
 							] /}
-							{param ref: 'typeValueInput' /}
-							{param spritemap: $spritemap /}
 							{param name: $secondOperandTypeName /}
-							{param value: $secondOperandTypeValue /}
 							{param readOnly: $readOnly /}
+							{param ref: 'typeValueInput' + $index /}
+							{param spritemap: $spritemap /}
+							{param value: $secondOperandTypeValue /}
 						{/delcall}
 					</div>
 
-					{let $visibleSelectField: isNonnull($secondOperandTypeSelectedList) and ($secondOperandTypeSelectedList[$index].name == 'field') ? true : false /}
+					{let $visibleDateField: (isNonnull($secondOperandTypeSelectedList) and length($secondOperandTypeSelectedList) > 0) and isNull($secondOperandTypeSelectedList[$index].name) and ($firstOperandTypeSelected == 'date') ? true : false /}
+					<div class="condition-type-value-date form-group-item {if not $visibleDateField}hide{/if}" condition-type-value-date-index="{$index}">
+						{delcall PageRenderer.RegisterFieldType variant="'date'"}
+							{param events: [
+								'fieldEdited': $_handleSecondOperandSelection
+							] /}
+							{param name: $secondOperandTypeName /}
+							{param readOnly: $readOnly /}
+							{param ref: 'typeValueDate' + $index /}
+							{param spritemap: $spritemap /}
+							{param value: $secondOperandTypeValue /}
+						{/delcall}
+					</div>
+
+					{let $visibleSelectField: (isNonnull($secondOperandTypeSelectedList) and length($secondOperandTypeSelectedList) > 0) and ($secondOperandTypeSelectedList[$index].name == 'field') ? true : false /}
 					<div class="condition-type-value-select form-group-item {if not $visibleSelectField}hide{/if}" condition-type-value-select-index="{$index}">
 						{delcall PageRenderer.RegisterFieldType variant="'select'"}
 							{param events: [
 									'fieldEdited': $_handleSecondOperandSelection
 								] /}
-							{param ref: 'typeValueSelect' /}
-							{param spritemap: $spritemap /}
 							{param options: $firstOperandList /}
+							{param placeholder: $chooseAnOption /}
+							{param ref: 'typeValueSelect' + $index /}
+							{param spritemap: $spritemap /}
 							{param value: [$secondOperandTypeValue] /}
 						{/delcall}
 					</div>
 
-					{let $visibleSelectOptionsField: isNonnull($secondOperandTypeSelectedList) and ($secondOperandTypeSelectedList[$index].name == 'select') ? true : false /}
+					{let $fieldHasOptions:
+						(isNonnull($secondOperandTypeSelectedList) and length($secondOperandTypeSelectedList) > 0 and isNull($secondOperandTypeSelectedList[$index].name)) and
+						($firstOperandTypeSelected == 'select' or
+						$firstOperandTypeSelected == 'checkbox_multiple' or
+						$firstOperandTypeSelected == 'radio')
+					/}
+
+					{let $visibleSelectOptionsField: $fieldHasOptions ? true : false /}
 					{foreach $operand in $firstOperandList}
 						{if $operand.value == $firstOperandValueSelected}
 							<div class="condition-type-value-select-options form-group-item {if not $visibleSelectOptionsField}hide{/if}" condition-type-value-select-options-index="{$index}">
 								{delcall PageRenderer.RegisterFieldType variant="'select'"}
 									{param events: [
-											'fieldEdited': $_handleSecondOperandSelection
-										] /}
-									{param ref: 'typeValueSelectOptions' /}
-									{param spritemap: $spritemap /}
+										'fieldEdited': $_handleSecondOperandSelection
+									] /}
 									{param options: $operand.options /}
+									{param placeholder: $chooseAnOption /}
+									{param ref: 'typeValueSelectOptions' + $index /}
+									{param spritemap: $spritemap /}
 									{param value: [$secondOperandTypeValue] /}
 								{/delcall}
 							</div>
@@ -241,10 +354,33 @@
 				</div>
 			</div>
 		</div>
+
+		<div class="operator panel panel-default panel-inline">
+			<div class="panel-body text-uppercase">{$logicalOperator}</div>
+		</div>
+
+		<div class="container-trash">
+			{call ClayButton.render}
+				{param events: [
+					'click': $_handleDeleteCondition
+				] /}
+				{param data: ['index': $index] /}
+				{param icon: 'trash' /}
+				{param monospaced: true /}
+				{param size: 'sm' /}
+				{param spritemap: $spritemap /}
+				{param style: 'secondary' /}
+			{/call}
+		</div>
 	</li>
 {/template}
 
 {template .operatorsList}
+	{@param index: int}
+	{@param? chooseAnOption: string}
+	{@param? _handleOperatorSelection: any}
+	{@param? firstOperandTypeSelected: string}
+	{@param? operatorSelected: string}
 	{@param? operatorsList:  list<[
 			value: string,
 			name: string,
@@ -252,20 +388,19 @@
 			returnType: string
 		]>
 	}
-	{@param? _handleOperatorSelection: any}
-	{@param? operatorSelected: string}
-	{@param index: int}
 	{@param? spritemap: string}
-	{let $readOnly: ($operatorsList and length($operatorsList) > 0) ? false : true /}
+
+	{let $readOnly: $firstOperandTypeSelected ? false : true /}
 
 	<div class="condition-operator form-group-item" condition-operator-index="{$index}">
 		{delcall PageRenderer.RegisterFieldType variant="'select'"}
 			{param events: [
 				'fieldEdited': $_handleOperatorSelection
 			] /}
-			{param readOnly: $readOnly /}
-			{param ref: 'conditionOperator' /}
 			{param options: $operatorsList /}
+			{param placeholder: $chooseAnOption /}
+			{param readOnly: $readOnly /}
+			{param ref: 'conditionOperator' + $index /}
 			{param spritemap: $spritemap /}
 			{param value: [$operatorSelected] /}
 		{/delcall}
@@ -273,7 +408,9 @@
 {/template}
 
 {template .secondOperandTypeList}
+	{@param index: int}
 	{@param? _handleTypeSelection: any}
+	{@param? chooseAnOption: string}
 	{@param? operatorSelected: any}
 	{@param? secondOperandTypeList : list<[
 			value: string,
@@ -281,11 +418,11 @@
 		]>
 	}
 	{@param? secondOperandTypeSelectedList : list<[
+			id: string,
 			value: string,
 			name: string
 		]>
 	}
-	{@param index: int}
 	{@param? spritemap: string}
 
 	{let $visible: $operatorSelected and isNonnull($secondOperandTypeSelectedList) and $secondOperandTypeSelectedList[$index].name != 'none' ? true: false /}
@@ -294,10 +431,38 @@
 			{param events: [
 				'fieldEdited': $_handleTypeSelection
 			] /}
-			{param ref: 'type' /}
 			{param options: $secondOperandTypeList /}
+			{param placeholder: $chooseAnOption /}
+			{param ref: 'type' + $index /}
 			{param spritemap: $spritemap /}
-			{param value: isNonnull($secondOperandTypeSelectedList) ? $secondOperandTypeSelectedList[$index].value : ''/}
+			{param value: (isNonnull($secondOperandTypeSelectedList) and length($secondOperandTypeSelectedList) > 0) ? $secondOperandTypeSelectedList[$index].value : ''/}
+		{/delcall}
+	</div>
+{/template}
+
+{template .rolesList}
+	{@param index: int}
+	{@param? _handleSecondOperandSelection: any}
+	{@param? chooseAnOption: string}
+	{@param? operatorSelected: any}
+	{@param? roles: list<[
+			name: string,
+			id: string
+		]>
+	}
+	{@param? secondOperandTypeValue: any }
+	{@param? spritemap: string}
+
+	{let $visible: $operatorSelected ? true: false /}
+	<div class="condition-user-role form-group-item {if not $visible}hide{/if}" condition-user-role-index="{$index}">
+		{delcall PageRenderer.RegisterFieldType variant="'select'"}
+			{param events: [
+				'fieldEdited': $_handleSecondOperandSelection
+			] /}
+			{param options: $roles /}
+			{param placeholder: $chooseAnOption /}
+			{param spritemap: $spritemap /}
+			{param value: [$secondOperandTypeValue] /}
 		{/delcall}
 	</div>
 {/template}
@@ -307,8 +472,9 @@
  */
 {template .logicalOperatorDropDown}
 	{@param strings: ?}
-	{@param? logicalOperator: string}
+	{@param _handleLogicalOperationChange: any}
 	{@param? enableLogicalOperator: bool}
+	{@param? logicalOperator: string}
 
 	{let $attributes kind="attributes"}
 
@@ -328,10 +494,10 @@
 			<span class="dropdown-toggle-selected-value">{$logicalOperator}</span> <span class="caret"></span>
 		</button>
 
-		<ul class="dropdown-menu">
-			<li class="logic-operator text-uppercase" data-logical-operator-value="or"><a href="#">{$strings['or']}</a></li>
+		<ul class="dropdown-menu" data-onclick={$_handleLogicalOperationChange}>
+			<li class="logic-operator text-uppercase" data-logical-operator-value="or"><a>{$strings['or']}</a></li>
 			<li class="divider"></li>
-			<li class="logic-operator text-uppercase" data-logical-operator-value="and"><a href="#">{$strings['and']}</a></li>
+			<li class="logic-operator text-uppercase" data-logical-operator-value="and"><a>{$strings['and']}</a></li>
 		</ul>
 	</div>
 {/template}
@@ -360,4 +526,27 @@
 			</div>
 		</div>
 	</li>
+{/template}
+
+/**
+ * Prints the DDM rule condition.
+ */
+{template .btnAddNewTimelineItem}
+	{@param? _handleAddNewCondition: any}
+	{@param? spritemap: string}
+
+	<div class="addbutton-timeline-item">
+		<div class="add-condition timeline-increment-icon">
+			{call ClayButton.render}
+				{param events: [
+					'click': $_handleAddNewCondition
+				] /}
+				{param elementClasses: 'rounded-circle' /}
+				{param icon: 'plus' /}
+				{param monospaced: true /}
+				{param size: 'sm' /}
+				{param spritemap: $spritemap /}
+			{/call}
+		</div>
+	</div>
 {/template}
