@@ -49,6 +49,8 @@ class RuleBuilder extends Component {
 
 		pages: Config.array().required(),
 
+		rolesURL: Config.string().required(),
+
 		rules: Config.arrayOf(
 			Config.shapeOf(
 				{
@@ -208,7 +210,7 @@ class RuleBuilder extends Component {
 			ruleScreen = <RuleEditor pages={this.props.pages} rules={this.props.rules} spritemap={spritemap} />;
 		}
 		else if (this.state.mode === 'create') {
-			ruleScreen = <RuleEditor functionsMetadata={this.props.functionsMetadata} pages={this.props.pages} spritemap={spritemap} />;
+			ruleScreen = <RuleEditor functionsMetadata={this.props.functionsMetadata} pages={this.props.pages} spritemap={spritemap} url={this.props.rolesURL} />;
 		}
 		else {
 			ruleScreen = <RuleList pages={this.props.pages} rules={this.props.rules} spritemap={spritemap} />;
