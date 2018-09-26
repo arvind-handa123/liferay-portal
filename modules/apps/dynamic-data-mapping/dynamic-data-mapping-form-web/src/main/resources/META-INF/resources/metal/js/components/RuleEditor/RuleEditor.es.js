@@ -1,9 +1,11 @@
 import 'clay-button';
+import 'clay-modal';
 import {Config} from 'metal-state';
 import {PagesVisitor} from '../../util/visitors.es';
 import Component from 'metal-component';
 import Soy from 'metal-soy';
 import templates from './RuleEditor.soy.js';
+import {makeFetch} from '../../util/fetch.es';
 
 /**
  * RuleEditor.
@@ -19,17 +21,6 @@ class RuleEditor extends Component {
 		 * @memberof RuleList
 		 * @type {?array}
 		 */
-
-		actions: Config.arrayOf(
-			Config.shapeOf(
-				{
-					action: Config.string(),
-					expression: Config.string(),
-					label: Config.string(),
-					target: Config.string()
-				}
-			)
-		),
 
 		conditions: Config.arrayOf(
 			Config.shapeOf(
@@ -49,9 +40,27 @@ class RuleEditor extends Component {
 			)
 		).internal().value([]),
 
-		conditionTypes: Config.array().internal(),
-
 		firstOperandList: Config.arrayOf(
+			Config.shapeOf(
+				{
+					dataType: Config.string(),
+					name: Config.string(),
+					options: Config.arrayOf(
+						Config.shapeOf(
+							{
+								label: Config.string(),
+								name: Config.string(),
+								value: Config.string()
+							}
+						)
+					),
+					type: Config.string(),
+					value: Config.string()
+				}
+			)
+		).internal().valueFn('_firstOperandListValueFn'),
+
+		fixedOptions: Config.arrayOf(
 			Config.shapeOf(
 				{
 					dataType: Config.string(),
@@ -68,7 +77,16 @@ class RuleEditor extends Component {
 					value: Config.string()
 				}
 			)
-		).internal().valueFn('_firstOperandListValueFn'),
+		).value(
+			[
+				{
+					dataType: 'user',
+					label: 'user',
+					name: 'user',
+					value: Liferay.Language.get('user')
+				}
+			]
+		),
 
 		functionsMetadata: Config.shapeOf(
 			{
@@ -105,6 +123,8 @@ class RuleEditor extends Component {
 			}
 		),
 
+		indexCondition: Config.string(),
+
 		logicalOperator: Config.string().internal().value('or'),
 
 		operators: Config.arrayOf(
@@ -119,6 +139,15 @@ class RuleEditor extends Component {
 		pages: Config.array().required(),
 
 		readOnly: Config.bool().value(false),
+
+		roles: Config.arrayOf(
+			Config.shapeOf(
+				{
+					id: Config.string(),
+					name: Config.string()
+				}
+			)
+		),
 
 		secondOperandTypeList: Config.arrayOf(
 			Config.shapeOf(
@@ -146,7 +175,7 @@ class RuleEditor extends Component {
 					value: Config.string()
 				}
 			)
-		).internal().value([]),
+		).internal().value([{name: '', value: ''}]),
 
 		/**
 		 * @default undefined
@@ -171,8 +200,13 @@ class RuleEditor extends Component {
 				autofill: Liferay.Language.get('autofill'),
 				calculate: Liferay.Language.get('calculate'),
 				cancel: Liferay.Language.get('cancel'),
+				chooseAnOption: Liferay.Language.get('choose-an-option'),
 				condition: Liferay.Language.get('condition'),
+				delete: Liferay.Language.get('delete'),
+				deleteCondition: Liferay.Language.get('delete-condition'),
+				deleteConditionQuestion: Liferay.Language.get('are-you-sure-you-want-to-delete-this-condition'),
 				description: Liferay.Language.get('define-condition-and-action-to-change-fields-and-elements-on-the-form'),
+				dismiss: Liferay.Language.get('dismiss'),
 				do: Liferay.Language.get('do'),
 				enable: Liferay.Language.get('enable'),
 				if: Liferay.Language.get('if'),
@@ -184,9 +218,34 @@ class RuleEditor extends Component {
 				show: Liferay.Language.get('show'),
 				the: Liferay.Language.get('the'),
 				title: Liferay.Language.get('rule'),
+				user: Liferay.Language.get('user'),
 				value: Liferay.Language.get('value')
 			}
+		},
+
+		url: Config.string().required(),
+
+		visibleModal: Config.bool().value(false)
+	}
+
+	attached() {
+		const addButton = document.querySelector('#addFieldButton');
+
+		if (addButton) {
+			addButton.classList.add('hide');
 		}
+	}
+
+	created() {
+		if (this.url) {
+			this._fetchRoles();
+		}
+
+		this.setState(
+			{
+				firstOperandList: this._getFieldsData()
+			}
+		);
 	}
 
 	syncPages(pages) {
@@ -232,16 +291,19 @@ class RuleEditor extends Component {
 	}
 
 	_clearAllFieldValues(index) {
-		let {conditions} = this;
+		let {conditions, secondOperandTypeSelectedList} = this;
 
 		conditions = this._clearFirstOperandValue(conditions, index);
 		conditions = this._clearOperatorValue(conditions, index);
 		conditions = this._clearSecondOperandValue(conditions, index);
 
+		secondOperandTypeSelectedList = this._clearTypeSelected(secondOperandTypeSelectedList, index);
+
 		this.setState(
 			{
 				conditions,
-				operators: []
+				operators: [],
+				secondOperandTypeSelectedList
 			}
 		);
 
@@ -293,8 +355,42 @@ class RuleEditor extends Component {
 		return conditions;
 	}
 
+	_clearTypeSelected(secondOperandTypeSelectedList, index) {
+		if (secondOperandTypeSelectedList[index]) {
+			secondOperandTypeSelectedList[index].name = '';
+			secondOperandTypeSelectedList[index].value = '';
+		}
+		return secondOperandTypeSelectedList;
+	}
+
+	_fetchRoles() {
+		const {url} = this;
+		makeFetch(
+			{
+				method: 'GET',
+				url
+			}
+		).then(
+			responseData => {
+				this._pendingRequest = null;
+				this.setState(
+					{
+						roles: responseData.map(
+							data => {
+								return {
+									...data,
+									value: data.name
+								};
+							}
+						)
+					}
+				);
+			}
+		);
+	}
+
 	_fieldHasOptions(field) {
-		return field === 'select' || field === 'radio' || field === 'checkbox';
+		return field === 'select' || field === 'radio' || field === 'checkbox_multiple';
 	}
 
 	_firstOperandListValueFn() {
@@ -323,27 +419,71 @@ class RuleEditor extends Component {
 		return firstOperand.getAttribute(`${fieldClass.substring(1)}-index`);
 	}
 
+	_getFieldsData() {
+		const fieldData = [];
+		const pages = this.pages;
+		const visitor = new PagesVisitor(pages);
+		visitor.mapFields(
+			field => {
+				fieldData.push(
+					{
+						...field,
+						name: field.fieldName,
+						options: field.options.map(
+							option => {
+								return {
+									...option,
+									name: option.value
+								};
+							}
+						),
+						value: field.label
+					}
+				);
+			}
+		);
+		return fieldData;
+	}
+
 	_getFieldType(fieldName) {
 		let fieldType = '';
-		const selectedField = this.firstOperandList.filter(
+
+		if (fieldName === 'user') {
+			fieldType = 'user';
+		}
+		else {
+			const selectedField = this.firstOperandList.filter(
+				field => {
+					return field.name === fieldName;
+				}
+			);
+
+			if (selectedField.length > 0) {
+				fieldType = selectedField[0].type;
+			}
+		}
+		return fieldType;
+	}
+
+	_getMetaDataName(firstOperandType, fieldName) {
+		const metaData = this.functionsMetadata[firstOperandType];
+		let name = '';
+		const selectedField = metaData.filter(
 			field => {
-				return field.name === fieldName;
+				return field.label === fieldName;
 			}
 		);
 
 		if (selectedField.length > 0) {
-			fieldType = selectedField[0].type;
+			name = selectedField[0].name;
 		}
-
-		return fieldType;
+		return name;
 	}
 
 	_getOperatorsByFieldType(type) {
-		if (this._fieldHasOptions(type)) {
-			type = 'text';
-		}
+		const fieldType = this._setType(type);
 
-		return this.functionsMetadata[type].map(
+		return this.functionsMetadata[fieldType].map(
 			metadata => {
 				return {
 					...metadata,
@@ -353,59 +493,124 @@ class RuleEditor extends Component {
 		);
 	}
 
+	_handleAddNewCondition() {
+		const {conditions, secondOperandTypeSelectedList} = this;
+		const newCondition = {operands: [{type: '', value: ''}], operator: ''};
+		const newOperandTypeSelected = {id: '', name: '', value: ''};
+
+		conditions.push(newCondition);
+
+		secondOperandTypeSelectedList.push(newOperandTypeSelected);
+
+		this.setState(
+			{
+				conditions,
+				secondOperandTypeSelectedList
+			}
+		);
+	}
+
+	_handleDeleteCondition(event) {
+		const {currentTarget} = event;
+		const index = currentTarget.getAttribute('data-index');
+
+		this.setState(
+			{
+				indexCondition: index,
+				visibleModal: true
+			}
+		);
+	}
+
 	_handleFirstOperandSelection(event) {
 		const {originalEvent, value} = event;
 		const fieldName = originalEvent.target.getAttribute('data-option-value');
 		const index = this._getConditionIndex(originalEvent, '.condition-if');
+
 		let operators = [];
+		let previousFirstOperandType = '';
 		let type = '';
 
 		if (fieldName) {
 			type = this._getFieldType(fieldName);
-
-			if (type === 'numeric') {
-				type = 'number';
-			}
-
 			operators = this._getOperatorsByFieldType(type);
-
 		}
 		else {
 			this._clearAllFieldValues(index);
 		}
 
-		const {conditions} = this;
+		const copyOfConditions = this.conditions;
 		const operandSelected = {type, value};
 
 		if (this.conditions.length === 0) {
 			const operands = [];
 
 			operands.push(operandSelected);
-
-			conditions.push({operands});
-
+			copyOfConditions.push({operands});
 		}
 		else {
-			const previousFirstOperandValue = conditions[index].operands[0].value;
+			const previousFirstOperandValue = copyOfConditions[index].operands[0].value;
 
+			previousFirstOperandType = copyOfConditions[index].operands[0].type;
 			if (previousFirstOperandValue !== value) {
-				conditions[index].operands[0] = operandSelected;
-				conditions[index].operator = '';
+				copyOfConditions[index].operands[0] = operandSelected;
+				copyOfConditions[index].operator = '';
 			}
 		}
+		const copyOfsecondOperandTypeSelectedList = this.secondOperandTypeSelectedList;
 
-		const {secondOperandTypeSelectedList} = this;
-		const resetedConditionType = {name: '', value: ''};
+		if (previousFirstOperandType !== type) {
+			const resetedConditionType = {id: index, name: '', value: ''};
 
-		secondOperandTypeSelectedList[index] = resetedConditionType;
-
+			copyOfsecondOperandTypeSelectedList[index] = resetedConditionType;
+		}
 		this.setState(
 			{
-				conditions,
+				conditions: copyOfConditions,
 				operators,
-				secondOperandTypeSelectedList
+				secondOperandTypeSelectedList: copyOfsecondOperandTypeSelectedList
 			}
 		);
+	}
+
+	_handleLogicalOperationChange(event) {
+		const {target} = event;
+
+		const logicalOperatorSelected = target.innerHTML;
+
+		let {logicalOperator} = this;
+
+		if (logicalOperatorSelected != logicalOperator) {
+			logicalOperator = logicalOperatorSelected.toLowerCase();
+
+			this.setState(
+				{
+					logicalOperator
+				}
+			);
+		}
+	}
+
+	_handleModalButtonClicked(event) {
+		event.stopPropagation();
+
+		if (!event.target.classList.contains('close-modal')) {
+			const indexCondition = this.indexCondition;
+			const {conditions, secondOperandTypeSelectedList} = this;
+
+			conditions.splice(indexCondition, 1);
+
+			secondOperandTypeSelectedList.splice(indexCondition, 1);
+
+			this.setState(
+				{
+					conditions,
+					indexCondition: '',
+					secondOperandTypeSelectedList,
+					visibleModal: false
+				}
+			);
+		}
 	}
 
 	_handleOperatorSelection(event) {
@@ -413,71 +618,74 @@ class RuleEditor extends Component {
 		const fieldName = originalEvent.target.getAttribute('data-option-value');
 		const index = this._getConditionIndex(originalEvent, '.condition-operator');
 
-		if (fieldName) {
-			const {secondOperandTypeList, secondOperandTypeSelectedList} = this;
+		let {conditions} = this;
 
-			if (this._isBinary(fieldName)) {
-				secondOperandTypeList[0].name = this.conditions[index].operands[0].type;
+		const {secondOperandTypeSelectedList} = this;
 
-				if (secondOperandTypeSelectedList[index] === null) {
-					secondOperandTypeSelectedList[index] = {name: '', value: ''};
-				}
+		if (!fieldName || !this._isBinary(fieldName)) {
+			conditions = this._clearSecondOperandValue(conditions, index);
+			if (!fieldName) {
+				conditions[index].operator = '';
 			}
 			else {
-				secondOperandTypeSelectedList[index] = null;
+				conditions[index].operator = value;
 			}
+			const configUnary = {name: 'none', value: 'none'};
 
-			const {conditions} = this;
-
-			conditions[index].operator = value;
-
-			this.setState(
-				{
-					conditions,
-					secondOperandTypeList,
-					secondOperandTypeSelectedList
-				}
-			);
+			secondOperandTypeSelectedList[index] = configUnary;
 		}
 		else {
-			this._clearOperatorValues(index);
+			const previousOperator = conditions[index].operator;
+
+			const type = this._setType(this.conditions[index].operands[0].type);
+
+			const name = this._getMetaDataName(type, previousOperator);
+
+			if (name == '' || !this._isBinary(name)) {
+				secondOperandTypeSelectedList[index] = {id: index, name: '', value: ''};
+			}
+			conditions[index].operator = value;
 		}
+		this.setState(
+			{
+				conditions,
+				secondOperandTypeSelectedList
+			}
+		);
 	}
 
 	_handleSecondOperandSelection(event) {
 		const {originalEvent, value} = event;
 		let index;
 
-		if (!document.querySelector('.condition-type-value.hide')) {
+		if (originalEvent.delegateTarget.closest('.condition-type-value')) {
 			index = this._getConditionIndex(originalEvent, '.condition-type-value');
 		}
-		else if (!document.querySelector('.condition-type-value-select.hide')) {
+		else if (originalEvent.delegateTarget.closest('.condition-type-value-select')) {
 			index = this._getConditionIndex(originalEvent, '.condition-type-value-select');
+		}
+		else if (originalEvent.delegateTarget.closest('.condition-user-role')) {
+			index = this._getConditionIndex(originalEvent, '.condition-user-role');
 		}
 		else {
 			index = this._getConditionIndex(originalEvent, '.condition-type-value-select-options');
 		}
-
 		const fieldName = originalEvent.target.getAttribute('data-option-value');
-
-		let type = '';
+		let fieldType = '';
 
 		if (fieldName) {
-			type = this._getFieldType(fieldName);
-
-			if (type === 'numeric') {
-				type = 'number';
+			fieldType = this._getFieldType(fieldName);
+			if (fieldType === 'numeric') {
+				fieldType = 'number';
 			}
 		}
+		const copyOfConditions = this.conditions;
+		const operandSelected = {fieldType, value};
 
-		const {conditions} = this;
-		const operandSelected = {type, value};
-
-		conditions[index].operands[1] = operandSelected;
-
+		copyOfConditions[index].operands[1] = operandSelected;
 		this.setState(
 			{
-				conditions
+				conditions: copyOfConditions
 			}
 		);
 	}
@@ -486,39 +694,56 @@ class RuleEditor extends Component {
 		const {originalEvent, value} = event;
 		const fieldName = originalEvent.target.getAttribute('data-option-value');
 		const index = this._getConditionIndex(originalEvent, '.condition-type');
+
 		let {conditions} = this;
-		let secondOperandTypeSelectedList = [];
+		let copyOfsecondOperandTypeSelectedList = [];
+		let previousTypeSelected = '';
 
 		if (this.secondOperandTypeSelectedList) {
-			secondOperandTypeSelectedList = this.secondOperandTypeSelectedList;
+			copyOfsecondOperandTypeSelectedList = this.secondOperandTypeSelectedList;
+			previousTypeSelected = copyOfsecondOperandTypeSelectedList[index].name;
 		}
+		const reloadType = (fieldName == null || fieldName == 'field') && (previousTypeSelected !== fieldName);
 
-		const newOperandType = {name: fieldName, value};
+		if (fieldName == '' || (reloadType && conditions[index].operands[0].value)) {
+			const newOperandType = {name: fieldName, value};
 
-		secondOperandTypeSelectedList[index] = newOperandType;
-
-		conditions = this._clearSecondOperandValue(conditions, index);
-
-		this.setState(
-			{
-				conditions,
-				secondOperandTypeSelectedList
-			}
-		);
+			copyOfsecondOperandTypeSelectedList[index] = newOperandType;
+			conditions = this._clearSecondOperandValue(conditions, index);
+			this.setState(
+				{
+					conditions,
+					secondOperandTypeSelectedList: copyOfsecondOperandTypeSelectedList
+				}
+			);
+		}
 	}
 
 	_isBinary(value) {
 		return (
-			value === 'belongs-to' ||
-			value === 'contains' ||
 			value === 'equals-to' ||
-			value === 'greater-than-equals' ||
-			value === 'greater-than' ||
-			value === 'less-than-equals' ||
-			value === 'less-than' ||
+			value === 'not-equals-to' ||
+			value === 'contains' ||
 			value === 'not-contains' ||
-			value === 'not-equals-to'
+			value === 'belongs-to' ||
+			value === 'greater-than' ||
+			value === 'greater-than-equals' ||
+			value === 'less-than' ||
+			value === 'less-than-equals'
 		);
+	}
+
+	_setType(type) {
+		if (type === 'numeric') {
+			type = 'number';
+		}
+		else if (type === 'date') {
+			type = 'text';
+		}
+		if (this._fieldHasOptions(type)) {
+			type = 'text';
+		}
+		return type;
 	}
 }
 
