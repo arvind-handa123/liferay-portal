@@ -365,6 +365,7 @@ class RuleEditor extends Component {
 
 	_fetchRoles() {
 		const {url} = this;
+
 		makeFetch(
 			{
 				method: 'GET',
@@ -423,6 +424,7 @@ class RuleEditor extends Component {
 		const fieldData = [];
 		const pages = this.pages;
 		const visitor = new PagesVisitor(pages);
+
 		visitor.mapFields(
 			field => {
 				fieldData.push(
