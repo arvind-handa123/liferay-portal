@@ -35,8 +35,19 @@ const pages = [
 								type: 'text'
 							},
 							{
+								fieldName: 'CampoDeData',
+								label: 'CampoDeData',
+								options: [
+									{
+										label: 'Option',
+										value: 'Option'
+									}
+								],
+								type: 'date'
+							},
+							{
 								fieldName: 'EstadoCivil',
-								label: 'Estado civil',
+								label: 'EstadoCivil',
 								options: [
 									{
 										label: 'Casado',
@@ -56,6 +67,8 @@ const pages = [
 		]
 	}
 ];
+
+const url = '/o/dynamic-data-mapping-form-builder-roles/';
 
 const firstOperandList = [
 	{
@@ -126,325 +139,32 @@ const functionsMetadata = {text: [
 ]};
 
 describe(
-	'RuleEditor',
-	() => {
-		beforeEach(
-			() => {
-				jest.useFakeTimers();
-			}
-		);
-		afterEach(
-			() => {
-				if (component) {
-					component.dispose();
-				}
-			}
-		);
-
-		it(
-			'should hide third and fourth selectors by default',
-			() => {
-				const conditions = [];
-
-				component = new RuleEditor(
-					{
-						conditions,
-						functionsMetadata,
-						pages,
-						secondOperandTypeSelectedList,
-						spritemap
-					}
-				);
-
-				const type = document.querySelector('.condition-type').classList.contains('hide');
-				const typeValue = document.querySelector('.condition-type-value');
-				const typeValueSelect = document.querySelector('.condition-type-value-select');
-
-				expect(type && !typeValue && !typeValueSelect).toEqual(true);
-			}
-		);
-
-		it(
-			'should show third selector when first and second selectors have options selected',
-			() => {
-				const conditions = [
-					{
-						operands: [
-							{
-								type: 'text',
-								value: 'Nome'
-							}
-						],
-						operator: 'Is not equal to'
-					}
-				];
-
-				const secondOperandTypeList = [
-					{
-						name: 'text',
-						value: 'Value'
-					},
-					{
-						name: 'field',
-						value: 'other-field'
-					}
-				];
-
-				component = new RuleEditor(
-					{
-						conditions,
-						firstOperandList,
-						functionsMetadata,
-						logicalOperator: 'or',
-						operatorsList,
-						pages,
-						secondOperandTypeList,
-						secondOperandTypeSelectedList,
-						spritemap
-					}
-				);
-
-				component.refs.conditionIf.emitFieldEdited('Nome', 'Nome');
-				component.refs.conditionOperator.emitFieldEdited('Is not equal to', 'not-equals-to');
-
-				const type = document.querySelector('.condition-type').classList.contains('hide');
-				const typeValue = document.querySelector('.condition-type-value').classList.contains('hide');
-				const typeValueSelect = document.querySelector('.condition-type-value-select').classList.contains('hide');
-
-				expect(!type && typeValue && typeValueSelect).toEqual(true);
-			}
-		);
-
-		it(
-			'should reset and show fourth input selector when first, second and third have options selected and first selector is text field',
-			() => {
-				const conditions = [
-					{
-						operands: [
-							{
-								type: 'text',
-								value: 'Nome'
-							},
-							{
-								type: 'text',
-								value: 'Nome'
-							}
-						],
-						operator: 'Is not equal to'
-					}
-				];
-
-				const secondOperandTypeList = [
-					{
-						name: 'text',
-						value: 'Value'
-					},
-					{
-						name: 'field',
-						value: 'other-field'
-					}
-				];
-
-				const secondOperandTypeSelectedList = [
-					{
-						name: 'text',
-						value: 'Value'
-					}
-				];
-
-				component = new RuleEditor(
-					{
-						conditions,
-						firstOperandList,
-						functionsMetadata,
-						pages,
-						secondOperandTypeList,
-						secondOperandTypeSelectedList,
-						spritemap
-					}
-				);
-
-				component.refs.conditionIf.emitFieldEdited('', 'Nome');
-				component.refs.conditionOperator.emitFieldEdited('Is not equal to', 'not-equals-to');
-				component.refs.type.emitFieldEdited('Value', 'text');
-
-				const secondOperandEmpty = (conditions[0].operands[1].type === '') && (conditions[0].operands[1].value === '');
-				const type = document.querySelector('.condition-type').classList.contains('hide');
-				const typeValue = document.querySelector('.condition-type-value').classList.contains('hide');
-				const typeValueSelect = document.querySelector('.condition-type-value-select').classList.contains('hide');
-
-				expect(
-					!type && !typeValue &&
-					typeValueSelect && secondOperandEmpty
-				).toEqual(true);
-			}
-		);
-
-		it(
-			'should show fourth "select" selector when first, second and third have options selected and first selector is select field',
-			() => {
-				const conditions = [
-					{
-						operands: [
-							{
-								type: 'select',
-								value: 'Estado civil'
-							}
-						],
-						operator: 'Is not equal to'
-					}
-				];
-
-				const secondOperandTypeSelectedList = [
-					{
-						name: 'select',
-						value: 'Value'
-					}
-				];
-
-				component = new RuleEditor(
-					{
-						conditions,
-						firstOperandList,
-						functionsMetadata,
-						pages,
-						secondOperandTypeSelectedList,
-						spritemap
-					}
-				);
-
-				component.refs.conditionIf.emitFieldEdited('', 'EstadoCivil');
-				component.refs.conditionOperator.emitFieldEdited('Is not equal to', 'not-equals-to');
-				component.refs.type.emitFieldEdited('Value', 'select');
-
-				const type = document.querySelector('.condition-type').classList.contains('hide');
-				const typeValue = document.querySelector('.condition-type-value').classList.contains('hide');
-				const typeValueSelect = document.querySelector('.condition-type-value-select').classList.contains('hide');
-				const typeValueSelectOptions = document.querySelector('.condition-type-value-select-options').classList.contains('hide');
-
-				expect(
-					!type && typeValue &&
-					typeValueSelect && !typeValueSelectOptions
-				).toEqual(true);
-			}
-		);
-
-		it(
-			'should show all fields when fourth field is a text input',
-			() => {
-				const conditions = [
-					{
-						operands: [
-							{
-								type: 'text',
-								value: 'Nome'
-							},
-							{
-								type: '',
-								value: 'Any text'
-							}
-						],
-						operator: 'Is not equal to'
-					}
-				];
-
-				const secondOperandTypeSelectedList = [
-					{
-						name: 'text',
-						value: 'Value'
-					}
-				];
-
-				component = new RuleEditor(
-					{
-						conditions,
-						firstOperandList,
-						functionsMetadata,
-						pages,
-						secondOperandTypeSelectedList,
-						spritemap
-					}
-				);
-
-				component.refs.conditionIf.emitFieldEdited('', 'Nome');
-				component.refs.conditionOperator.emitFieldEdited('Is not equal to', 'not-equals-to');
-				component.refs.type.emitFieldEdited('Value', 'text');
-				component.refs.typeValueInput.emitFieldEdited('', 'Nome');
-
-				expect(component).toMatchSnapshot();
-			}
-		);
-
-		it(
-			'should show all fields when fourth field is a select field',
-			() => {
-				const conditions = [
-					{
-						operands: [
-							{
-								type: 'text',
-								value: 'Nome'
-							},
-							{
-								type: 'text',
-								value: 'Nome'
-							}
-						],
-						operator: 'Is not equal to'
-					}
-				];
-
-				const secondOperandTypeSelectedList = [
-					{
-						name: 'field',
-						value: 'other-field'
-					}
-				];
-
-				component = new RuleEditor(
-					{
-						conditions,
-						firstOperandList,
-						functionsMetadata,
-						pages,
-						secondOperandTypeSelectedList,
-						spritemap
-					}
-				);
-
-				component.refs.conditionIf.emitFieldEdited('', 'Nome');
-				component.refs.conditionOperator.emitFieldEdited('Is not equal to', 'not-equals-to');
-				component.refs.type.emitFieldEdited('other-field', 'field');
-				component.refs.typeValueSelect.emitFieldEdited('', 'Nome');
-
-				expect(component).toMatchSnapshot();
-			}
-		);
-	}
-);
-
-describe(
 	'Regression',
 	() => {
+		beforeEach(() => {
+			jest.useFakeTimers();
+		});
 		it(
 			'LPS-85642 Should hide second operand and value when operator is reset',
 			() => {
+
 				component = new RuleEditor(
 					{
 						functionsMetadata,
 						pages,
-						spritemap
+						spritemap,
+						url
 					}
 				);
 
-				component.refs.conditionIf.emitFieldEdited('', 'Nome');
-				component.refs.conditionOperator.emitFieldEdited('Is not equal to', 'not-equals-to');
-				component.refs.type.emitFieldEdited('other-field', 'field');
+				component.refs.conditionIf0.emitFieldEdited('', 'Nome');
+				component.refs.conditionOperator0.emitFieldEdited('Is not equal to', 'not-equals-to');
+				component.refs.type0.emitFieldEdited('other-field', 'field');
 
 				jest.runAllTimers();
 
-				component.refs.typeValueSelect.emitFieldEdited('', 'Nome');
-				component.refs.conditionOperator.emitFieldEdited('', '');
+				component.refs.typeValueSelect0.emitFieldEdited('', 'Nome');
+				component.refs.conditionOperator0.emitFieldEdited('', '');
 
 				jest.runAllTimers();
 
@@ -459,15 +179,126 @@ describe(
 					{
 						functionsMetadata,
 						pages,
-						spritemap
+						spritemap,
+						url
 					}
 				);
 
-				component.refs.conditionIf.emitFieldEdited('Nome', 'Nome');
-				component.refs.conditionOperator.emitFieldEdited('Is not equal to', 'not-equals-to');
-				component.refs.type.emitFieldEdited('other-field', 'field');
+				component.refs.conditionIf0.emitFieldEdited('Nome', 'Nome');
+				component.refs.conditionOperator0.emitFieldEdited('Is not equal to', 'not-equals-to');
+				component.refs.type0.emitFieldEdited('other-field', 'field');
 
 				component.pages = [];
+
+				jest.runAllTimers();
+
+				expect(component).toMatchSnapshot();
+			}
+		);
+
+		it(
+			'should show third selector when first and second selectors have options selected',
+			() => {
+				component = new RuleEditor(
+					{
+						functionsMetadata,
+						pages,
+						spritemap,
+						url
+					}
+				);
+
+				component.refs.conditionIf0.emitFieldEdited('Nome', 'Nome');
+				component.refs.conditionOperator0.emitFieldEdited('Is not equal to', 'not-equals-to');
+
+				jest.runAllTimers();
+
+				expect(component).toMatchSnapshot();
+			}
+		);
+
+		it(
+			'should reset and show fourth input selector when first, second and third have options selected and first selector is text field',
+			() => {
+				component = new RuleEditor(
+					{
+						functionsMetadata,
+						pages,
+						spritemap,
+						url
+					}
+				);
+
+				component.refs.conditionIf0.emitFieldEdited('Nome', 'Nome');
+				component.refs.conditionOperator0.emitFieldEdited('Is not equal to', 'not-equals-to');
+				component.refs.type0.emitFieldEdited('Value', null);
+
+				jest.runAllTimers();
+
+				expect(component).toMatchSnapshot();
+			}
+		);
+
+		it(
+			'should show fourth "select" selector when first, second and third have options selected and first selector is select field',
+			() => {
+				component = new RuleEditor(
+					{
+						functionsMetadata,
+						pages,
+						spritemap,
+						url
+					}
+				);
+
+				component.refs.conditionIf0.emitFieldEdited('EstadoCivil', 'EstadoCivil');
+				component.refs.conditionOperator0.emitFieldEdited('Is not equal to', 'not-equals-to');
+				component.refs.type0.emitFieldEdited('Value', null);
+
+				jest.runAllTimers();
+
+				expect(component).toMatchSnapshot();
+			}
+		);
+
+		it(
+			'should show fourth "date" field when first, second and third have options selected and first selector is date',
+			() => {
+				component = new RuleEditor(
+					{
+						functionsMetadata,
+						pages,
+						spritemap,
+						url
+					}
+				);
+
+				component.refs.conditionIf0.emitFieldEdited('CampoDeData', 'CampoDeData');
+				component.refs.conditionOperator0.emitFieldEdited('Is not equal to', 'not-equals-to');
+				component.refs.type0.emitFieldEdited('Value', null);
+
+				jest.runAllTimers();
+
+				expect(component).toMatchSnapshot();
+			}
+		);
+
+		it(
+			'should add a new condition row when addNewCondition button is clicked',
+			() => {
+				component = new RuleEditor(
+					{
+						functionsMetadata,
+						pages,
+						spritemap,
+						url
+					}
+				);
+
+				component.refs.conditionIf0.emitFieldEdited('CampoDeData', 'CampoDeData');
+				component.refs.conditionOperator0.emitFieldEdited('Is not equal to', 'not-equals-to');
+				component.refs.type0.emitFieldEdited('Value', null);
+				component.refs.addNewCondition.emit('click');
 
 				jest.runAllTimers();
 
