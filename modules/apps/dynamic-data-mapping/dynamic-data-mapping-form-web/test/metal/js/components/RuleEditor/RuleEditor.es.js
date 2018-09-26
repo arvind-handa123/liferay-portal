@@ -70,65 +70,6 @@ const pages = [
 
 const url = '/o/dynamic-data-mapping-form-builder-roles/';
 
-const firstOperandList = [
-	{
-		dataType: 'string',
-		name: 'Nome',
-		options: [
-			{
-				label: 'Option',
-				value: 'Option'
-			}
-		],
-		type: 'text',
-		value: 'Nome'
-	},
-	{
-		dataType: 'string',
-		name: 'text',
-		options: [
-			{
-				label: 'Option',
-				value: 'Option'
-			}
-		],
-		type: 'text',
-		value: 'Sobrenome'
-	},
-	{
-		dataType: 'string',
-		name: 'EstadoCivil',
-		options: [
-			{
-				label: 'Casado',
-				value: 'Casado'
-			},
-			{
-				label: 'Solteiro',
-				value: 'Solteiro'
-			}
-		],
-		type: 'select',
-		value: 'Estado civil'
-	}
-];
-
-const secondOperandTypeSelectedList = [
-	{
-		name: '',
-		value: ''
-	}
-];
-
-const operatorsList = [
-	{name: 'contains', parameterTypes: ['text', 'text'], returnType: 'boolean', value: 'Contains'},
-	{name: 'equals-to', parameterTypes: ['text', 'text'], returnType: 'boolean', value: 'Is equal to'},
-	{name: 'is-empty', parameterTypes: ['text'], returnType: 'boolean', value: 'Is empty'},
-	{name: 'not-contains', parameterTypes: ['text', 'text'], returnType: 'boolean', value: 'Does not contain'},
-	{name: 'not-equals-to', parameterTypes: ['text', 'text'], returnType: 'boolean', value: 'Is not equal to'},
-	{name: 'not-is-empty', parameterTypes: ['text'], returnType: 'boolean', value: 'Is not empty'}
-];
-
 const functionsMetadata = {text: [
 	{name: 'contains', parameterTypes: ['text', 'text'], returnType: 'boolean', value: 'Contains'},
 	{name: 'equals-to', parameterTypes: ['text', 'text'], returnType: 'boolean', value: 'Is equal to'},
@@ -141,9 +82,11 @@ const functionsMetadata = {text: [
 describe(
 	'Regression',
 	() => {
-		beforeEach(() => {
-			jest.useFakeTimers();
-		});
+		beforeEach(
+			() => {
+				jest.useFakeTimers();
+			}
+		);
 		it(
 			'LPS-85642 Should hide second operand and value when operator is reset',
 			() => {
