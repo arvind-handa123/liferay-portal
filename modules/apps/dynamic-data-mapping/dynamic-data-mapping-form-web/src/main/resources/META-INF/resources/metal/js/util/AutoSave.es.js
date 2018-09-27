@@ -2,7 +2,7 @@
 
 import {Config} from 'metal-state';
 import objectHash from 'object-hash';
-import {makeFetch} from './fetch.es';
+import {convertToSearchParams, makeFetch} from './fetch.es';
 import Component from 'metal-jsx';
 
 class AutoSave extends Component {
@@ -151,7 +151,7 @@ class AutoSave extends Component {
 		formData.set(`${namespace}published`, JSON.stringify(this.published));
 		formData.set(`${namespace}saveAsDraft`, saveAsDraft);
 
-		return formData;
+		return convertToSearchParams(formData);
 	}
 
 	_setInterval(minutes) {
