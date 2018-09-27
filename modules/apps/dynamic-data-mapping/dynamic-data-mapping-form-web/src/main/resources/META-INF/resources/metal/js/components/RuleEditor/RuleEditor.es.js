@@ -147,7 +147,7 @@ class RuleEditor extends Component {
 					name: Config.string()
 				}
 			)
-		),
+		).internal(),
 
 		secondOperandTypeList: Config.arrayOf(
 			Config.shapeOf(
@@ -261,7 +261,7 @@ class RuleEditor extends Component {
 
 				visitor.mapFields(
 					({label}) => {
-						if (condition.operands[0].value === label) {
+						if (condition.operands[0].value === label || condition.operands[0].value === 'User') {
 							firstOperandFieldExists = true;
 						}
 
@@ -431,14 +431,14 @@ class RuleEditor extends Component {
 					{
 						...field,
 						name: field.fieldName,
-						options: field.options.map(
+						options: field.options ? field.options.map(
 							option => {
 								return {
 									...option,
 									name: option.value
 								};
 							}
-						),
+						) : [],
 						value: field.label
 					}
 				);
