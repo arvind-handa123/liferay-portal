@@ -31,7 +31,7 @@ export const makeFetch = ({url, body, headers = defaultHeaders, method = 'POST'}
 		);
 };
 
-export const convertToSearchParams = (body) => {
+export const convertToSearchParams = body => {
 	let searchParams = new URLSearchParams();
 
 	if (body instanceof HTMLFormElement) {
@@ -50,4 +50,4 @@ export const convertToSearchParams = (body) => {
 	}
 
 	return searchParams;
-}
+};
