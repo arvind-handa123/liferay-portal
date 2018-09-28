@@ -261,7 +261,7 @@ class RuleEditor extends Component {
 
 				visitor.mapFields(
 					({label}) => {
-						if (condition.operands[0].value === label || condition.operands[0].value === 'User') {
+						if (condition.operands[0].value === label) {
 							firstOperandFieldExists = true;
 						}
 
@@ -270,6 +270,10 @@ class RuleEditor extends Component {
 						}
 					}
 				);
+
+				if (condition.operands[0].value === 'User') {
+					firstOperandFieldExists = true;
+				}
 
 				if (!firstOperandFieldExists) {
 					newConditions = this._clearAllFieldValues(index);
