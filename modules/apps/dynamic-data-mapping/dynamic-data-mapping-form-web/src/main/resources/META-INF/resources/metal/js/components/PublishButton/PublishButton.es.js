@@ -4,7 +4,6 @@ import Notifications from '../../util/Notifications.es';
 import {convertToSearchParams, makeFetch} from '../../util/fetch.es';
 import Component from 'metal-jsx';
 
-
 class PublishButton extends Component {
 	static PROPS = {
 		namespace: Config.string().required(),
@@ -76,8 +75,8 @@ class PublishButton extends Component {
 
 				return makeFetch(
 					{
-						url: this.props.url,
-						body: convertToSearchParams(payload)
+						body: convertToSearchParams(payload),
+						url: this.props.url
 					}
 				).then(
 					() => {
