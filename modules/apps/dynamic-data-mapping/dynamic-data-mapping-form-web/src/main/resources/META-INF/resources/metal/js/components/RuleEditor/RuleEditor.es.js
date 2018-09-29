@@ -127,14 +127,20 @@ class RuleEditor extends Component {
 
 		logicalOperator: Config.string().internal().value('or'),
 
-		operators: Config.arrayOf(
+		operatorsList: Config.arrayOf(
 			Config.shapeOf(
 				{
-					label: Config.string(),
-					type: Config.string()
+					operator: Config.arrayOf(
+						Config.shapeOf(
+							{
+								label: Config.string(),
+								type: Config.string()
+							}
+						)
+					)
 				}
 			)
-		).internal(),
+		).internal().value([]),
 
 		pages: Config.array().required(),
 
@@ -306,7 +312,7 @@ class RuleEditor extends Component {
 		this.setState(
 			{
 				conditions,
-				operators: [],
+				operatorsList: [],
 				secondOperandTypeSelectedList
 			}
 		);
@@ -533,13 +539,20 @@ class RuleEditor extends Component {
 		const fieldName = originalEvent.target.getAttribute('data-option-value');
 		const index = this._getConditionIndex(originalEvent, '.condition-if');
 
-		let operators = [];
+		const operatorsList = this.operatorsList;
+		let operators;
 		let previousFirstOperandType = '';
 		let type = '';
 
 		if (fieldName) {
 			type = this._getFieldType(fieldName);
-			operators = this._getOperatorsByFieldType(type);
+			operators = {operator: this._getOperatorsByFieldType(type)};
+			if (operatorsList.length == 0) {
+				operatorsList.push(operators);
+			}
+			else {
+				operatorsList[index] = operators;
+			}
 		}
 		else {
 			this._clearAllFieldValues(index);
@@ -573,7 +586,7 @@ class RuleEditor extends Component {
 		this.setState(
 			{
 				conditions: copyOfConditions,
-				operators,
+				operatorsList,
 				secondOperandTypeSelectedList: copyOfsecondOperandTypeSelectedList
 			}
 		);
@@ -621,6 +634,7 @@ class RuleEditor extends Component {
 
 	_handleOperatorSelection(event) {
 		const {originalEvent, value} = event;
+
 		const fieldName = originalEvent.target.getAttribute('data-option-value');
 		const index = this._getConditionIndex(originalEvent, '.condition-operator');
 
