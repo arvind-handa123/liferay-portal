@@ -45,11 +45,13 @@
 	{@param? _handleSecondOperandSelection: any}
 	{@param? _handleTypeSelection: any}
 	{@param? _handleModalButtonClicked: any}
-	{@param? operators:  list<[
-			value: string,
-			name: string,
-			parameterTypes: list<string>,
-			returnType: string
+	{@param? operatorsList: list<[
+			operator: list<[
+				value: string,
+				name: string,
+				parameterTypes: list<string>,
+				returnType: string
+			]>
 		]>
 	}
 	{@param? roles: list<[
@@ -102,7 +104,7 @@
 					{param index: index($condition) /}
 					{param logicalOperator: $strings[$logicalOperator] /}
 					{param operatorSelected: $condition.operator /}
-					{param operators: $operators /}
+					{param operators: isNonnull($operatorsList) and length($operatorsList) > 0 and isNonnull($operatorsList[index($condition)]) ? $operatorsList[index($condition)].operator : null  /}
 					{param readOnly: $readOnly /}
 					{param roles: $roles /}
 					{param secondOperandTypeList: $secondOperandTypeList /}
@@ -125,7 +127,7 @@
 						{param if: $strings.if /}
 						{param index: 0 /}
 						{param logicalOperator: $strings[$logicalOperator] /}
-						{param operators: $operators /}
+						{param operators: isNonnull($operatorsList) and length($operatorsList) > 0 and isNonnull($operatorsList[0]) ? $operatorsList[0].operator : null /}
 						{param readOnly: $readOnly /}
 						{param roles: $roles /}
 						{param secondOperandTypeList: $secondOperandTypeList /}
