@@ -79,9 +79,7 @@ class Select extends Component {
 					value: Config.string()
 				}
 			)
-		).value(
-			[]
-		),
+		).value([]),
 
 		/**
 		 * @default undefined
@@ -170,19 +168,34 @@ class Select extends Component {
 		this._eventHandler.removeAllListeners();
 	}
 
-	prepareStateForRender(states) {
-		const {predefinedValue, value} = states;
+	prepareStateForRender(state) {
+		const {predefinedValue, value} = state;
 		let newValue = value;
 
 		if (typeof (newValue) === 'string') {
 			newValue = [value];
 		}
 
+		const selectedValue = newValue && newValue.length ? newValue[0] : '';
+		const selectedLabel = this._getSelectedLabel(selectedValue);
+
 		return {
-			...states,
+			...state,
 			predefinedValue: predefinedValue && predefinedValue.length ? predefinedValue[0] : '',
-			value: newValue && newValue.length ? newValue[0] : ''
+			selectedLabel,
+			value: selectedValue
 		};
+	}
+
+	_getSelectedLabel(selectedValue) {
+		const {fixedOptions, options, placeholder} = this;
+		let selectedOption = options.find(option => option.value === selectedValue);
+
+		if (!selectedOption) {
+			selectedOption = fixedOptions.find(option => option.value === selectedValue);
+		}
+
+		return selectedOption ? selectedOption.label : placeholder;
 	}
 
 	_handleDocumentClicked({target}) {
@@ -192,10 +205,12 @@ class Select extends Component {
 	}
 
 	_handleItemClicked(event) {
+		const value = [event.target.dataset.optionValue];
+
 		this.setState(
 			{
-				predefinedValue: event.target.innerText,
-				value: event.target.innerText
+				open: !this.open,
+				value
 			}
 		);
 
@@ -204,16 +219,18 @@ class Select extends Component {
 			{
 				fieldInstance: this,
 				originalEvent: event,
-				value: event.target.innerText
+				value
 			}
 		);
-
-		this.setState({open: !this.open});
 	}
 
 	_handleClick() {
 		if (!this.readOnly) {
-			this.setState({open: !this.open});
+			this.setState(
+				{
+					open: !this.open
+				}
+			);
 		}
 	}
 }
