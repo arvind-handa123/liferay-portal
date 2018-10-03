@@ -744,6 +744,7 @@ public class DDMFormAdminDisplayContext {
 	public String getRolesURL() throws PortalException {
 		DDMFormBuilderSettingsResponse ddmFormBuilderSettingsResponse =
 			getDDMFormBuilderSettingsResponse();
+
 		return ddmFormBuilderSettingsResponse.getRolesURL();
 	}
 
