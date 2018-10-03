@@ -504,7 +504,7 @@ Array [
       "text",
     ],
     "returnType": "boolean",
-    "value": undefined,
+    "value": "contains",
   },
   Object {
     "name": "equals-to",
@@ -513,7 +513,7 @@ Array [
       "text",
     ],
     "returnType": "boolean",
-    "value": undefined,
+    "value": "equals-to",
   },
   Object {
     "name": "is-empty",
@@ -521,7 +521,7 @@ Array [
       "text",
     ],
     "returnType": "boolean",
-    "value": undefined,
+    "value": "is-empty",
   },
   Object {
     "name": "not-contains",
@@ -530,7 +530,7 @@ Array [
       "text",
     ],
     "returnType": "boolean",
-    "value": undefined,
+    "value": "not-contains",
   },
   Object {
     "name": "not-equals-to",
@@ -539,7 +539,7 @@ Array [
       "text",
     ],
     "returnType": "boolean",
-    "value": undefined,
+    "value": "not-equals-to",
   },
   Object {
     "name": "not-is-empty",
@@ -547,7 +547,7 @@ Array [
       "text",
     ],
     "returnType": "boolean",
-    "value": undefined,
+    "value": "not-is-empty",
   },
 ]
 `;
@@ -560,7 +560,7 @@ Array [
       "text",
     ],
     "returnType": "boolean",
-    "value": undefined,
+    "value": "belongs-to",
   },
 ]
 `;
