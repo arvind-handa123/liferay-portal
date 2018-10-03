@@ -1,6 +1,7 @@
 import './__fixtures__/RuleEditorMockField.es';
 import mockPages from 'mock/mockPages.es';
 import RuleEditor from 'source/components/RuleEditor/RuleEditor.es';
+import {PagesVisitor} from 'source/util/visitors.es';
 
 let component;
 
@@ -61,7 +62,7 @@ describe(
 		);
 
 		it(
-			'should make operators field "read only" when first operator is not selected',
+			'should make operators field "read only" when first operand is not selected',
 			() => {
 				component = new RuleEditor(
 					{
@@ -73,7 +74,7 @@ describe(
 					}
 				);
 
-				component.refs.firstOperand0.emitFieldEdited('');
+				component.refs.firstOperand0.emitFieldEdited(['']);
 
 				jest.runAllTimers();
 
@@ -82,7 +83,192 @@ describe(
 		);
 
 		it(
-			'should not make operators field "read only" when first operator is selected',
+			'should hide the second operand type selector when first operand is not selected',
+			() => {
+				component = new RuleEditor(
+					{
+						conditions: [],
+						functionsMetadata,
+						pages,
+						spritemap,
+						url
+					}
+				);
+
+				component.refs.firstOperand0.emitFieldEdited(['']);
+
+				jest.runAllTimers();
+
+				expect(component.refs.secondOperandTypeSelector0).toBeFalsy();
+			}
+		);
+
+		it(
+			'should hide the second operand when first operand is not selected',
+			() => {
+				component = new RuleEditor(
+					{
+						conditions: [],
+						functionsMetadata,
+						pages,
+						spritemap,
+						url
+					}
+				);
+
+				component.refs.firstOperand0.emitFieldEdited(['']);
+
+				jest.runAllTimers();
+
+				expect(component.refs.secondOperand0).toBeFalsy();
+			}
+		);
+
+		it(
+			'should reset the operator, and hide the second operand type selector and second operand',
+			() => {
+				component = new RuleEditor(
+					{
+						conditions: [],
+						functionsMetadata,
+						pages,
+						spritemap,
+						url
+					}
+				);
+
+				component.refs.firstOperand0.emitFieldEdited(['radio']);
+				component.refs.conditionOperator0.emitFieldEdited(['not-contains']);
+
+				jest.runAllTimers();
+
+				component.refs.secondOperandTypeSelector0.emitFieldEdited(['value']);
+
+				jest.runAllTimers();
+
+				component.refs.secondOperand0.emitFieldEdited(['123']);
+
+				jest.runAllTimers();
+
+				component.refs.firstOperand0.emitFieldEdited(['']);
+
+				jest.runAllTimers();
+
+				expect(component.refs.conditionOperator0.value).toEqual(['']);
+				expect(component.refs.secondOperandTypeSelector0).toBeFalsy();
+				expect(component.refs.secondOperand0).toBeFalsy();
+			}
+		);
+
+		it(
+			'should reset the operator, and hide the second operand type selector and second operand',
+			() => {
+				component = new RuleEditor(
+					{
+						conditions: [],
+						functionsMetadata,
+						pages,
+						spritemap,
+						url
+					}
+				);
+
+				component.refs.firstOperand0.emitFieldEdited(['radio']);
+				component.refs.conditionOperator0.emitFieldEdited(['not-contains']);
+
+				jest.runAllTimers();
+
+				component.refs.secondOperandTypeSelector0.emitFieldEdited(['value']);
+
+				jest.runAllTimers();
+
+				component.refs.secondOperand0.emitFieldEdited(['123']);
+
+				jest.runAllTimers();
+
+				component.refs.firstOperand0.emitFieldEdited(['text1']);
+
+				jest.runAllTimers();
+
+				expect(component.refs.conditionOperator0.value).toEqual(['']);
+				expect(component.refs.secondOperandTypeSelector0).toBeFalsy();
+				expect(component.refs.secondOperand0).toBeFalsy();
+			}
+		);
+
+		it(
+			'should not reset second operand type selector nor second operand when operator changes from a binary type to another binary type',
+			() => {
+				component = new RuleEditor(
+					{
+						conditions: [],
+						functionsMetadata,
+						pages,
+						spritemap,
+						url
+					}
+				);
+
+				component.refs.firstOperand0.emitFieldEdited(['radio']);
+				component.refs.conditionOperator0.emitFieldEdited(['not-contains']);
+
+				jest.runAllTimers();
+
+				component.refs.secondOperandTypeSelector0.emitFieldEdited(['value']);
+
+				jest.runAllTimers();
+
+				component.refs.secondOperand0.emitFieldEdited(['123']);
+
+				jest.runAllTimers();
+
+				component.refs.conditionOperator0.emitFieldEdited(['contains']);
+
+				jest.runAllTimers();
+
+				expect(component.refs.conditionOperator0.value).toEqual(['contains']);
+				expect(component.refs.secondOperandTypeSelector0.value).toEqual(['value']);
+				expect(component.refs.secondOperand0.value).toEqual(['123']);
+			}
+		);
+
+		it(
+			'should hide second operand type selector and hide second operand when operator changes from a binary type to an unary type',
+			() => {
+				component = new RuleEditor(
+					{
+						conditions: [],
+						functionsMetadata,
+						pages,
+						spritemap,
+						url
+					}
+				);
+
+				component.refs.firstOperand0.emitFieldEdited(['radio']);
+				component.refs.conditionOperator0.emitFieldEdited(['not-contains']);
+
+				jest.runAllTimers();
+
+				component.refs.secondOperandTypeSelector0.emitFieldEdited(['value']);
+
+				jest.runAllTimers();
+
+				component.refs.secondOperand0.emitFieldEdited(['123']);
+
+				jest.runAllTimers();
+
+				component.refs.conditionOperator0.emitFieldEdited(['is-empty']);
+
+				jest.runAllTimers();
+
+				expect(component.refs.secondOperandTypeSelector0).toBeFalsy();
+				expect(component.refs.secondOperand0).toBeFalsy();
+			}
+		);
+
+		it(
+			'should not make operators field "read only" when first operand is selected',
 			() => {
 				component = new RuleEditor(
 					{
@@ -278,7 +464,7 @@ describe(
 				);
 
 				component.refs.firstOperand0.emitFieldEdited(['radio']);
-				component.refs.conditionOperator0.emitFieldEdited(['is-not-equal-to']);
+				component.refs.conditionOperator0.emitFieldEdited(['not-equals-to']);
 
 				jest.runAllTimers();
 
@@ -289,6 +475,44 @@ describe(
 				jest.runAllTimers();
 
 				expect(component.refs.secondOperandTypeSelector0).toBeFalsy();
+			}
+		);
+
+		it(
+			'should mirror options of a field that has options in second operand when condition compares values',
+			() => {
+				component = new RuleEditor(
+					{
+						conditions: [],
+						functionsMetadata,
+						pages,
+						spritemap,
+						url
+					}
+				);
+
+				const visitor = new PagesVisitor(component.pages);
+
+				let radioField;
+
+				visitor.mapFields(
+					field => {
+						if (field.fieldName === 'radio') {
+							radioField = field;
+						}
+					}
+				);
+
+				component.refs.firstOperand0.emitFieldEdited(['radio']);
+				component.refs.conditionOperator0.emitFieldEdited(['not-equals-to']);
+
+				jest.runAllTimers();
+
+				component.refs.secondOperandTypeSelector0.emitFieldEdited(['value']);
+
+				jest.runAllTimers();
+
+				expect(component.refs.secondOperand0.options).toEqual(radioField.options);
 			}
 		);
 
@@ -373,6 +597,25 @@ describe(
 		);
 
 		it(
+			'should disable the "AND" or "OR" selector when there\'s only one condtion',
+			() => {
+				component = new RuleEditor(
+					{
+						conditions: [],
+						functionsMetadata,
+						pages,
+						spritemap,
+						url
+					}
+				);
+
+				jest.runAllTimers();
+
+				expect(component.refs.logicalOperatorDropDownButton.hasAttribute('disabled')).toBe(true);
+			}
+		);
+
+		it(
 			'should enable the "AND" or "OR" selector when there\'s more than one condtion',
 			() => {
 				component = new RuleEditor(
@@ -396,7 +639,7 @@ describe(
 
 				jest.runAllTimers();
 
-				expect(component.refs.logicalOperatorDropDownButton.classList.contains('disabled')).toBe(false);
+				expect(component.refs.logicalOperatorDropDownButton.hasAttribute('disabled')).toBe(false);
 			}
 		);
 
