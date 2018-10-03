@@ -237,16 +237,21 @@ class RuleEditor extends Component {
 		const conditions = state.conditions.map(
 			condition => {
 				const fieldName = condition.operands[0].value;
+				let firstOperandOptions = [];
 				let operators = [];
 
 				if (fieldName) {
 					const type = this._getFieldTypeByFieldName(fieldName);
 
 					operators = this._getOperatorsByFieldType(type);
+
+					firstOperandOptions = this.getFieldOptions(fieldName);
 				}
 
 				return {
 					...condition,
+					binaryOperator: this._isBinary(condition.operator),
+					firstOperandOptions,
 					operators
 				};
 			}
@@ -256,6 +261,21 @@ class RuleEditor extends Component {
 			...state,
 			conditions
 		};
+	}
+
+	getFieldOptions(fieldName) {
+		let options = [];
+		const visitor = new PagesVisitor(this.pages);
+
+		visitor.mapFields(
+			field => {
+				if (field.fieldName === fieldName) {
+					options = field.options;
+				}
+			}
+		);
+
+		return options;
 	}
 
 	syncPages(pages) {
@@ -454,7 +474,7 @@ class RuleEditor extends Component {
 			metadata => {
 				return {
 					...metadata,
-					value: metadata.label
+					value: metadata.name
 				};
 			}
 		);
