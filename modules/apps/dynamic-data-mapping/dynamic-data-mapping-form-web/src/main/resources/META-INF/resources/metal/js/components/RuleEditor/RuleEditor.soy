@@ -10,16 +10,16 @@
 				label: string,
 				value: string
 			]>,
+			operands: list<[
+				type: string,
+				label: string,
+				value: string
+			]>,
 			operator: string,
 			operators: list<[
 				name: string,
 				parameterTypes: list<string>,
 				returnType: string,
-				value: string
-			]>,
-			operands: list<[
-				type: string,
-				label: string,
 				value: string
 			]>
 		]>
@@ -37,13 +37,13 @@
 		]>
 	}
 	{@param fixedOptions : list<[
-			value: string,
-			type: string,
 			name: string,
 			options: list<[
 				label: string,
 				value: string
-			]>
+			]>,
+			type: string,
+			value: string
 		]>
 	}
 	{@param logicalOperator: string}
@@ -190,16 +190,14 @@
 	{@param? _handleOperatorEdited: any}
 	{@param? _handleSecondOperandFieldEdited: any}
 	{@param? _handleSecondOperandTypeEdited: any}
-	{@param? firstOperandType: string}
-	{@param? firstOperandValueSelected: string}
 	{@param? firstOperandOptions: list<[
 		label: string,
 		value: string
 	]>}
+	{@param? firstOperandType: string}
+	{@param? firstOperandValueSelected: string}
 	{@param? fixedOptions: any}
 	{@param? logicalOperator: string}
-	{@param? selectedOperator: string}
-	{@param? secondOperandType: string}
 	{@param? operators:  list<[
 		value: string,
 		name: string,
@@ -210,8 +208,10 @@
 		label: string,
 		value: string
 	]>}
+	{@param? secondOperandType: string}
 	{@param? secondOperandFieldName: string}
 	{@param? secondOperandValue: any}
+	{@param? selectedOperator: string}
 	{@param? spritemap: string}
 
 	<li class="form-builder-rule-condition-container timeline-item" condition-index="{$index}">
@@ -358,7 +358,6 @@
 	]}
 	{@param? _handleOperatorEdited: any}
 	{@param? firstOperandType: string}
-	{@param? selectedOperator: string}
 	{@param? operators:  list<[
 			value: string,
 			name: string,
@@ -366,6 +365,7 @@
 			returnType: string
 		]>
 	}
+	{@param? selectedOperator: string}
 	{@param? spritemap: string}
 
 	{let $readOnly: $firstOperandType ? false : true /}
@@ -393,8 +393,8 @@
 		value: string
 	]}
 	{@param? _handleSecondOperandTypeEdited: any}
-	{@param? selectedOperator: any}
 	{@param? secondOperandType: string}
+	{@param? selectedOperator: any}
 	{@param? spritemap: string}
 
 	{let $options: [
@@ -435,12 +435,12 @@
 		chooseAnOption: string
 	]}
 	{@param? _handleSecondOperandFieldEdited: any}
-	{@param? selectedOperator: any}
 	{@param? roles: list<[
 			label: string,
 			value: string
 		]>
 	}
+	{@param? selectedOperator: any}
 	{@param? secondOperandValue: any }
 	{@param? spritemap: string}
 
