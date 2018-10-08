@@ -907,7 +907,8 @@ describe(
 			}
 		);
 
-		describe('LPS-86162 The filled value is being lost when re-selecting Value in the rule builder',
+		describe(
+			'LPS-86162 The filled value is being lost when re-selecting Value in the rule builder',
 			() => {
 				it(
 					'should not clear second operand value when there were no changes on second oprand type',
