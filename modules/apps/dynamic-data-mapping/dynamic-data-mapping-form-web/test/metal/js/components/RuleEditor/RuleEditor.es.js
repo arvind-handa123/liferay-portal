@@ -882,8 +882,67 @@ describe(
 describe(
 	'Regression',
 	() => {
+		afterEach(
+			() => {
+				fetch.resetMocks();
 
-		// TODO
+				component.dispose();
+			}
+		);
 
+		beforeEach(
+			() => {
+				jest.useFakeTimers();
+
+				fetch.mockResponse(
+					JSON.stringify(
+						[
+							{
+								id: 'roleA',
+								name: 'Role A'
+							}
+						]
+					)
+				);
+			}
+		);
+
+		describe('LPS-86162 The filled value is being lost when re-selecting Value in the rule builder',
+			() => {
+				it(
+					'should not clear second operand value when there were no changes on second oprand type',
+					() => {
+						component = new RuleEditor(
+							{
+								conditions: [],
+								functionsMetadata,
+								pages,
+								spritemap,
+								url
+							}
+						);
+
+						component.refs.firstOperand0.emitFieldEdited(['radio']);
+						component.refs.conditionOperator0.emitFieldEdited(['not-contains']);
+
+						jest.runAllTimers();
+
+						component.refs.secondOperandTypeSelector0.emitFieldEdited(['value']);
+
+						jest.runAllTimers();
+
+						component.refs.secondOperand0.emitFieldEdited(['123']);
+
+						jest.runAllTimers();
+
+						component.refs.secondOperandTypeSelector0.emitFieldEdited(['value']);
+
+						jest.runAllTimers();
+
+						expect(component.refs.secondOperand0.value).toEqual(['123']);
+					}
+				);
+			}
+		);
 	}
 );
