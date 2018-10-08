@@ -282,12 +282,13 @@
 										/}
 
 										{if $fieldHasOptions}
-											{delcall PageRenderer.RegisterFieldType variant="$firstOperandType"}
+											{delcall PageRenderer.RegisterFieldType variant="'select'"}
 												{param events: [
 													'fieldEdited': $_handleSecondOperandFieldEdited
 												] /}
 												{param name: $secondOperandFieldName /}
 												{param options: $firstOperandOptions /}
+												{param placeholder: $strings.chooseAnOption /}
 												{param readOnly: $readOnly /}
 												{param ref: 'secondOperand' + $index /}
 												{param spritemap: $spritemap /}
