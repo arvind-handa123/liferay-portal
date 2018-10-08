@@ -308,7 +308,7 @@ class RuleEditor extends Component {
 					conditions = this._clearAllFieldValues(index);
 				}
 
-				if (!secondOperandFieldExists && secondOperand && secondOperand.type) {
+				if (!secondOperandFieldExists && secondOperand && secondOperand.type == 'field') {
 					conditions = this._clearSecondOperandValue(conditions, index);
 				}
 			}
