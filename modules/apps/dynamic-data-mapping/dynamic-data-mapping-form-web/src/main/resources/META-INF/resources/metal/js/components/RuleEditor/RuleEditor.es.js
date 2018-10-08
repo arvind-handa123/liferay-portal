@@ -649,8 +649,13 @@ class RuleEditor extends Component {
 		let {conditions} = this;
 		const {fieldInstance, value} = event;
 		const index = this._getConditionIndex(fieldInstance, '.condition-type');
+		const secondOperand = conditions[index].operands[1];
 
-		conditions = this._clearSecondOperandValue(conditions, index);
+		if (secondOperand && secondOperand.type != value) {
+			if (secondOperand.type === 'field' || value === 'field') {
+				conditions = this._clearSecondOperandValue(conditions, index);
+			}
+		}
 
 		if (value && value.length > 0 && value[0]) {
 			let secondOperandType = 'field';
@@ -660,8 +665,8 @@ class RuleEditor extends Component {
 				secondOperandType = conditions[index].operands[0].type;
 			}
 
-			if (conditions[index].operands[1]) {
-				conditions[index].operands[1].type = secondOperandType;
+			if (secondOperand) {
+				secondOperand.type = secondOperandType;
 			}
 			else {
 				conditions[index].operands.push(
