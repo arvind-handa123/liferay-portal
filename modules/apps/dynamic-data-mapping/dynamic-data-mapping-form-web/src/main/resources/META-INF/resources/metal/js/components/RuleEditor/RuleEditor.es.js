@@ -463,10 +463,12 @@ class RuleEditor extends Component {
 		return fieldType;
 	}
 
-	_getOperatorsByFieldType(type) {
-		let fieldType = type;
+	_getOperatorsByFieldType(fieldType) {
+		if(fieldType === 'numeric') {
+			fieldType = 'number';
+		}
 
-		if (!this.functionsMetadata.hasOwnProperty(type)) {
+		if (!this.functionsMetadata.hasOwnProperty(fieldType)) {
 			fieldType = 'text';
 		}
 
