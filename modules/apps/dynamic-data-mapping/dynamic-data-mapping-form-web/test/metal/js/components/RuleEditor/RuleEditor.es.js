@@ -34,10 +34,10 @@ const functionsMetadata = {
 };
 
 describe(
-	'Rule Editor > ',
+	'Rule Editor',
 	() => {
 		describe(
-			'Acceptance Criteria > ',
+			'Acceptance Criteria',
 			() => {
 				afterEach(
 					() => {
@@ -64,7 +64,7 @@ describe(
 					}
 				);
 				describe(
-					'When a condition is added and there\'s more than one condition, there must be an option the delete the condition:',
+					'When a condition is added and there\'s more than one condition, there must be an option the delete the condition',
 					() => {
 						it(
 							'should display a confirmation modal when trying to delete a condition',
@@ -145,7 +145,7 @@ describe(
 				);
 
 				describe(
-					'The OR select must be disabled by default:',
+					'The OR select must be disabled by default',
 					() => {
 						it(
 							'should disable the "AND" or "OR" selector when there\'s only one condtion',
@@ -169,7 +169,7 @@ describe(
 				);
 
 				describe(
-					'The OR select must be activated if the are more than one condition: ',
+					'The OR select must be activated if the are more than one condition',
 					() => {
 						it(
 							'should enable the "AND" or "OR" selector when there\'s more than one condtion',
@@ -202,7 +202,7 @@ describe(
 				);
 
 				describe(
-					'Clear all fields when first operand is not selected:',
+					'Clear all fields when first operand is not selected',
 					() => {
 						it(
 							'should make operators field "read only" when first operand is not selected',
@@ -434,7 +434,7 @@ describe(
 				);
 
 				describe(
-					'should configure the conditions according to the first operand type:',
+					'should configure the conditions according to the first operand type',
 					() => {
 						it(
 							'should populate operators when the first selected operand is a field',
@@ -706,6 +706,46 @@ describe(
 										]
 									}
 								];
+
+								jest.runAllTimers();
+
+								expect(component.refs.secondOperandTypeSelector0.value).toEqual(['']);
+								expect(component.refs.secondOperand0).toBeFalsy();
+							}
+						);
+
+						it(
+							'should reset second operand type selector ("Other Field" or "Value") and hide second operand when first operand field is changed',
+							() => {
+								component = new RuleEditor(
+									{
+										conditions: [],
+										functionsMetadata,
+										pages,
+										spritemap,
+										url
+									}
+								);
+
+								component.refs.firstOperand0.emitFieldEdited(['radio']);
+								component.refs.conditionOperator0.emitFieldEdited(['not-equals-to']);
+
+								jest.runAllTimers();
+
+								component.refs.secondOperandTypeSelector0.emitFieldEdited(['field']);
+
+								jest.runAllTimers();
+
+								component.refs.secondOperand0.emitFieldEdited(['date']);
+
+
+								jest.runAllTimers();
+
+								component.refs.firstOperand0.emitFieldEdited(['date']);
+
+								jest.runAllTimers();
+
+								component.refs.conditionOperator0.emitFieldEdited(['equals-to']);
 
 								jest.runAllTimers();
 
