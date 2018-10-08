@@ -486,6 +486,10 @@ class RuleEditor extends Component {
 		const {conditions} = this;
 		const newCondition = {operands: [{type: '', value: ''}], operator: ''};
 
+		if(conditions.length == 0) {
+			conditions.push(newCondition);
+		}
+
 		conditions.push(newCondition);
 
 		this.setState(
