@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Rule Editor >  Acceptance Criteria >  When a condition is added and there's more than one condition, there must be an option the delete the condition: should display a confirmation modal when trying to delete a condition 1`] = `
+exports[`Rule Editor Acceptance Criteria When a condition is added and there's more than one condition, there must be an option the delete the condition should display a confirmation modal when trying to delete a condition 1`] = `
 <div class="form-builder-rule-builder liferay-ddm-form-builder-rule-builder-content">
   <h2 class="form-builder-section-title text-default">rule</h2>
   <h4 class="text-default">define-condition-and-action-to-change-fields-and-elements-on-the-form</h4>
@@ -165,7 +165,7 @@ exports[`Rule Editor >  Acceptance Criteria >  When a condition is added and the
 </div>
 `;
 
-exports[`Rule Editor >  Acceptance Criteria >  should configure the conditions according to the first operand type: should add a new condition to the conditions array 1`] = `
+exports[`Rule Editor Acceptance Criteria should configure the conditions according to the first operand type should add a new condition to the conditions array 1`] = `
 <div class="form-builder-rule-builder liferay-ddm-form-builder-rule-builder-content">
   <h2 class="form-builder-section-title text-default">rule</h2>
   <h4 class="text-default">define-condition-and-action-to-change-fields-and-elements-on-the-form</h4>
@@ -330,7 +330,7 @@ exports[`Rule Editor >  Acceptance Criteria >  should configure the conditions a
 </div>
 `;
 
-exports[`Rule Editor >  Acceptance Criteria >  should configure the conditions according to the first operand type: should change all logical operators when changing it via the global logical operator selector 1`] = `
+exports[`Rule Editor Acceptance Criteria should configure the conditions according to the first operand type should change all logical operators when changing it via the global logical operator selector 1`] = `
 <div class="form-builder-rule-builder liferay-ddm-form-builder-rule-builder-content">
   <h2 class="form-builder-section-title text-default">rule</h2>
   <h4 class="text-default">define-condition-and-action-to-change-fields-and-elements-on-the-form</h4>
@@ -495,7 +495,7 @@ exports[`Rule Editor >  Acceptance Criteria >  should configure the conditions a
 </div>
 `;
 
-exports[`Rule Editor >  Acceptance Criteria >  should configure the conditions according to the first operand type: should populate operators when the first selected operand is a field 1`] = `
+exports[`Rule Editor Acceptance Criteria should configure the conditions according to the first operand type should populate operators when the first selected operand is a field 1`] = `
 Array [
   Object {
     "name": "contains",
@@ -552,7 +552,7 @@ Array [
 ]
 `;
 
-exports[`Rule Editor >  Acceptance Criteria >  should configure the conditions according to the first operand type: should populate operators when the first selected operand is an user 1`] = `
+exports[`Rule Editor Acceptance Criteria should configure the conditions according to the first operand type should populate operators when the first selected operand is an user 1`] = `
 Array [
   Object {
     "name": "belongs-to",
