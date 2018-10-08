@@ -599,6 +599,64 @@ describe(
 						);
 
 						it(
+							'should not clear second operand value when pages were changed but selected field was not removed',
+							() => {
+								component = new RuleEditor(
+									{
+										conditions: [],
+										functionsMetadata,
+										pages,
+										spritemap,
+										url
+									}
+								);
+
+								component.refs.firstOperand0.emitFieldEdited(['radio']);
+
+								component.refs.conditionOperator0.emitFieldEdited(['not-contains']);
+
+								jest.runAllTimers();
+
+								component.refs.secondOperandTypeSelector0.emitFieldEdited(['value']);
+
+								jest.runAllTimers();
+
+								component.refs.secondOperand0.emitFieldEdited(['123']);
+
+								jest.runAllTimers();
+
+								component.pages = [
+									...component.pages,
+									{
+										rows: [
+											{
+												columns: [
+													{
+														fields: [
+															{
+																fieldName: 'newField',
+																label: 'New Field',
+																type: 'text'
+															}
+														]
+													}
+												]
+											}
+										]
+									}
+								];
+
+								jest.runAllTimers();
+
+								expect(component.refs.firstOperand0.value).toEqual(['radio']);
+
+								expect(component.refs.secondOperandTypeSelector0.value).toEqual(['value']);
+
+								expect(component.refs.secondOperand0.value).toEqual(['123']);
+							}
+						);
+
+						it(
 							'should not display second operand type selector ("Other Field" or "Value") when operator is empty',
 							() => {
 								component = new RuleEditor(
