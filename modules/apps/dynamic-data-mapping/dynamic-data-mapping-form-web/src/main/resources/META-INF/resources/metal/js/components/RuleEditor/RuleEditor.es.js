@@ -535,6 +535,8 @@ class RuleEditor extends Component {
 				}
 
 				conditions[index].operands[0] = firstOperand;
+
+				this._clearSecondOperandValue(conditions, index);
 			}
 		}
 		else {
