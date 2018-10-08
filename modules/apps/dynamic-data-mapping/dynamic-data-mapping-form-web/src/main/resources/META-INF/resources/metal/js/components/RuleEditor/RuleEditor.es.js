@@ -464,7 +464,7 @@ class RuleEditor extends Component {
 	}
 
 	_getOperatorsByFieldType(fieldType) {
-		if(fieldType === 'numeric') {
+		if (fieldType === 'numeric') {
 			fieldType = 'number';
 		}
 
@@ -486,7 +486,7 @@ class RuleEditor extends Component {
 		const {conditions} = this;
 		const newCondition = {operands: [{type: '', value: ''}], operator: ''};
 
-		if(conditions.length == 0) {
+		if (conditions.length == 0) {
 			conditions.push(newCondition);
 		}
 

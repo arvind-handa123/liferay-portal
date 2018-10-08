@@ -738,7 +738,6 @@ describe(
 
 								component.refs.secondOperand0.emitFieldEdited(['date']);
 
-
 								jest.runAllTimers();
 
 								component.refs.firstOperand0.emitFieldEdited(['date']);
@@ -820,11 +819,13 @@ describe(
 			}
 		);
 	}
-)
+);
 
 describe(
 	'Regression',
 	() => {
-		//TODO
+
+		// TODO
+
 	}
 );
