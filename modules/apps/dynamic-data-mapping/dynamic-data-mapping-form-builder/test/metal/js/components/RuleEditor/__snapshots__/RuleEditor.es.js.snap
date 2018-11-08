@@ -117,7 +117,7 @@ exports[`Rule Editor Acceptance Criteria When a condition is added and there's m
               </div>
             </div>
             <div class="form-group-item form-group-item-label form-group-item-shrink hide target-message-0">
-              <h4><span class="text-truncate-inline"><span class="text-truncate">from-data-provider</span></span></h4>
+              <h4><span class="text-truncate-inline"></span></h4>
             </div>
           </div>
           <div class="timeline-increment"><span class="timeline-icon"></span></div>
@@ -307,7 +307,7 @@ exports[`Rule Editor Acceptance Criteria should configure the conditions accordi
               </div>
             </div>
             <div class="form-group-item form-group-item-label form-group-item-shrink hide target-message-0">
-              <h4><span class="text-truncate-inline"><span class="text-truncate">from-data-provider</span></span></h4>
+              <h4><span class="text-truncate-inline"></span></h4>
             </div>
           </div>
           <div class="timeline-increment"><span class="timeline-icon"></span></div>
@@ -497,7 +497,7 @@ exports[`Rule Editor Acceptance Criteria should configure the conditions accordi
               </div>
             </div>
             <div class="form-group-item form-group-item-label form-group-item-shrink hide target-message-0">
-              <h4><span class="text-truncate-inline"><span class="text-truncate">from-data-provider</span></span></h4>
+              <h4><span class="text-truncate-inline"></span></h4>
             </div>
           </div>
           <div class="timeline-increment"><span class="timeline-icon"></span></div>
