@@ -205,7 +205,7 @@
 					overflow: inherit;
 					padding: 0;
 
-					li.calculator-button, li.calculator-add-operator-button-area {
+					li.calculator-button, .calculator-add-operator-button-area {
 						align-items: center;
 						cursor: pointer;
 						display: flex;
@@ -216,7 +216,7 @@
 						width: 49px;
 					}
 
-					li.calculator-add-operator-button-area {
+					.calculator-add-operator-button-area {
 						.calculator-add-operator-button {
 							height: 50px;
 							position: absolute;
