@@ -6,6 +6,16 @@
 {template .render}
 	{@param actions: list<[
 			action: string,
+			calculatorFields: list<[
+				label: string,
+				name: string,
+				options: list<[
+					label: string,
+					value: string
+				]>,
+				type: string,
+				value: string
+			]>,
 			expression: string,
 			hasRequiredInputs: bool,
 			inputs: list<[
@@ -47,6 +57,12 @@
 	{@param actionTypes: list<[
 			value: string,
 			name: string
+		]>
+	}
+	{@param calculatorOptions: list<[
+			label: string,
+			tooltip: string,
+			value: string
 		]>
 	}
 	{@param conditions: list<[
@@ -188,6 +204,8 @@
 					{param actionOutputs: $action.outputs /}
 					{param actionSelected: $action.action /}
 					{param actionTypes: $actionTypes /}
+					{param calculatorOptions: $calculatorOptions /}
+					{param calculatorFields: $action.calculatorFields /}
 					{param dataProvider: $dataProvider /}
 					{param fieldOptions: $fieldOptions /}
 					{param hasRequiredInputs: $action.hasRequiredInputs /}
@@ -264,6 +282,22 @@
 			name: string
 		]>
 	}
+	{@param calculatorFields: list<[
+		label: string,
+		name: string,
+		options: list<[
+			label: string,
+			value: string
+		]>,
+		type: string,
+		value: string
+	]>}
+	{@param calculatorOptions: list<[
+			label: string,
+			tooltip: string,
+			value: string
+		]>
+	}
 	{@param fieldOptions : list<[
 			label: string,
 			name: string,
@@ -278,6 +312,7 @@
 	{@param index: int}
 	{@param spritemap: string}
 	{@param strings: [
+		addField: string,
 		chooseAnOption: string,
 		dataProviderParameterInput: string,
 		dataProviderParameterInputDescription: string,
@@ -285,7 +320,9 @@
 		dataProviderParameterOutputDescription: string,
 		do: string,
 		fromDataProvider: string,
-		requiredField: string
+		requiredField: string,
+		showTheResult: string,
+		theExpressionWillBeDisplayedHere: string
 	]}
 	{@param? _handleActionSelection: any}
 	{@param? _handleDataProviderInputEdited: any}
@@ -362,28 +399,47 @@
 
 					{let $showTargetDefault: $actionSelected and (($actionSelected == 'show') or ($actionSelected == 'enable') or ($actionSelected == 'require')) /}
 					{let $showTargetAutofill: $actionSelected and ($actionSelected == 'autofill') /}
+					{let $showTargetCalculator: $actionSelected and ($actionSelected == 'calculate') /}
+					{let $showLabel: $showTargetAutofill or $showTargetCalculator /}
 
-					<div class="form-group-item form-group-item-label form-group-item-shrink {if not $showTargetAutofill}hide{/if} target-message-{$index}">
+					<div class="form-group-item form-group-item-label form-group-item-shrink {if not $showLabel}hide{/if} target-message-{$index}">
 						<h4>
 							<span class="text-truncate-inline">
-								<span class="text-truncate">{$strings.fromDataProvider}</span>
+								{if $showTargetAutofill}
+									<span class="text-truncate">{$strings.fromDataProvider}</span>
+								{elseif $showTargetCalculator}
+									<span class="text-truncate">{$strings.showTheResult}</span>
+								{/if}
 							</span>
 						</h4>
 					</div>
-					{if $showTargetDefault or $showTargetAutofill}
-						{let $options: ($showTargetAutofill) ? $dataProvider : ($showTargetDefault ? $fieldOptions : []) /}
+					{if $showTargetDefault or $showTargetAutofill or $showTargetCalculator}
+						{let $options: ($showTargetAutofill) ? $dataProvider : ($showTargetDefault or $showTargetCalculator ? $fieldOptions : []) /}
+						{let $ref: $showTargetCalculator ? 'calculatorResult' : 'actionTarget' /}
 
 						{call .renderActionTarget}
 							{param _handleTargetSelection: $_handleTargetSelection /}
 							{param index: $index /}
 							{param options: $options /}
 							{param placeholder: $strings.chooseAnOption /}
-							{param ref: 'actionTarget' + $index/}
+							{param ref: $ref + $index/}
 							{param spritemap: $spritemap /}
 							{param value: $targetSelected /}
 						{/call}
 					{/if}
 				</div>
+
+				{if $showTargetCalculator and $targetSelected}
+					{call Calculator.render}
+						{param index: $index /}
+						{param calculatorOptions: $calculatorOptions /}
+						{param options: $calculatorFields /}
+						{param optionsRepeatable: [] /}
+						{param resultSelected: $targetSelected /}
+						{param spritemap: $spritemap /}
+						{param strings: $strings /}
+					{/call}
+				{/if}
 
 				{if $showTargetAutofill and $targetSelected}
 					<div class="action-rule-data-provider row">
