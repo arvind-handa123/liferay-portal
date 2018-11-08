@@ -2,6 +2,7 @@ import 'clay-button';
 import 'clay-modal';
 import {Config} from 'metal-state';
 import {PagesVisitor} from '../../util/visitors.es';
+import '../Calculator/Calculator.es';
 import Component from 'metal-component';
 import Soy from 'metal-soy';
 import templates from './RuleEditor.soy.js';
@@ -36,6 +37,7 @@ class RuleEditor extends Component {
 			Config.shapeOf(
 				{
 					action: Config.string(),
+					calculatorFields: Config.arrayOf(fieldOptionStructure),
 					expression: Config.string(),
 					hasRequiredInputs: Config.bool(),
 					inputs: Config.arrayOf(
@@ -90,6 +92,10 @@ class RuleEditor extends Component {
 				{
 					label: 'Autofill',
 					value: 'autofill'
+				},
+				{
+					label: 'Calculate',
+					value: 'calculate'
 				}
 			]
 		),
@@ -115,19 +121,15 @@ class RuleEditor extends Component {
 
 		activeConditionIndex: Config.number().value(-1),
 
-		dataProvider: Config.arrayOf(
+		calculatorOptions: Config.arrayOf(
 			Config.shapeOf(
 				{
-					id: Config.string(),
-					name: Config.string(),
-					uuid: Config.string()
+					label: Config.string(),
+					tooltip: Config.string(),
+					value: Config.string()
 				}
 			)
-		).internal(),
-
-		dataProviderInstanceParameterSettingsURL: Config.string().required(),
-
-		dataProviderInstancesURL: Config.string().required(),
+		).internal().value([]),
 
 		/**
 		 * @default 0
@@ -153,6 +155,22 @@ class RuleEditor extends Component {
 				}
 			)
 		).internal().setter('_setConditions').value([]),
+
+		dataProvider: Config.arrayOf(
+			Config.shapeOf(
+				{
+					id: Config.string(),
+					name: Config.string(),
+					uuid: Config.string()
+				}
+			)
+		).internal(),
+
+		dataProviderInstanceParameterSettingsURL: Config.string().required(),
+
+		dataProviderInstancesURL: Config.string().required(),
+
+		functionsURL: Config.string(),
 
 		fieldOptions: Config.arrayOf(
 			Config.shapeOf(
@@ -277,6 +295,7 @@ class RuleEditor extends Component {
 		strings: {
 			value: {
 				actions: Liferay.Language.get('actions'),
+				addField: Liferay.Language.get('add-field'),
 				and: Liferay.Language.get('and'),
 				autofill: Liferay.Language.get('autofill'),
 				calculate: Liferay.Language.get('calculate'),
@@ -305,7 +324,9 @@ class RuleEditor extends Component {
 				requiredField: Liferay.Language.get('required-field'),
 				save: Liferay.Language.get('save'),
 				show: Liferay.Language.get('show'),
+				showTheResult: Liferay.Language.get('choose-a-field-to-show-the-result'),
 				the: Liferay.Language.get('the'),
+				theExpressionWillBeDisplayedHere: Liferay.Language.get('the-expression-will-be-displayed-here'),
 				title: Liferay.Language.get('rule'),
 				user: Liferay.Language.get('user'),
 				value: Liferay.Language.get('value')
@@ -316,6 +337,7 @@ class RuleEditor extends Component {
 	created() {
 		this._fetchDataProvider();
 		this._fetchRoles();
+		this._fetchFunctionsURL();
 	}
 
 	prepareStateForRender(state) {
@@ -385,6 +407,8 @@ class RuleEditor extends Component {
 
 	syncPages(pages) {
 		let {conditions} = this;
+		const {actions} = this;
+
 		const visitor = new PagesVisitor(pages);
 
 		conditions.forEach(
@@ -419,8 +443,17 @@ class RuleEditor extends Component {
 			}
 		);
 
+		actions.forEach(
+			(action, index) => {
+				const target = action.target;
+
+				this._updateCalculatorFields(index, target);
+			}
+		);
+
 		this.setState(
 			{
+				actions,
 				conditions,
 				fieldOptions: this._fieldOptionsValueFn()
 			}
@@ -567,6 +600,32 @@ class RuleEditor extends Component {
 		);
 	}
 
+	_fetchFunctionsURL() {
+		const {functionsURL} = this;
+
+		makeFetch(
+			{
+				method: 'GET',
+				url: functionsURL
+			}
+		).then(
+			responseData => {
+				if (!this.isDisposed()) {
+
+					this.setState(
+						{
+							calculatorOptions: responseData
+						}
+					);
+				}
+			}
+		).catch(
+			error => {
+				console.log(error);
+			}
+		);
+	}
+
 	_fetchRoles() {
 		const {rolesURL} = this;
 
@@ -668,9 +727,7 @@ class RuleEditor extends Component {
 
 	_handleActionAdded() {
 		const {actions} = this;
-		const newAction = {action: '',
-			label: '',
-			target: ''};
+		const newAction = {action: '', calculatorFields: [], label: '', target: ''};
 
 		if (actions.length == 0) {
 			actions.push(newAction);
@@ -1005,12 +1062,6 @@ class RuleEditor extends Component {
 			actions[index].inputs = [];
 			actions[index].outputs = [];
 			actions[index].hasRequiredInputs = false;
-
-			this.setState(
-				{
-					actions
-				}
-			);
 		}
 		else if (previousTarget !== id) {
 			if (this.actions[index].action == 'autofill') {
@@ -1034,7 +1085,28 @@ class RuleEditor extends Component {
 						}
 					);
 			}
+			else if (this.actions[index].action == 'calculate') {
+				this._updateCalculatorFields(index, id);
+			}
 		}
+
+		this.setState(
+			{
+				actions
+			}
+		);
+	}
+
+	_updateCalculatorFields(index, id) {
+		const {actions} = this;
+
+		actions[index].calculatorFields = this.fieldOptions.filter(
+			option => {
+				option.title = option.fieldName;
+				option.type = 'dropdownCalculator';
+				return option.fieldName !== id;
+			}
+		);
 	}
 
 	formatDataProviderParameter(parameters) {
@@ -1074,6 +1146,7 @@ class RuleEditor extends Component {
 			actions.push(
 				{
 					action: '',
+					calculatorFields: [],
 					expression: '',
 					hasRequiredInputs: false,
 					inputs: [],
