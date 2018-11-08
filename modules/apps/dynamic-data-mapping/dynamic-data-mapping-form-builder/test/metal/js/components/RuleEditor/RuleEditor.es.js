@@ -70,6 +70,8 @@ const functionsMetadata = {
 	]
 };
 
+const functionsURL = '/o/dynamic-data-mapping-form-builder-functions/';
+
 const pages = [...mockPages];
 
 const spritemap = 'icons.svg';
@@ -81,6 +83,7 @@ const getBaseConfig = () => ({
 	dataProviderInstanceParameterSettingsURL,
 	dataProviderInstancesURL,
 	functionsMetadata,
+	functionsURL,
 	pages,
 	rolesURL,
 	spritemap
@@ -900,6 +903,26 @@ describe(
 								component.refs.action0.emitFieldEdited(['show']);
 
 								expect(component.refs.actionTarget0.value).toEqual(['date']);
+							}
+						);
+
+						it(
+							'should show Result field when the action Calculate is selected',
+							() => {
+								component = new RuleEditor(
+									{
+										...getBaseConfig()
+									}
+								);
+
+								component.refs.action0.emitFieldEdited(['calculate']);
+
+								jest.runAllTimers();
+
+								const resultField = !!component.refs.calculatorResult0;
+
+								expect(resultField).toBe(true);
+
 							}
 						);
 
