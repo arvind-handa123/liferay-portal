@@ -51,6 +51,8 @@ class RuleBuilder extends Component {
 			}
 		),
 
+		functionsURL: Config.string().required(),
+
 		pages: Config.array().required(),
 
 		rolesURL: Config.string().required(),
@@ -225,15 +227,33 @@ class RuleBuilder extends Component {
 	 */
 
 	render() {
-		const {pages, rules, spritemap} = this.props;
+		const {
+			dataProviderInstanceParameterSettingsURL,
+			dataProviderInstancesURL,
+			functionsMetadata,
+			functionsURL,
+			pages,
+			rolesURL,
+			rules,
+			spritemap
+		} = this.props;
 
 		return (
 			<div class="container">
 				{this.state.mode === 'create' && (
-					<RuleEditor dataProviderInstanceParameterSettingsURL={this.props.dataProviderInstanceParameterSettingsURL} dataProviderInstancesURL={this.props.dataProviderInstancesURL} functionsMetadata={this.props.functionsMetadata} key={'create'} pages={pages} rolesURL={this.props.rolesURL} spritemap={spritemap} />
+					<RuleEditor
+						dataProviderInstanceParameterSettingsURL={dataProviderInstanceParameterSettingsURL}
+						dataProviderInstancesURL={dataProviderInstancesURL}
+						functionsMetadata={functionsMetadata}
+						functionsURL={functionsURL}
+						key={'create'}
+						pages={pages}
+						rolesURL={rolesURL}
+						spritemap={spritemap}
+					/>
 				)}
 				{this.state.mode === 'edit' && (
-					<RuleEditor key={'edit'} pages={pages} rules={rules} spritemap={spritemap} />
+					<RuleEditor functionsURL={functionsURL} key={'edit'} pages={pages} rules={rules} spritemap={spritemap} />
 				)}
 				{this.state.mode === 'view' && (
 					<RuleList pages={pages} rules={rules} spritemap={spritemap} />

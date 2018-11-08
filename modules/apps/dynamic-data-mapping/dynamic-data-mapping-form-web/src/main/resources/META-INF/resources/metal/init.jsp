@@ -20,6 +20,7 @@
 String dataProviderInstanceParameterSettingsURL = ddmFormAdminDisplayContext.getDataProviderInstanceParameterSettingsURL();
 String dataProviderInstancesURL = ddmFormAdminDisplayContext.getDataProviderInstancesURL();
 String functionsMetadata = ddmFormAdminDisplayContext.getFunctionsMetadata();
+String functionsURL = ddmFormAdminDisplayContext.getFunctionsURL();
 String mainRequire = ddmFormAdminDisplayContext.getMainRequire();
 String rolesURL = ddmFormAdminDisplayContext.getRolesURL();
 String serializedDDMFormRules = ddmFormAdminDisplayContext.getSerializedDDMFormRules();

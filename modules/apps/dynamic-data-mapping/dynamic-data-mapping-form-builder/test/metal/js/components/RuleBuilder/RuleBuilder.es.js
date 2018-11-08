@@ -8,6 +8,7 @@ let component;
 const baseConfig = {
 	dataProviderInstanceParameterSettingsURL: '/o/dynamic-data-mapping-form-builder-data-provider-instances/',
 	dataProviderInstancesURL: '/o/data-provider/',
+	functionsURL: '/o/dynamic-data-mapping-form-builder-functions/',
 	mode: 'view',
 	pages: [
 		{

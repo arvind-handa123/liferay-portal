@@ -214,6 +214,7 @@ if (!isFormPublished && isFormSaved) {
 							fieldTypes: <%= ddmFormAdminDisplayContext.getDDMFormFieldTypesJSONArray() %>,
 							formInstanceId: '<%= formInstanceId %>',
 							functionsMetadata: <%= functionsMetadata %>,
+							functionsURL: '<%= functionsURL %>',
 							localizedDescription: <%= ddmFormAdminDisplayContext.getFormLocalizedDescription() %>,
 							localizedName: <%= ddmFormAdminDisplayContext.getFormLocalizedName() %>,
 							modules: Liferay.MODULES,
@@ -238,28 +239,28 @@ if (!isFormPublished && isFormSaved) {
 	};
 
 	var clearPortletHandlers = function(event) {
-			if (event.portletId === '<%= portletDisplay.getRootPortletId() %>') {
-				Liferay.Forms.App.dispose();
+		if (event.portletId === '<%= portletDisplay.getRootPortletId() %>') {
+			Liferay.Forms.App.dispose();
 
-				var translationManager = Liferay.component('<portlet:namespace />translationManager');
+			var translationManager = Liferay.component('<portlet:namespace />translationManager');
 
-				Liferay.destroyComponents(
-					function(component) {
-						var destroy = false;
+			Liferay.destroyComponents(
+				function(component) {
+					var destroy = false;
 
-						if (component === translationManager) {
-							destroy = true;
-						}
-
-						return destroy;
+					if (component === translationManager) {
+						destroy = true;
 					}
-				);
 
-				Liferay.detach('destroyPortlet', clearPortletHandlers);
-			}
-		};
+					return destroy;
+				}
+			);
 
-		Liferay.on('destroyPortlet', clearPortletHandlers);
+			Liferay.detach('destroyPortlet', clearPortletHandlers);
+		}
+	};
+
+	Liferay.on('destroyPortlet', clearPortletHandlers);
 
 	Liferay.Forms.App.start();
 </aui:script>

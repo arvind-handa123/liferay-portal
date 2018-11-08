@@ -596,6 +596,13 @@ public class DDMFormAdminDisplayContext {
 		return ddmFormBuilderSettingsResponse.getFunctionsMetadata();
 	}
 
+	public String getFunctionsURL() throws PortalException {
+		DDMFormBuilderSettingsResponse ddmFormBuilderSettingsResponse =
+			getDDMFormBuilderSettingsResponse();
+
+		return ddmFormBuilderSettingsResponse.getFunctionsURL();
+	}
+
 	public JSONFactory getJSONFactory() {
 		return _jsonFactory;
 	}

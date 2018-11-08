@@ -112,6 +112,16 @@ class Form extends Component {
 		functionsMetadata: Config.object().value({}),
 
 		/**
+		 * A map with all translated values available as the form name.
+		 * @default undefined
+		 * @instance
+		 * @memberof Form
+		 * @type {!array}
+		 */
+
+		functionsURL: Config.string().required(),
+
+		/**
 		 * The context for rendering a layout that represents a form.
 		 * @default undefined
 		 * @instance
@@ -513,6 +523,7 @@ class Form extends Component {
 					<RuleBuilder
 						dataProviderInstancesURL={this.props.dataProviderInstancesURL}
 						functionsMetadata={this.props.functionsMetadata}
+						functionsURL={this.props.functionsURL}
 						pages={context.pages}
 						rolesURL={this.props.rolesURL}
 						rules={this.props.rules}
