@@ -927,6 +927,35 @@ describe(
 						);
 
 						it(
+							'should show Result field when the action Calculate is selected',
+							() => {
+								component = new RuleEditor(
+									{
+										...getBaseConfig()
+									}
+								);
+
+								component.refs.action0.emitFieldEdited(['calculate']);
+
+								jest.runAllTimers();
+
+								let resultField = !!component.refs.calculatorResult0;
+
+								expect(resultField).toBe(true);
+
+								component.refs.action0.emitFieldEdited(['show']);
+
+								jest.runAllTimers();
+
+								jest.runAllTimers();
+
+								resultField = !!component.refs.calculatorResult0;
+
+								expect(resultField).toBe(false);
+							}
+						);
+
+						it(
 							'should refresh the target when the user changes any of the options of the first action select between (Show, Enable or Required)',
 							() => {
 								component = new RuleEditor(
