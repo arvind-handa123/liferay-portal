@@ -7,8 +7,8 @@
 	{@param calculatorOptions: list<?>}
 	{@param? disableCalculatorField: bool}
 	{@param strings: [
-		addField: string,
-		theExpressionWillBeDisplayedHere: string
+			addField: string,
+			theExpressionWillBeDisplayedHere: string
 		]
 	}
 	{@param spritemap: string}
@@ -29,7 +29,7 @@
 							{param elementClasses: 'calculator-add-field-button-container' /}
 							{param items: $optionsList /}
 							{param label: $strings.addField /}
-							{param ref: 'calculatorButton' + $index /}
+							{param ref: 'calculatorAddField' + $index /}
 							{param spritemap: $spritemap /}
 							{param style: 'primary' /}
 							{param triggerClasses: 'btn-lg calculator-add-field-button ddm-button' /}
@@ -62,7 +62,7 @@
 
 							<ul class="calculator-buttons calculator-buttons-operators">
 								{let $disableCalculatorOptions:  $disableCalculatorField ? true : false /}
-								<li>
+								<li data-calculator-key="...">
 									{call ClayActionsDropdown.render}
 										{param events: [
 											'itemClicked': $_handleItemSelection
@@ -70,6 +70,7 @@
 										{param elementClasses: 'dropdown-action' /}
 										{param disabled: $disableCalculatorOptions /}
 										{param items: $calculatorOptions /}
+										{param ref: 'calculatorOptions' + $index /}
 										{param spritemap: $spritemap /}
 										{param style: 'secondary' /}
 										{param triggerClasses: 'dropdown-toggle calculator-add-operator-button-area' /}
@@ -134,7 +135,7 @@
 		data-onclick="{$_handleItemClick}"
 	{/let}
 
-	<li {$itemAttributes}>
+	<li {$itemAttributes} data-option-value='{$title}'>
 		{$item}
 	</li>
 

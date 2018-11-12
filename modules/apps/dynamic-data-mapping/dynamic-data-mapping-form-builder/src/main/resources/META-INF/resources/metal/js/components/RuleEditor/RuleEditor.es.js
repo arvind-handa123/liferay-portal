@@ -444,11 +444,10 @@ class RuleEditor extends Component {
 		);
 
 		actions.forEach(
-			(action, index) => {
-				const target = action.target;
-
-				this._updateCalculatorFields(index, target);
-			}
+			(action, index) =>
+				(
+					({target}, index) => this._updateCalculatorFields(index, target)
+				)
 		);
 
 		this.setState(
@@ -565,7 +564,7 @@ class RuleEditor extends Component {
 			}
 		).catch(
 			error => {
-				console.log(error);
+				throw new Error(error);
 			}
 		);
 	}
@@ -595,7 +594,7 @@ class RuleEditor extends Component {
 			}
 		).catch(
 			error => {
-				console.log(error);
+				throw new Error(error);
 			}
 		);
 	}
@@ -621,7 +620,7 @@ class RuleEditor extends Component {
 			}
 		).catch(
 			error => {
-				console.log(error);
+				throw new Error(error);
 			}
 		);
 	}
@@ -654,7 +653,7 @@ class RuleEditor extends Component {
 			}
 		).catch(
 			error => {
-				console.log(error);
+				throw new Error(error);
 			}
 		);
 	}
@@ -1098,14 +1097,20 @@ class RuleEditor extends Component {
 	}
 
 	_updateCalculatorFields(index, id) {
-		const {actions} = this;
+		const {actions, fieldOptions} = this;
 
-		actions[index].calculatorFields = this.fieldOptions.filter(
-			option => {
-				option.title = option.fieldName;
-				option.type = 'dropdownCalculator';
-				return option.fieldName !== id;
-			}
+		actions[index].calculatorFields = fieldOptions.reduce(
+			(prev, option) => {
+				return option.fieldName === id ? prev : [
+					...prev,
+					{
+						...option,
+						title: option.fieldName,
+						type: 'dropdownCalculator'
+					}
+				];
+			},
+			[]
 		);
 	}
 

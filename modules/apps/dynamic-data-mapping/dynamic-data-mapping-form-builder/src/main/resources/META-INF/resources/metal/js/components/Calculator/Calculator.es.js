@@ -22,7 +22,7 @@ class Calculator extends Component {
 			)
 		).value([]),
 
-		disableCalculatorField: Config.bool().value(false),
+		disableCalculatorField: Config.bool().internal().value(false),
 
 		expression: Config.string().value(''),
 
@@ -70,7 +70,7 @@ class Calculator extends Component {
 					value: Config.string()
 				}
 			)
-		).value([]),
+		).internal().value([]),
 
 		strings: {
 			value: {
@@ -108,57 +108,69 @@ class Calculator extends Component {
 		}
 	}
 
-	_resetExpression() {
-		let {expression, expressionArray} = this;
-
-		expression = '';
-		expressionArray = [];
-
-		this.setState(
-			{
-				expression,
-				expressionArray
-			}
-		);
-	}
-
 	_formatExpression(expressionArray, expression) {
 		const regexRepeatableArithSigns = /[\+\-\*/]{2,}/;
 		const regexRepeatableDotSign = /[\.]{2,}/;
 
 		if (expression.match(regexRepeatableArithSigns) || expression.match(regexRepeatableDotSign)) {
-			const lastChar = expressionArray.pop();
-
-			expressionArray.pop();
-			expressionArray.push(lastChar);
+			expressionArray.splice(expressionArray.length - 2, 2, expressionArray[expressionArray.length - 1]);
 		}
 
 		return expressionArray;
 	}
 
-	_setFieldsRepeatable() {
-		const {options} = this;
+	_addItemIntoExpression(calculatorOperationFieldSelected, calculatorSymbol, dropdownItemWasSelected, dropdownItemName) {
+		let {disableCalculatorField, expressionArray} = this;
 
-		let {optionsRepeatable} = this;
+		if (dropdownItemWasSelected) {
+			if (calculatorOperationFieldSelected) {
+				this._setFieldsRepeatable();
 
-		optionsRepeatable = options.filter(
-			option => {
-				return option.repeatable == true;
+				disableCalculatorField = true;
+
+				expressionArray.push(`${dropdownItemName}(`);
 			}
-		);
+			else if (disableCalculatorField) {
+				expressionArray.push(`${dropdownItemName})`);
+
+				disableCalculatorField = false;
+			}
+			else {
+				expressionArray.push(dropdownItemName);
+			}
+		}
+		else if (calculatorSymbol == 'backspace') {
+			expressionArray.pop();
+
+			const lastElement = expressionArray[expressionArray.length - 1];
+
+			if (lastElement && lastElement.indexOf('(') > 0) {
+				disableCalculatorField = true;
+			}
+			else {
+				disableCalculatorField = false;
+			}
+		}
+		else if (calculatorSymbol) {
+			expressionArray.push(calculatorSymbol);
+		}
+
+		expressionArray = this._formatExpression(expressionArray, expressionArray.join(''));
 
 		this.setState(
 			{
-				optionsRepeatable
+				disableCalculatorField
 			}
 		);
+
+		return expressionArray;
 	}
 
 	_handleItemSelection(event) {
-		let {disableCalculatorField, expressionArray} = this;
-		let calculatorOperationFieldSelected = false;
+		let calculatorOperationFieldSelected;
 		let calculatorSymbol = '';
 		let dropdownItemName = '';
+		let expressionArray = [];
 
 		const keyWasClicked = event.target.dataset;
 
@@ -176,51 +188,42 @@ class Calculator extends Component {
 			calculatorSymbol = event.target.dataset.calculatorKey;
 		}
 
-		if (expressionArray) {
-
-			if (dropdownItemWasSelected) {
-				if (calculatorOperationFieldSelected) {
-					this._setFieldsRepeatable();
-
-					disableCalculatorField = true;
-
-					expressionArray.push(`${dropdownItemName}(`);
-				}
-				else if (disableCalculatorField) {
-					expressionArray.push(`${dropdownItemName})`);
-
-					disableCalculatorField = false;
-				}
-				else {
-					expressionArray.push(dropdownItemName);
-				}
-			}
-			else if (calculatorSymbol == 'backspace') {
-				expressionArray.pop();
-
-				const lastElement = expressionArray[expressionArray.length - 1];
-
-				if (lastElement && lastElement.indexOf('(') > 0) {
-					disableCalculatorField = true;
-				}
-				else {
-					disableCalculatorField = false;
-				}
-			}
-			else if (calculatorSymbol) {
-				expressionArray.push(calculatorSymbol);
-			}
-		}
-
-		if (expressionArray) {
-			expressionArray = this._formatExpression(expressionArray, expressionArray.join(''));
-		}
+		expressionArray = this._addItemIntoExpression(calculatorOperationFieldSelected, calculatorSymbol, dropdownItemWasSelected, dropdownItemName);
 
 		this.setState(
 			{
-				disableCalculatorField,
 				expression: expressionArray.join(''),
 				expressionArray
+			}
+		);
+	}
+
+	_resetExpression() {
+		let {expression, expressionArray} = this;
+
+		expression = '';
+		expressionArray = [];
+
+		this.setState(
+			{
+				expression,
+				expressionArray
+			}
+		);
+	}
+
+	_setFieldsRepeatable() {
+		const {options} = this;
+
+		let {optionsRepeatable} = this;
+
+		optionsRepeatable = options.filter(
+			({repeatable}) => repeatable === true
+		);
+
+		this.setState(
+			{
+				optionsRepeatable
 			}
 		);
 	}
