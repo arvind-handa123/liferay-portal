@@ -84,39 +84,12 @@ class Calculator extends Component {
 	}
 
 	willReceiveState(changes) {
-		let {expression, expressionArray} = this;
-
 		if (changes.hasOwnProperty('resultSelected')) {
 			this._resetExpression();
 		}
 		else if (changes.hasOwnProperty('options')) {
-			if (changes.expression) {
-				expression = changes.expression.prevVal;
-			}
-			else {
-				expression = '';
-			}
-
-			expressionArray = changes.expressionArray.prevVal;
-
-			this.setState(
-				{
-					expression,
-					expressionArray
-				}
-			);
+			this._keepLatestExpression(changes);
 		}
-	}
-
-	_formatExpression(expressionArray, expression) {
-		const regexRepeatableArithSigns = /[\+\-\*/]{2,}/;
-		const regexRepeatableDotSign = /[\.]{2,}/;
-
-		if (expression.match(regexRepeatableArithSigns) || expression.match(regexRepeatableDotSign)) {
-			expressionArray.splice(expressionArray.length - 2, 2, expressionArray[expressionArray.length - 1]);
-		}
-
-		return expressionArray;
 	}
 
 	_addItemIntoExpression(calculatorOperationFieldSelected, calculatorSymbol, dropdownItemWasSelected, dropdownItemName) {
@@ -166,6 +139,17 @@ class Calculator extends Component {
 		return expressionArray;
 	}
 
+	_formatExpression(expressionArray, expression) {
+		const regexRepeatableArithSigns = /[\+\-\*/]{2,}/;
+		const regexRepeatableDotSign = /[\.]{2,}/;
+
+		if (expression.match(regexRepeatableArithSigns) || expression.match(regexRepeatableDotSign)) {
+			expressionArray.splice(expressionArray.length - 2, 2, expressionArray[expressionArray.length - 1]);
+		}
+
+		return expressionArray;
+	}
+
 	_handleItemSelection(event) {
 		let calculatorOperationFieldSelected;
 		let calculatorSymbol = '';
@@ -193,6 +177,26 @@ class Calculator extends Component {
 		this.setState(
 			{
 				expression: expressionArray.join(''),
+				expressionArray
+			}
+		);
+	}
+
+	_keepLatestExpression(changes) {
+		let {expression, expressionArray} = this;
+
+		if (changes.expression) {
+			expression = changes.expression.prevVal;
+		}
+		else {
+			expression = '';
+		}
+
+		expressionArray = changes.expressionArray.prevVal;
+
+		this.setState(
+			{
+				expression,
 				expressionArray
 			}
 		);
