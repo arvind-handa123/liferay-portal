@@ -22,6 +22,14 @@ class Calculator extends Component {
 			)
 		).value([]),
 
+		deletedFields: Config.arrayOf(
+			Config.shapeOf(
+				{
+					fieldName: Config.string()
+				}
+			)
+		),
+
 		disableCalculatorField: Config.bool().internal().value(false),
 
 		expression: Config.string().value(''),
@@ -183,20 +191,18 @@ class Calculator extends Component {
 	}
 
 	_keepLatestExpression(changes) {
-		let {expression, expressionArray} = this;
-
-		if (changes.expression) {
-			expression = changes.expression.prevVal;
-		}
-		else {
-			expression = '';
-		}
+		const {deletedFields} = this;
+		let {expressionArray} = this;
 
 		expressionArray = changes.expressionArray.prevVal;
 
+		if (deletedFields) {
+			expressionArray = this._updateExpression(expressionArray);
+		}
+
 		this.setState(
 			{
-				expression,
+				expression: expressionArray.join(''),
 				expressionArray
 			}
 		);
@@ -230,6 +236,22 @@ class Calculator extends Component {
 				optionsRepeatable
 			}
 		);
+	}
+
+	_updateExpression(expressionArray) {
+		const {deletedFields} = this;
+
+		deletedFields.forEach(
+			field => {
+				const index = expressionArray.indexOf(field);
+
+				if (index != -1) {
+					expressionArray.splice(index, 1);
+				}
+			}
+		);
+
+		return expressionArray;
 	}
 }
 

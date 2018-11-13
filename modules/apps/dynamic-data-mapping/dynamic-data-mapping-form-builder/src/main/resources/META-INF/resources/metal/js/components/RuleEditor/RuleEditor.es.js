@@ -192,6 +192,14 @@ class RuleEditor extends Component {
 			)
 		).internal().valueFn('_fieldOptionsValueFn'),
 
+		deletedFields: Config.arrayOf(
+			Config.shapeOf(
+				{
+					fieldName: Config.string()
+				}
+			)
+		).value([]),
+
 		fixedOptions: Config.arrayOf(
 			fieldOptionStructure
 		).value(
@@ -406,8 +414,7 @@ class RuleEditor extends Component {
 	}
 
 	syncPages(pages) {
-		let {conditions} = this;
-		const {actions} = this;
+		let {actions, conditions} = this;
 
 		const visitor = new PagesVisitor(pages);
 
@@ -434,7 +441,7 @@ class RuleEditor extends Component {
 				}
 
 				if (!firstOperandFieldExists) {
-					conditions = this._clearAllFieldValues(index);
+					conditions = this._clearAllConditionFieldValues(index);
 				}
 
 				if (!secondOperandFieldExists && secondOperand && secondOperand.type == 'field') {
@@ -444,19 +451,61 @@ class RuleEditor extends Component {
 		);
 
 		actions.forEach(
-			(action, index) =>
-				(
-					({target}, index) => this._updateCalculatorFields(index, target)
-				)
+			(action, index) => {
+				let targetFieldExists = false;
+
+				visitor.mapFields(
+					({fieldName}) => {
+						if (action.target === fieldName) {
+							targetFieldExists = true;
+						}
+					}
+				);
+
+				if (!targetFieldExists) {
+					actions = this._clearAllActionFieldValues(index);
+				}
+
+				actions[index].calculatorFields = this._updateCalculatorFields(index, action.target);
+			}
 		);
 
 		this.setState(
 			{
 				actions,
 				conditions,
+				deletedFields: this._getDeletedFields(visitor),
 				fieldOptions: this._fieldOptionsValueFn()
 			}
 		);
+	}
+
+	_getDeletedFields(visitor) {
+		const existentFields = [];
+		const {fieldOptions} = this;
+		let deletedFields = [];
+
+		fieldOptions.forEach(
+			field => {
+				visitor.mapFields(
+					({fieldName}) => {
+						if (field.fieldName === fieldName) {
+							existentFields.push(fieldName);
+						}
+					}
+				);
+			}
+		);
+
+		const oldFields = fieldOptions.map(field => field.fieldName);
+
+		deletedFields = oldFields.filter(
+			field => {
+				return existentFields.indexOf(field) > -1 ? false : field;
+			}
+		);
+
+		return deletedFields;
 	}
 
 	syncVisible(visible) {
@@ -487,7 +536,15 @@ class RuleEditor extends Component {
 		);
 	}
 
-	_clearAllFieldValues(index) {
+	_clearAllActionFieldValues(index) {
+		let {actions} = this;
+
+		actions = this._clearTargetValue(actions, index);
+
+		return actions;
+	}
+
+	_clearAllConditionFieldValues(index) {
 		let {conditions, secondOperandSelectedList} = this;
 
 		conditions = this._clearFirstOperandValue(conditions, index);
@@ -513,6 +570,14 @@ class RuleEditor extends Component {
 		}
 
 		return conditions;
+	}
+
+	_clearTargetValue(actions, index) {
+		if (actions[index]) {
+			actions[index].target = '';
+		}
+
+		return actions;
 	}
 
 	_clearOperatorValue(conditions, index) {
@@ -884,7 +949,7 @@ class RuleEditor extends Component {
 			}
 		}
 		else {
-			conditions = this._clearAllFieldValues(index);
+			conditions = this._clearAllConditionFieldValues(index);
 		}
 
 		this.setState(
@@ -1085,7 +1150,7 @@ class RuleEditor extends Component {
 					);
 			}
 			else if (this.actions[index].action == 'calculate') {
-				this._updateCalculatorFields(index, id);
+				actions[index].calculatorFields = this._updateCalculatorFields(index, id);
 			}
 		}
 
@@ -1112,6 +1177,8 @@ class RuleEditor extends Component {
 			},
 			[]
 		);
+
+		return actions[index].calculatorFields;
 	}
 
 	formatDataProviderParameter(parameters) {

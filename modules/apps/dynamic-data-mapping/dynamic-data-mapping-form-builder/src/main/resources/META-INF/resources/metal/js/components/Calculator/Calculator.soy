@@ -21,11 +21,13 @@
 				<div class="calculate-container-calculator-component col-md-3">
 					<div class="liferay-ddm-form-builder-calculator">
 						{let $optionsList: $disableCalculatorField ? $optionsRepeatable : $options /}
+						{let $disableAddField: length($options) > 0 ? false : true /}
 						{call ClayDropdownBase.render}
 							{param events: [
 								'itemClicked': $_handleItemSelection
 							] /}
 							{param contentRenderer: 'dropdownCalculator' /}
+							{param disabled: $disableAddField /}
 							{param elementClasses: 'calculator-add-field-button-container' /}
 							{param items: $optionsList /}
 							{param label: $strings.addField /}
@@ -68,7 +70,7 @@
 											'itemClicked': $_handleItemSelection
 										] /}
 										{param elementClasses: 'dropdown-action' /}
-										{param disabled: $disableCalculatorOptions /}
+										{param disabled: $disableCalculatorOptions or $disableAddField /}
 										{param items: $calculatorOptions /}
 										{param ref: 'calculatorOptions' + $index /}
 										{param spritemap: $spritemap /}
