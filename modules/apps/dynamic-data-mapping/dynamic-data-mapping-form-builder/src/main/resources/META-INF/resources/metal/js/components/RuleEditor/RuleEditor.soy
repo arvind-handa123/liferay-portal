@@ -65,6 +65,17 @@
 			value: string
 		]>
 	}
+	{@param calculatorResultOptions: list<[
+			label: string,
+			name: string,
+			options: list<[
+				label: string,
+				value: string
+			]>,
+			type: string,
+			value: string
+		]>
+	}
 	{@param conditions: list<[
 			binaryOperator: bool,
 			firstOperandOptions: list<[
@@ -90,11 +101,8 @@
 			name: string
 		]>
 	}
-	{@param? deletedFields: list<[
-			fieldName: string
-		]>
-	}
-	{@param fieldOptions : list<[
+	{@param? deletedFields: list<string>}
+	{@param fieldOptions: list<[
 			label: string,
 			name: string,
 			options: list<[
@@ -105,7 +113,7 @@
 			value: string
 		]>
 	}
-	{@param fixedOptions : list<[
+	{@param fixedOptions: list<[
 			name: string,
 			options: list<[
 				label: string,
@@ -210,6 +218,7 @@
 					{param actionTypes: $actionTypes /}
 					{param calculatorOptions: $calculatorOptions /}
 					{param calculatorFields: $action.calculatorFields /}
+					{param calculatorResultOptions: $calculatorResultOptions /}
 					{param dataProvider: $dataProvider /}
 					{param deletedFields: $deletedFields /}
 					{param fieldOptions: $fieldOptions /}
@@ -303,7 +312,18 @@
 			value: string
 		]>
 	}
-	{@param fieldOptions : list<[
+	{@param calculatorResultOptions: list<[
+			label: string,
+			name: string,
+			options: list<[
+				label: string,
+				value: string
+			]>,
+			type: string,
+			value: string
+		]>
+	}
+	{@param fieldOptions: list<[
 			label: string,
 			name: string,
 			options: list<[
@@ -374,10 +394,7 @@
 			name: string
 		]>
 	}
-	{@param? deletedFields: list<[
-			fieldName: string
-		]>
-	}
+	{@param? deletedFields: list<string>}
 	{@param? targetSelected: string}
 	{@param? hasRequiredInputs: bool}
 
@@ -423,7 +440,7 @@
 						</h4>
 					</div>
 					{if $showTargetDefault or $showTargetAutofill or $showTargetCalculator}
-						{let $options: ($showTargetAutofill) ? $dataProvider : ($showTargetDefault or $showTargetCalculator ? $fieldOptions : []) /}
+						{let $options: ($showTargetAutofill) ? $dataProvider : ($showTargetDefault ? $fieldOptions : ($showTargetCalculator ? $calculatorResultOptions : [])) /}
 						{let $ref: $showTargetCalculator ? 'calculatorResult' : 'actionTarget' /}
 
 						{call .renderActionTarget}

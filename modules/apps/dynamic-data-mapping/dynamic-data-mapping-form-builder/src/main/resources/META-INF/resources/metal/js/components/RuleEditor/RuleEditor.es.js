@@ -131,6 +131,8 @@ class RuleEditor extends Component {
 			)
 		).internal().value([]),
 
+		calculatorResultOptions: Config.arrayOf(fieldOptionStructure).internal().valueFn('_calculatorResultOptionsValueFn'),
+
 		/**
 		 * @default 0
 		 * @instance
@@ -192,13 +194,7 @@ class RuleEditor extends Component {
 			)
 		).internal().valueFn('_fieldOptionsValueFn'),
 
-		deletedFields: Config.arrayOf(
-			Config.shapeOf(
-				{
-					fieldName: Config.string()
-				}
-			)
-		).value([]),
+		deletedFields: Config.arrayOf(Config.string()).value([]),
 
 		fixedOptions: Config.arrayOf(
 			fieldOptionStructure
@@ -473,6 +469,7 @@ class RuleEditor extends Component {
 		this.setState(
 			{
 				actions,
+				calculatorResultOptions: this._calculatorResultOptionsValueFn(),
 				conditions,
 				deletedFields: this._getDeletedFields(visitor),
 				fieldOptions: this._fieldOptionsValueFn()
@@ -737,6 +734,28 @@ class RuleEditor extends Component {
 						value: field.fieldName
 					}
 				);
+			}
+		);
+
+		return fields;
+	}
+
+	_calculatorResultOptionsValueFn() {
+		const {pages} = this;
+		const fields = [];
+		const visitor = new PagesVisitor(pages);
+
+		visitor.mapFields(
+			field => {
+				if (field.type == 'numeric') {
+					fields.push(
+						{
+							...field,
+							options: field.options ? field.options : [],
+							value: field.fieldName
+						}
+					);
+				}
 			}
 		);
 
@@ -1162,11 +1181,11 @@ class RuleEditor extends Component {
 	}
 
 	_updateCalculatorFields(index, id) {
-		const {actions, fieldOptions} = this;
+		const {actions, calculatorResultOptions} = this;
 
-		actions[index].calculatorFields = fieldOptions.reduce(
+		actions[index].calculatorFields = calculatorResultOptions.reduce(
 			(prev, option) => {
-				return option.fieldName === id ? prev : [
+				return (option.fieldName === id) ? prev : [
 					...prev,
 					{
 						...option,
