@@ -22,13 +22,7 @@ class Calculator extends Component {
 			)
 		).value([]),
 
-		deletedFields: Config.arrayOf(
-			Config.shapeOf(
-				{
-					fieldName: Config.string()
-				}
-			)
-		),
+		deletedFields: Config.arrayOf(Config.string()),
 
 		disableCalculatorField: Config.bool().internal().value(false),
 
@@ -247,6 +241,13 @@ class Calculator extends Component {
 
 				if (index != -1) {
 					expressionArray.splice(index, 1);
+				}
+
+				const indexWithParenthesis = expressionArray.indexOf(`${field})`);
+
+				if (indexWithParenthesis != -1) {
+					expressionArray.splice(indexWithParenthesis, 1);
+					expressionArray.splice(indexWithParenthesis - 1, 1);
 				}
 			}
 		);
