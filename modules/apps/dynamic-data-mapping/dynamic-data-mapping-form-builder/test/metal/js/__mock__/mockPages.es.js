@@ -132,6 +132,24 @@ export default [
 						size: 12
 					}
 				]
+			},
+			{
+				columns: [
+					{
+						fields: [
+							{
+								fieldName: 'numeric',
+								label: 'Numeric Field',
+								required: true,
+								settingsContext: {
+									pages: []
+								},
+								type: 'numeric'
+							}
+						],
+						size: 12
+					}
+				]
 			}
 		],
 		title: 'Untitled name'

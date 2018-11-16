@@ -93,6 +93,27 @@ exports[`PageRenderer should change the page title 1`] = `
             <div class="ddm-target"></div>
           </div>
         </div>
+        <div class="row">
+          <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0">
+            <div class="ddm-field-container">
+              <div class="ddm-resize-handle-left"></div>
+              <div class="ddm-drag"></div>
+              <div class="ddm-field-actions-container"><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="paste" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-paste" focusable="false">
+                    <title>paste</title>
+                    <use xlink:href="icons.svg#paste"></use>
+                  </svg></button><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="trash" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-trash" focusable="false">
+                    <title>trash</title>
+                    <use xlink:href="icons.svg#trash"></use>
+                  </svg></button></div>
+              <div class="ddm-resize-handle-right"></div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-empty col-md-12" data-ddm-field-row="4" data-ddm-field-page="0">
+            <div class="ddm-target"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -189,6 +210,27 @@ exports[`PageRenderer should change the page title 2`] = `
         </div>
         <div class="row">
           <div class="col col-empty col-md-12" data-ddm-field-row="3" data-ddm-field-page="0">
+            <div class="ddm-target"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0">
+            <div class="ddm-field-container">
+              <div class="ddm-resize-handle-left"></div>
+              <div class="ddm-drag"></div>
+              <div class="ddm-field-actions-container"><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="paste" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-paste" focusable="false">
+                    <title>paste</title>
+                    <use xlink:href="icons.svg#paste"></use>
+                  </svg></button><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="trash" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-trash" focusable="false">
+                    <title>trash</title>
+                    <use xlink:href="icons.svg#trash"></use>
+                  </svg></button></div>
+              <div class="ddm-resize-handle-right"></div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-empty col-md-12" data-ddm-field-row="4" data-ddm-field-page="0">
             <div class="ddm-target"></div>
           </div>
         </div>
@@ -304,6 +346,27 @@ exports[`PageRenderer should resize a specific column on the drag and drop layou
         </div>
         <div class="row">
           <div class="col col-empty col-md-12" data-ddm-field-row="3" data-ddm-field-page="0">
+            <div class="ddm-target"></div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0">
+            <div class="ddm-field-container">
+              <div class="ddm-resize-handle-left"></div>
+              <div class="ddm-drag"></div>
+              <div class="ddm-field-actions-container"><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="paste" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-paste" focusable="false">
+                    <title>paste</title>
+                    <use xlink:href="icons.svg#paste"></use>
+                  </svg></button><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="trash" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-trash" focusable="false">
+                    <title>trash</title>
+                    <use xlink:href="icons.svg#trash"></use>
+                  </svg></button></div>
+              <div class="ddm-resize-handle-right"></div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col col-empty col-md-12" data-ddm-field-row="4" data-ddm-field-page="0">
             <div class="ddm-target"></div>
           </div>
         </div>

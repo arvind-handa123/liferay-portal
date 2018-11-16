@@ -102,6 +102,27 @@ exports[`FormRenderer PagesSettings should add a new page on the layout render 1
               <div class="ddm-target"></div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0">
+              <div class="ddm-field-container">
+                <div class="ddm-resize-handle-left"></div>
+                <div class="ddm-drag"></div>
+                <div class="ddm-field-actions-container"><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="paste" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-paste" focusable="false">
+                      <title>paste</title>
+                      <use xlink:href="icons.svg#paste"></use>
+                    </svg></button><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="trash" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-trash" focusable="false">
+                      <title>trash</title>
+                      <use xlink:href="icons.svg#trash"></use>
+                    </svg></button></div>
+                <div class="ddm-resize-handle-right"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-empty col-md-12" data-ddm-field-row="4" data-ddm-field-page="0">
+              <div class="ddm-target"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -255,6 +276,27 @@ exports[`FormRenderer PagesSettings should delete the current page on layout ren
               <div class="ddm-target"></div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0">
+              <div class="ddm-field-container">
+                <div class="ddm-resize-handle-left"></div>
+                <div class="ddm-drag"></div>
+                <div class="ddm-field-actions-container"><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="paste" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-paste" focusable="false">
+                      <title>paste</title>
+                      <use xlink:href="icons.svg#paste"></use>
+                    </svg></button><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="trash" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-trash" focusable="false">
+                      <title>trash</title>
+                      <use xlink:href="icons.svg#trash"></use>
+                    </svg></button></div>
+                <div class="ddm-resize-handle-right"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-empty col-md-12" data-ddm-field-row="4" data-ddm-field-page="0">
+              <div class="ddm-target"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -373,6 +415,27 @@ exports[`FormRenderer PagesSettings should delete the success page 1`] = `
               <div class="ddm-target"></div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0">
+              <div class="ddm-field-container">
+                <div class="ddm-resize-handle-left"></div>
+                <div class="ddm-drag"></div>
+                <div class="ddm-field-actions-container"><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="paste" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-paste" focusable="false">
+                      <title>paste</title>
+                      <use xlink:href="icons.svg#paste"></use>
+                    </svg></button><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="trash" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-trash" focusable="false">
+                      <title>trash</title>
+                      <use xlink:href="icons.svg#trash"></use>
+                    </svg></button></div>
+                <div class="ddm-resize-handle-right"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-empty col-md-12" data-ddm-field-row="4" data-ddm-field-page="0">
+              <div class="ddm-target"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -486,6 +549,27 @@ exports[`FormRenderer PagesSettings should reset the current page on layout rend
           </div>
           <div class="row">
             <div class="col col-empty col-md-12" data-ddm-field-row="3" data-ddm-field-page="0">
+              <div class="ddm-target"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0">
+              <div class="ddm-field-container">
+                <div class="ddm-resize-handle-left"></div>
+                <div class="ddm-drag"></div>
+                <div class="ddm-field-actions-container"><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="paste" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-paste" focusable="false">
+                      <title>paste</title>
+                      <use xlink:href="icons.svg#paste"></use>
+                    </svg></button><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="trash" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-trash" focusable="false">
+                      <title>trash</title>
+                      <use xlink:href="icons.svg#trash"></use>
+                    </svg></button></div>
+                <div class="ddm-resize-handle-right"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-empty col-md-12" data-ddm-field-row="4" data-ddm-field-page="0">
               <div class="ddm-target"></div>
             </div>
           </div>
@@ -619,6 +703,27 @@ exports[`FormRenderer PagesSettings should show delete-field option, when the fo
               <div class="ddm-target"></div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0">
+              <div class="ddm-field-container">
+                <div class="ddm-resize-handle-left"></div>
+                <div class="ddm-drag"></div>
+                <div class="ddm-field-actions-container"><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="paste" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-paste" focusable="false">
+                      <title>paste</title>
+                      <use xlink:href="icons.svg#paste"></use>
+                    </svg></button><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="trash" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-trash" focusable="false">
+                      <title>trash</title>
+                      <use xlink:href="icons.svg#trash"></use>
+                    </svg></button></div>
+                <div class="ddm-resize-handle-right"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-empty col-md-12" data-ddm-field-row="4" data-ddm-field-page="0">
+              <div class="ddm-target"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -734,6 +839,27 @@ exports[`FormRenderer PagesSettings should show reset-field option, when the for
           </div>
           <div class="row">
             <div class="col col-empty col-md-12" data-ddm-field-row="3" data-ddm-field-page="0">
+              <div class="ddm-target"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0">
+              <div class="ddm-field-container">
+                <div class="ddm-resize-handle-left"></div>
+                <div class="ddm-drag"></div>
+                <div class="ddm-field-actions-container"><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="paste" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-paste" focusable="false">
+                      <title>paste</title>
+                      <use xlink:href="icons.svg#paste"></use>
+                    </svg></button><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="trash" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-trash" focusable="false">
+                      <title>trash</title>
+                      <use xlink:href="icons.svg#trash"></use>
+                    </svg></button></div>
+                <div class="ddm-resize-handle-right"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-empty col-md-12" data-ddm-field-row="4" data-ddm-field-page="0">
               <div class="ddm-target"></div>
             </div>
           </div>
@@ -867,6 +993,27 @@ exports[`FormRenderer should back the pagination mode to wizard mode when user c
               <div class="ddm-target"></div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0">
+              <div class="ddm-field-container">
+                <div class="ddm-resize-handle-left"></div>
+                <div class="ddm-drag"></div>
+                <div class="ddm-field-actions-container"><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="paste" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-paste" focusable="false">
+                      <title>paste</title>
+                      <use xlink:href="icons.svg#paste"></use>
+                    </svg></button><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="trash" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-trash" focusable="false">
+                      <title>trash</title>
+                      <use xlink:href="icons.svg#trash"></use>
+                    </svg></button></div>
+                <div class="ddm-resize-handle-right"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-empty col-md-12" data-ddm-field-row="4" data-ddm-field-page="0">
+              <div class="ddm-target"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -975,6 +1122,27 @@ exports[`FormRenderer should change the active by clicking on the pagination whe
           </div>
           <div class="row">
             <div class="col col-empty col-md-12" data-ddm-field-row="3" data-ddm-field-page="1">
+              <div class="ddm-target"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="1" data-ddm-field-column="0">
+              <div class="ddm-field-container">
+                <div class="ddm-resize-handle-left"></div>
+                <div class="ddm-drag"></div>
+                <div class="ddm-field-actions-container"><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="paste" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-paste" focusable="false">
+                      <title>paste</title>
+                      <use xlink:href="icons.svg#paste"></use>
+                    </svg></button><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="trash" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-trash" focusable="false">
+                      <title>trash</title>
+                      <use xlink:href="icons.svg#trash"></use>
+                    </svg></button></div>
+                <div class="ddm-resize-handle-right"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-empty col-md-12" data-ddm-field-row="4" data-ddm-field-page="1">
               <div class="ddm-target"></div>
             </div>
           </div>
@@ -1120,6 +1288,27 @@ exports[`FormRenderer should change the active page 1`] = `
           </div>
           <div class="row">
             <div class="col col-empty col-md-12" data-ddm-field-row="3" data-ddm-field-page="0">
+              <div class="ddm-target"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0">
+              <div class="ddm-field-container">
+                <div class="ddm-resize-handle-left"></div>
+                <div class="ddm-drag"></div>
+                <div class="ddm-field-actions-container"><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="paste" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-paste" focusable="false">
+                      <title>paste</title>
+                      <use xlink:href="icons.svg#paste"></use>
+                    </svg></button><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="trash" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-trash" focusable="false">
+                      <title>trash</title>
+                      <use xlink:href="icons.svg#trash"></use>
+                    </svg></button></div>
+                <div class="ddm-resize-handle-right"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-empty col-md-12" data-ddm-field-row="4" data-ddm-field-page="0">
               <div class="ddm-target"></div>
             </div>
           </div>
@@ -1290,6 +1479,27 @@ exports[`FormRenderer should change the form page description 1`] = `
               <div class="ddm-target"></div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0">
+              <div class="ddm-field-container">
+                <div class="ddm-resize-handle-left"></div>
+                <div class="ddm-drag"></div>
+                <div class="ddm-field-actions-container"><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="paste" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-paste" focusable="false">
+                      <title>paste</title>
+                      <use xlink:href="icons.svg#paste"></use>
+                    </svg></button><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="trash" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-trash" focusable="false">
+                      <title>trash</title>
+                      <use xlink:href="icons.svg#trash"></use>
+                    </svg></button></div>
+                <div class="ddm-resize-handle-right"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-empty col-md-12" data-ddm-field-row="4" data-ddm-field-page="0">
+              <div class="ddm-target"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1403,6 +1613,27 @@ exports[`FormRenderer should change the form page title 1`] = `
           </div>
           <div class="row">
             <div class="col col-empty col-md-12" data-ddm-field-row="3" data-ddm-field-page="0">
+              <div class="ddm-target"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0">
+              <div class="ddm-field-container">
+                <div class="ddm-resize-handle-left"></div>
+                <div class="ddm-drag"></div>
+                <div class="ddm-field-actions-container"><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="paste" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-paste" focusable="false">
+                      <title>paste</title>
+                      <use xlink:href="icons.svg#paste"></use>
+                    </svg></button><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="trash" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-trash" focusable="false">
+                      <title>trash</title>
+                      <use xlink:href="icons.svg#trash"></use>
+                    </svg></button></div>
+                <div class="ddm-resize-handle-right"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-empty col-md-12" data-ddm-field-row="4" data-ddm-field-page="0">
               <div class="ddm-target"></div>
             </div>
           </div>
@@ -1536,6 +1767,27 @@ exports[`FormRenderer should change the pagination mode when switch pagination m
               <div class="ddm-target"></div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0">
+              <div class="ddm-field-container">
+                <div class="ddm-resize-handle-left"></div>
+                <div class="ddm-drag"></div>
+                <div class="ddm-field-actions-container"><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="paste" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-paste" focusable="false">
+                      <title>paste</title>
+                      <use xlink:href="icons.svg#paste"></use>
+                    </svg></button><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="trash" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-trash" focusable="false">
+                      <title>trash</title>
+                      <use xlink:href="icons.svg#trash"></use>
+                    </svg></button></div>
+                <div class="ddm-resize-handle-right"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-empty col-md-12" data-ddm-field-row="4" data-ddm-field-page="0">
+              <div class="ddm-target"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1576,6 +1828,9 @@ exports[`FormRenderer should not render the layout with the field empty in non-e
           </div>
           <div class="row">
             <div class="col-md-12 col-ddm" data-ddm-field-row="2" data-ddm-field-page="0" data-ddm-field-column="0"></div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0"></div>
           </div>
         </div>
       </div>
@@ -1690,6 +1945,27 @@ exports[`FormRenderer should receive a delete button event and propage it 1`] = 
           </div>
           <div class="row">
             <div class="col col-empty col-md-12" data-ddm-field-row="3" data-ddm-field-page="0">
+              <div class="ddm-target"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0">
+              <div class="ddm-field-container">
+                <div class="ddm-resize-handle-left"></div>
+                <div class="ddm-drag"></div>
+                <div class="ddm-field-actions-container"><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="paste" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-paste" focusable="false">
+                      <title>paste</title>
+                      <use xlink:href="icons.svg#paste"></use>
+                    </svg></button><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="trash" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-trash" focusable="false">
+                      <title>trash</title>
+                      <use xlink:href="icons.svg#trash"></use>
+                    </svg></button></div>
+                <div class="ddm-resize-handle-right"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-empty col-md-12" data-ddm-field-row="4" data-ddm-field-page="0">
               <div class="ddm-target"></div>
             </div>
           </div>
@@ -1809,6 +2085,27 @@ exports[`FormRenderer should receive a duplicate button event and propage it 1`]
               <div class="ddm-target"></div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0">
+              <div class="ddm-field-container">
+                <div class="ddm-resize-handle-left"></div>
+                <div class="ddm-drag"></div>
+                <div class="ddm-field-actions-container"><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="paste" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-paste" focusable="false">
+                      <title>paste</title>
+                      <use xlink:href="icons.svg#paste"></use>
+                    </svg></button><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="trash" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-trash" focusable="false">
+                      <title>trash</title>
+                      <use xlink:href="icons.svg#trash"></use>
+                    </svg></button></div>
+                <div class="ddm-resize-handle-right"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-empty col-md-12" data-ddm-field-row="4" data-ddm-field-page="0">
+              <div class="ddm-target"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1922,6 +2219,27 @@ exports[`FormRenderer should receive an update page event and propage it 1`] = `
           </div>
           <div class="row">
             <div class="col col-empty col-md-12" data-ddm-field-row="3" data-ddm-field-page="0">
+              <div class="ddm-target"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0">
+              <div class="ddm-field-container">
+                <div class="ddm-resize-handle-left"></div>
+                <div class="ddm-drag"></div>
+                <div class="ddm-field-actions-container"><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="paste" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-paste" focusable="false">
+                      <title>paste</title>
+                      <use xlink:href="icons.svg#paste"></use>
+                    </svg></button><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="trash" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-trash" focusable="false">
+                      <title>trash</title>
+                      <use xlink:href="icons.svg#trash"></use>
+                    </svg></button></div>
+                <div class="ddm-resize-handle-right"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-empty col-md-12" data-ddm-field-row="4" data-ddm-field-page="0">
               <div class="ddm-target"></div>
             </div>
           </div>
@@ -2041,6 +2359,27 @@ exports[`FormRenderer should render a layout in editable mode 1`] = `
               <div class="ddm-target"></div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0">
+              <div class="ddm-field-container">
+                <div class="ddm-resize-handle-left"></div>
+                <div class="ddm-drag"></div>
+                <div class="ddm-field-actions-container"><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="paste" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-paste" focusable="false">
+                      <title>paste</title>
+                      <use xlink:href="icons.svg#paste"></use>
+                    </svg></button><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="trash" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-trash" focusable="false">
+                      <title>trash</title>
+                      <use xlink:href="icons.svg#trash"></use>
+                    </svg></button></div>
+                <div class="ddm-resize-handle-right"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-empty col-md-12" data-ddm-field-row="4" data-ddm-field-page="0">
+              <div class="ddm-target"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -2079,6 +2418,9 @@ exports[`FormRenderer should render a layout in pagination mode 1`] = `
           <div class="row">
             <div class="col-md-12 col-ddm" data-ddm-field-row="2" data-ddm-field-page="0" data-ddm-field-column="0"></div>
           </div>
+          <div class="row">
+            <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -2116,6 +2458,9 @@ exports[`FormRenderer should render a layout in wizard mode 1`] = `
           </div>
           <div class="row">
             <div class="col-md-12 col-ddm" data-ddm-field-row="2" data-ddm-field-page="0" data-ddm-field-column="0"></div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0"></div>
           </div>
         </div>
       </div>
@@ -2244,6 +2589,27 @@ exports[`FormRenderer should render a layout with an empty field only in editabl
               <div class="ddm-target"></div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0">
+              <div class="ddm-field-container">
+                <div class="ddm-resize-handle-left"></div>
+                <div class="ddm-drag"></div>
+                <div class="ddm-field-actions-container"><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="paste" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-paste" focusable="false">
+                      <title>paste</title>
+                      <use xlink:href="icons.svg#paste"></use>
+                    </svg></button><button class="btn btn-monospaced btn-sm btn-secondary" aria-label="trash" type="button"><svg aria-hidden="true" class="lexicon-icon lexicon-icon-trash" focusable="false">
+                      <title>trash</title>
+                      <use xlink:href="icons.svg#trash"></use>
+                    </svg></button></div>
+                <div class="ddm-resize-handle-right"></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col col-empty col-md-12" data-ddm-field-row="4" data-ddm-field-page="0">
+              <div class="ddm-target"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -2267,6 +2633,9 @@ exports[`FormRenderer should render a layout with pages in mode of list 1`] = `
     <div class="row">
       <div class="col-md-4"></div>
       <div class="col-md-6"></div>
+    </div>
+    <div class="row">
+      <div class="col-md-12"></div>
     </div>
     <div class="row">
       <div class="col-md-12"></div>
@@ -2298,6 +2667,9 @@ exports[`FormRenderer should render default markup 1`] = `
           </div>
           <div class="row">
             <div class="col-md-12 col-ddm" data-ddm-field-row="2" data-ddm-field-page="0" data-ddm-field-column="0"></div>
+          </div>
+          <div class="row">
+            <div class="col-md-12 col-ddm" data-ddm-field-row="3" data-ddm-field-page="0" data-ddm-field-column="0"></div>
           </div>
         </div>
       </div>
