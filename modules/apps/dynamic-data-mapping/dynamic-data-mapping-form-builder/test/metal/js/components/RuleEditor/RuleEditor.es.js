@@ -903,9 +903,7 @@ describe(
 								jest.runAllTimers();
 
 								const notEquals = formBuilderFields.some(
-									item => {
-										return component.deletedFields.indexOf(item) == -1;
-									}
+									item => component.deletedFields.indexOf(item) == -1
 								);
 
 								expect(notEquals).toEqual(false);
