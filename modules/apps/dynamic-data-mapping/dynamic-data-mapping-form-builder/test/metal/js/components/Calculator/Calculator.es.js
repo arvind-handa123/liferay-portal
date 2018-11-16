@@ -112,6 +112,23 @@ describe(
 						);
 
 						it(
+							'should disable the Add Field button when there\'s no numeric field options',
+							() => {
+								component = new Calculator(
+									{
+										...getBaseConfig()
+									}
+								);
+
+								component.options = [];
+
+								jest.runAllTimers();
+
+								expect(component.refs.calculatorAddField0.disabled).toEqual(true);
+							}
+						);
+
+						it(
 							'should not allow type two repeated signs',
 							() => {
 								component = new Calculator(

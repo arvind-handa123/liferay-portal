@@ -884,6 +884,35 @@ describe(
 						);
 
 						it(
+							'should add to the deletedField all the fields removed from the FormBuilder',
+							() => {
+								component = new RuleEditor(
+									{
+										...getBaseConfig()
+									}
+								);
+
+								component.refs.firstOperand0.emitFieldEdited(['radio']);
+
+								jest.runAllTimers();
+
+								const formBuilderFields = component.fieldOptions.map(a => a.fieldName);
+
+								component.pages = [];
+
+								jest.runAllTimers();
+
+								const notEquals = formBuilderFields.some(
+									item => {
+										return component.deletedFields.indexOf(item) == -1;
+									}
+								);
+
+								expect(notEquals).toEqual(false);
+							}
+						);
+
+						it(
 							'should not reset the target after setting a target to an action and click in the action selected without changing it',
 							() => {
 								component = new RuleEditor(
