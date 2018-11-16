@@ -8,6 +8,8 @@
 			{call .Date /}
 		{case 'text'}
 			{call .Text /}
+		{case 'numeric'}
+			{call .Numeric /}
 		{case 'select'}
 			{call .Select /}
 		{case 'radio'}
@@ -23,6 +25,10 @@
 
 {template .Text}
 	<p>Text Field</p>
+{/template}
+
+{template .Numeric}
+	<p>Numeric Field</p>
 {/template}
 
 {template .Radio}

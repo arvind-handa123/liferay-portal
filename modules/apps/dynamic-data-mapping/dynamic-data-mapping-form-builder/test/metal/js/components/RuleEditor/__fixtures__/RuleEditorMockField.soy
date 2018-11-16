@@ -9,6 +9,8 @@
 				{call .CheckboxMultiple /}
 			{case 'date'}
 				{call .Date /}
+			{case 'numeric'}
+				{call .Numeric /}
 			{case 'radio'}
 				{call .Radio /}
 			{case 'select'}
@@ -27,6 +29,10 @@
 
 {template .Date}
 	<p>Date Field</p>
+{/template}
+
+{template .Numeric}
+	<p>Numeric Field</p>
 {/template}
 
 {template .Radio}

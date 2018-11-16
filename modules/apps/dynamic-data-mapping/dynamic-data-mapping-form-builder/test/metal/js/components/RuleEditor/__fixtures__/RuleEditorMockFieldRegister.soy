@@ -12,6 +12,12 @@
 	{/call}
 {/deltemplate}
 
+{deltemplate PageRenderer.RegisterFieldType variant="'numeric'"}
+	{call RuleEditorMockField.render data="all"}
+		{param type: 'numeric' /}
+	{/call}
+{/deltemplate}
+
 {deltemplate PageRenderer.RegisterFieldType variant="'radio'"}
 	{call RuleEditorMockField.render data="all"}
 		{param type: 'radio' /}
