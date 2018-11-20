@@ -37,7 +37,7 @@ class RuleEditor extends Component {
 			Config.shapeOf(
 				{
 					action: Config.string(),
-					calculatorFields: Config.arrayOf(fieldOptionStructure),
+					calculatorFields: Config.arrayOf(fieldOptionStructure).value([]),
 					expression: Config.string(),
 					hasRequiredInputs: Config.bool(),
 					inputs: Config.arrayOf(
@@ -522,6 +522,7 @@ class RuleEditor extends Component {
 
 		newActions[index] = {
 			action: '',
+			calculatorFields: [],
 			label: '',
 			target: ''
 		};
@@ -841,6 +842,7 @@ class RuleEditor extends Component {
 
 				if (fieldName !== previousAction) {
 					newActions[index].action = fieldName;
+					newActions[index].calculatorFields = [];
 					newActions[index].target = '';
 					newActions[index].label = '';
 				}
