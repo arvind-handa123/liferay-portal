@@ -1192,7 +1192,7 @@ class RuleEditor extends Component {
 					{
 						...option,
 						title: option.fieldName,
-						type: 'dropdownCalculator'
+						type: 'item'
 					}
 				];
 			},
