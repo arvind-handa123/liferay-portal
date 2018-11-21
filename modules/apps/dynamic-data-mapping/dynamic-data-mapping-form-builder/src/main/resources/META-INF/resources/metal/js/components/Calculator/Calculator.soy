@@ -148,21 +148,21 @@
 {/deltemplate}
 
 {deltemplate ClayDropdownBase.Content variant="'dropdownFormContent'"}
-    {@param? _handleItemClick: any}
-    {@param? contentRenderer: string}
-    {@param? items: list<?>}
-    {@param? itemsIconAlignment: string}
-    {@param? spritemap: string}
+	{@param? _handleItemClick: any}
+	{@param? contentRenderer: string}
+	{@param? items: list<?>}
+	{@param? itemsIconAlignment: string}
+	{@param? spritemap: string}
 
-    {if $items}
-        <ul class="list-unstyled">
-            {call ClayDropdownBase.items}
-                {param _handleItemClick: $_handleItemClick /}
-                {param items: $items /}
-                {param itemsIconAlignment: $itemsIconAlignment /}
-                {param contentRenderer: 'dropdownCalculator' /}
-                {param spritemap: $spritemap /}
-            {/call}
-        </ul>
-    {/if}
+	{if $items}
+		<ul class="list-unstyled">
+			{call ClayDropdownBase.items}
+				{param _handleItemClick: $_handleItemClick /}
+				{param items: $items /}
+				{param itemsIconAlignment: $itemsIconAlignment /}
+				{param contentRenderer: 'dropdownCalculator' /}
+				{param spritemap: $spritemap /}
+			{/call}
+		</ul>
+	{/if}
 {/deltemplate}
