@@ -1015,7 +1015,7 @@ describe(
 									}
 								);
 
-								component.refs.action0.emitFieldEdited(['autofill']);
+								component.refs.action0.emitFieldEdited(['auto-fill']);
 
 								jest.runAllTimers();
 
@@ -1040,7 +1040,7 @@ describe(
 									}
 								);
 
-								component.refs.action0.emitFieldEdited(['autofill']);
+								component.refs.action0.emitFieldEdited(['auto-fill']);
 
 								jest.runAllTimers();
 
@@ -1061,7 +1061,7 @@ describe(
 									}
 								);
 
-								component.refs.action0.emitFieldEdited(['autofill']);
+								component.refs.action0.emitFieldEdited(['auto-fill']);
 
 								jest.runAllTimers();
 
@@ -1116,6 +1116,66 @@ describe(
 				);
 
 				describe(
+					'When a rule is not fully filled with actions and conditions',
+					() => {
+						it(
+							'the save rule button must be disabled',
+							() => {
+								component = new RuleEditor(
+									{
+										...getBaseConfig()
+									}
+								);
+
+								expect(component.refs.save.disabled).toBe(true);
+								expect(component.refs.cancel.disabled).toBe(false);
+							}
+						);
+					}
+				);
+
+				describe(
+					'When a rule is fully filled with actions and conditions',
+					() => {
+						it(
+							'the save rule button must be enabled',
+							() => {
+								component = new RuleEditor(
+									{
+										...getBaseConfig()
+									}
+								);
+
+								component.refs.firstOperand0.emitFieldEdited(['radio']);
+
+								jest.runAllTimers();
+
+								component.refs.conditionOperator0.emitFieldEdited(['not-contains']);
+
+								jest.runAllTimers();
+
+								component.refs.secondOperandTypeSelector0.emitFieldEdited(['value']);
+
+								jest.runAllTimers();
+
+								component.refs.secondOperand0.emitFieldEdited(['123']);
+
+								component.refs.action0.emitFieldEdited(['show']);
+
+								jest.runAllTimers();
+
+								component.refs.actionTarget0.emitFieldEdited(['date']);
+
+								jest.runAllTimers();
+
+								expect(component.refs.save.disabled).toBe(false);
+								expect(component.refs.cancel.disabled).toBe(false);
+							}
+						);
+					}
+				);
+
+				describe(
 					'When the user choose a data provider as a target',
 					() => {
 						it(
@@ -1130,7 +1190,7 @@ describe(
 									}
 								);
 
-								component.refs.action0.emitFieldEdited(['autofill']);
+								component.refs.action0.emitFieldEdited(['auto-fill']);
 
 								jest.runAllTimers();
 
@@ -1192,7 +1252,7 @@ describe(
 				);
 
 				it(
-					'should not show Inputs and Outputss if the dataprovider\'s inputs and outputs were empty',
+					'should not show Inputs and Outputs if the dataprovider\'s inputs and outputs were empty',
 					done => {
 
 						component = new RuleEditor(
@@ -1201,7 +1261,7 @@ describe(
 							}
 						);
 
-						component.refs.action0.emitFieldEdited(['autofill']);
+						component.refs.action0.emitFieldEdited(['auto-fill']);
 
 						jest.runAllTimers();
 
@@ -1239,7 +1299,7 @@ describe(
 							}
 						);
 
-						component.refs.action0.emitFieldEdited(['autofill']);
+						component.refs.action0.emitFieldEdited(['auto-fill']);
 
 						jest.runAllTimers();
 
@@ -1301,7 +1361,7 @@ describe(
 							}
 						);
 
-						component.refs.action0.emitFieldEdited(['autofill']);
+						component.refs.action0.emitFieldEdited(['auto-fill']);
 
 						jest.runAllTimers();
 
@@ -1359,7 +1419,7 @@ describe(
 							}
 						);
 
-						component.refs.action0.emitFieldEdited(['autofill']);
+						component.refs.action0.emitFieldEdited(['auto-fill']);
 
 						jest.runAllTimers();
 
