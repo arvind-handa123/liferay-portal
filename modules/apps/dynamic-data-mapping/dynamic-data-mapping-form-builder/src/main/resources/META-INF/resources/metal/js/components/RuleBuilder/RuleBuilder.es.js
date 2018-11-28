@@ -111,7 +111,41 @@ class RuleBuilder extends Component {
 		 *
 		 */
 
-		mode: Config.oneOf(['view', 'edit', 'create']).value('view')
+		mode: Config.oneOf(['view', 'edit', 'create']).value('view'),
+
+		rules: Config.arrayOf(
+			Config.shapeOf(
+				{
+					actions: Config.arrayOf(
+						Config.shapeOf(
+							{
+								action: Config.string(),
+								label: Config.string(),
+								target: Config.string()
+							}
+						)
+					),
+					conditions: Config.arrayOf(
+						Config.shapeOf(
+							{
+								operands: Config.arrayOf(
+									Config.shapeOf(
+										{
+											label: Config.string(),
+											repeatable: Config.bool(),
+											type: Config.string(),
+											value: Config.string()
+										}
+									)
+								),
+								operator: Config.string()
+							}
+						)
+					),
+					logicalOperator: Config.string()
+				}
+			)
+		)
 	};
 
 	/**
@@ -141,7 +175,16 @@ class RuleBuilder extends Component {
 	_showRuleCreation() {
 		this.setState(
 			{
-				mode: 'create'
+				mode: 'create',
+				rules: []
+			}
+		);
+	}
+
+	_showRuleList() {
+		this.setState(
+			{
+				mode: 'view'
 			}
 		);
 	}
@@ -166,6 +209,23 @@ class RuleBuilder extends Component {
 		this._showRuleCreation();
 
 		this._hideAddRuleButton(event.delegateTarget);
+	}
+
+	_handleRuleAdded(event) {
+		this.emit(
+			'ruleAdded',
+			{
+				...event
+			}
+		);
+
+		this._showRuleList();
+	}
+
+	_handleRuleCancel(event) {
+		this.emit('ruleCancel');
+
+		this._showRuleList();
 	}
 
 	/**
@@ -227,6 +287,11 @@ class RuleBuilder extends Component {
 	 */
 
 	render() {
+		const RuleBuilderEvents = {
+			ruleAdded: this._handleRuleAdded.bind(this),
+			ruleCancel: this._handleRuleCancel.bind(this)
+		};
+
 		const {
 			dataProviderInstanceParameterSettingsURL,
 			dataProviderInstancesURL,
@@ -242,8 +307,11 @@ class RuleBuilder extends Component {
 			<div class="container">
 				{this.state.mode === 'create' && (
 					<RuleEditor
+						actions={[]}
+						conditions={[]}
 						dataProviderInstanceParameterSettingsURL={dataProviderInstanceParameterSettingsURL}
 						dataProviderInstancesURL={dataProviderInstancesURL}
+						events={RuleBuilderEvents}
 						functionsMetadata={functionsMetadata}
 						functionsURL={functionsURL}
 						key={'create'}
