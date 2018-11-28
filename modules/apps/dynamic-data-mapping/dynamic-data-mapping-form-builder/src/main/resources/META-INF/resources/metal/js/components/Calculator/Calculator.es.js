@@ -158,6 +158,8 @@ class Calculator extends Component {
 		let dropdownItemName = '';
 		let expressionArray = [];
 
+		const {index} = this;
+
 		const keyWasClicked = event.target.dataset;
 
 		const dropdownItemWasSelected = event.data;
@@ -182,6 +184,16 @@ class Calculator extends Component {
 				expressionArray
 			}
 		);
+
+		if (calculatorSymbol || dropdownItemWasSelected) {
+			this.emit(
+				'editExpression',
+				{
+					expression: expressionArray.join(''),
+					index
+				}
+			);
+		}
 	}
 
 	_keepLatestExpression(changes) {
