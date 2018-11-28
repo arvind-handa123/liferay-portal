@@ -1270,6 +1270,123 @@ class RuleEditor extends Component {
 
 		return conditions;
 	}
+
+	_validateConditionsFilling() {
+		const {conditions} = this;
+
+		let allFieldsFilled = true;
+
+		for (const condition of conditions) {
+			const {operands, operator} = condition;
+
+			if (operands[0].value == '') {
+				allFieldsFilled = false;
+				break;
+			}
+			else if (!operator) {
+				allFieldsFilled = false;
+				break;
+			}
+			else if (operator && this._isBinary(operator)) {
+				allFieldsFilled = operands[1] && !!operands[1].value && operands[1].value != '';
+				if (!allFieldsFilled) {
+					break;
+				}
+			}
+		}
+
+		return allFieldsFilled;
+	}
+
+	_validateActionsFilling() {
+		const {actions} = this;
+
+		let allFieldsFilled = true;
+
+		const autofillActions = actions.filter(
+			action => {
+				return action.action == 'auto-fill';
+			}
+		);
+
+		const calculateActions = actions.filter(
+			action => {
+				return action.action == 'calculate';
+			}
+		);
+
+		if (actions) {
+			actions.forEach(
+				currentAction => {
+					const {action, target} = currentAction;
+
+					if (action == '') {
+						allFieldsFilled = false;
+					}
+					else if (target == '') {
+						allFieldsFilled = false;
+					}
+				}
+			);
+
+			if (allFieldsFilled) {
+				if (autofillActions && autofillActions.length > 0 && calculateActions && calculateActions.length > 0) {
+					allFieldsFilled = this._validateInputOutputs(autofillActions) && this._validateActionsCalculateFilling(calculateActions);
+				}
+				else if (autofillActions && autofillActions.length > 0) {
+					allFieldsFilled = this._validateActionsAutofillFilling(autofillActions, 'inputs') &&
+							this._validateActionsAutofillFilling(autofillActions, 'outputs');
+				}
+				else if (calculateActions && calculateActions.length > 0) {
+					allFieldsFilled = this._validateActionsCalculateFilling(calculateActions);
+				}
+			}
+		}
+
+		return allFieldsFilled;
+	}
+
+	_validateInputOutputs(autofillActions) {
+		return this._validateActionsAutofillFilling(autofillActions, 'inputs') &&
+			this._validateActionsAutofillFilling(autofillActions, 'outputs');
+	}
+
+	_validateActionsAutofillFilling(autofillActions, list) {
+		let allFieldsFilled = true;
+
+		autofillActions.forEach(
+			action => {
+				if (action[list].length == 0) {
+					allFieldsFilled = false;
+				}
+				else if (action[list].length > 0) {
+					action[list].forEach(
+						({value}) => {
+							if (!value || value == '') {
+								allFieldsFilled = false;
+							}
+						}
+					);
+				}
+			}
+		);
+
+		return allFieldsFilled;
+	}
+
+	_validateActionsCalculateFilling(calculateActions) {
+		let allFieldsFilled = true;
+
+		calculateActions.forEach(
+			({expression}) => {
+				if (expression.length == 0) {
+					allFieldsFilled = false;
+				}
+			}
+		);
+
+		return allFieldsFilled;
+	}
 }
 
 Soy.register(RuleEditor, templates);
