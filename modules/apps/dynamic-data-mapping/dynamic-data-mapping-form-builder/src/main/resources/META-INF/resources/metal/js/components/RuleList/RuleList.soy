@@ -15,9 +15,12 @@
 			]>,
 			actions: list<[
 				action: string,
+				dataProviderName: ?,
 				expression: ?,
+				inputValue: ?,
 				target: string,
-				label: string
+				label: string,
+				outputValue: ?
 			]>,
 			logicalOperator: string
 		]>
@@ -51,9 +54,12 @@
 			]>,
 			actions: list<[
 				action: string,
+				dataProviderName: ?,
 				expression: ?,
+				inputValue: ?,
 				target: string,
-				label: string
+				label: string,
+				outputValue: ?
 			]>,
 			logicalOperator: string
 		]>
@@ -98,9 +104,12 @@
 							{foreach $action in $rule.actions}
 								{call .action}
 									{param action: $action.action /}
+									{param dataProviderName: $action.dataProviderName /}
+									{param inputValue: $action.inputValue /}
 									{param expression: $action.expression /}
 									{param label: $action.label /}
 									{param logicalOperator: $rule.logicalOperator /}
+									{param outputValue: $action.outputValue /}
 									{param strings: $strings /}
 
 								{/call}
@@ -205,8 +214,11 @@
  */
 {template .action}
 	{@param action: string}
+	{@param dataProviderName: ?}
+	{@param inputValue: ?}
 	{@param expression: ?}
 	{@param label: ?}
+	{@param outputValue: ?}
 	{@param strings: ?}
 
 	<span><b>{$action} </b></span>
@@ -215,8 +227,12 @@
 
 	{if $action == 'auto-fill'}
 		{call .label}
-			{param content: $label /}
+			{param content: $inputValue /}
 		{/call}
+		{call .label}
+			{param content: $outputValue /}
+		{/call}
+		<span><b>{$strings['fromDataProvider']} {$dataProviderName}</b></span>
 	{elseif $action == 'calculate'}
 		{call .label}
 			{param content: $expression /}

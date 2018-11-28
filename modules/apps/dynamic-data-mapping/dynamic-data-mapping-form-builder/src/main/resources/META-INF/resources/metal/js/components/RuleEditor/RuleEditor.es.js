@@ -1437,6 +1437,8 @@ class RuleEditor extends Component {
 					action.outputs = this._prepareAutofillOutputs(action);
 					delete action.target;
 					delete action.label;
+					delete action.inputValue;
+					delete action.outputValue;
 				}
 
 				if (action.action != 'auto-fill') {

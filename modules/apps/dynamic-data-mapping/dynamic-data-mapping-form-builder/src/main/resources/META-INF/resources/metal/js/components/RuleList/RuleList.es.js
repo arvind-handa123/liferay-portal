@@ -5,6 +5,7 @@ import Component from 'metal-component';
 import dom from 'metal-dom';
 import Soy from 'metal-soy';
 import templates from './RuleList.soy.js';
+import {makeFetch} from '../../util/fetch.es';
 
 /**
  * LayoutRenderer.
@@ -14,6 +15,18 @@ import templates from './RuleList.soy.js';
 class RuleList extends Component {
 
 	static STATE = {
+		dataProvider: Config.arrayOf(
+			Config.shapeOf(
+				{
+					id: Config.string(),
+					name: Config.string(),
+					uuid: Config.string()
+				}
+			)
+		).internal(),
+
+		dataProviderInstancesURL: Config.string().required(),
+
 		pages: Config.array().required(),
 
 		/**
@@ -30,8 +43,11 @@ class RuleList extends Component {
 						Config.shapeOf(
 							{
 								action: Config.string(),
+								ddmDataProviderInstanceUUID: Config.string(),
 								expression: Config.string(),
+								inputs: Config.object(),
 								label: Config.string(),
+								outputs: Config.object(),
 								target: Config.string()
 							}
 						)
@@ -76,34 +92,68 @@ class RuleList extends Component {
 
 		strings: Config.object().value(
 			{
-				and: 'and',
-				'auto-fill': 'autofill-x-from-data-provider-x',
-				'belongs-to': 'belongs-to',
-				'calculate-field': 'calculate-field-x-as-x',
-				contains: 'contains',
-				delete: 'delete',
-				edit: 'edit',
-				emptyListText: 'there-are-no-rules-yet-click-on-plus-icon-below-to-add-the-first',
-				'enable-field': 'enable-x',
-				'equals-to': 'is-equal-to',
-				field: 'field',
-				'greater-than': 'is-greater-than',
-				'greater-than-equals': 'is-greater-than-or-equal-to',
-				if: 'if',
-				'is-empty': 'is-empty',
-				'jump-to-page': 'jump-to-page-x',
-				'less-than': 'is-less-than',
-				'less-than-equals': 'is-less-than-or-equal-to',
-				'not-contains': 'does-not-contain',
-				'not-equals-to': 'is-not-equal-to',
-				'not-is-empty': 'is-not-empty',
-				or: 'or',
-				'require-field': 'require-x',
-				rules: 'rules',
-				'show-field': 'show-x',
-				value: 'value'
+				and: Liferay.Language.get('and'),
+				'auto-fill': Liferay.Language.get('autofill-x-from-data-provider-x'),
+				'belongs-to': Liferay.Language.get('belongs-to'),
+				'calculate-field': Liferay.Language.get('calculate-field-x-as-x'),
+				contains: Liferay.Language.get('contains'),
+				delete: Liferay.Language.get('delete'),
+				edit: Liferay.Language.get('edit'),
+				emptyListText: Liferay.Language.get('there-are-no-rules-yet-click-on-plus-icon-below-to-add-the-first'),
+				'enable-field': Liferay.Language.get('enable-x'),
+				'equals-to': Liferay.Language.get('is-equal-to'),
+				field: Liferay.Language.get('field'),
+				fromDataProvider: Liferay.Language.get('from-data-provider'),
+				'greater-than': Liferay.Language.get('is-greater-than'),
+				'greater-than-equals': Liferay.Language.get('is-greater-than-or-equal-to'),
+				if: Liferay.Language.get('if'),
+				'is-empty': Liferay.Language.get('is-empty'),
+				'jump-to-page': Liferay.Language.get('jump-to-page-x'),
+				'less-than': Liferay.Language.get('is-less-than'),
+				'less-than-equals': Liferay.Language.get('is-less-than-or-equal-to'),
+				'not-contains': Liferay.Language.get('does-not-contain'),
+				'not-equals-to': Liferay.Language.get('is-not-equal-to'),
+				'not-is-empty': Liferay.Language.get('is-not-empty'),
+				or: Liferay.Language.get('or'),
+				'require-field': Liferay.Language.get('require-x'),
+				rules: Liferay.Language.get('rules'),
+				'show-field': Liferay.Language.get('show-x'),
+				value: Liferay.Language.get('value')
 			}
 		)
+	}
+
+	_fetchDataProvider() {
+		const {dataProviderInstancesURL} = this;
+
+		makeFetch(
+			{
+				method: 'GET',
+				url: dataProviderInstancesURL
+			}
+		).then(
+			responseData => {
+				if (!this.isDisposed()) {
+					this.setState(
+						{
+							dataProvider: responseData.map(
+								data => {
+									return {
+										...data,
+										label: data.name,
+										value: data.id
+									};
+								}
+							)
+						}
+					);
+				}
+			}
+		).catch(
+			error => {
+				throw new Error(error);
+			}
+		);
 	}
 
 	_getFieldLabel(fieldName) {
@@ -151,11 +201,30 @@ class RuleList extends Component {
 		return actions;
 	}
 
+	_getDataProviderName(id) {
+		const {dataProvider} = this;
+
+		return dataProvider.find(data => data.uuid == id).label;
+	}
+
 	_setRules(newRules) {
 		for (let rule = 0; rule < newRules.length; rule++) {
 			const actions = newRules[rule].actions;
 
 			newRules[rule].actions = actions;
+
+			actions.forEach(
+				action => {
+					if (action.action === 'auto-fill') {
+						const inputValue = Object.values(action.inputs).map(fieldName => this._getFieldLabel(fieldName));
+
+						action.inputValue = inputValue.toString();
+						const outputValue = Object.values(action.outputs).map(fieldName => this._getFieldLabel(fieldName));
+
+						action.outputValue = outputValue.toString();
+					}
+				}
+			);
 
 			let logicalOperator;
 
@@ -168,13 +237,35 @@ class RuleList extends Component {
 				logicalOperator = newRules[rule].logicalOperator.toLowerCase();
 				newRules[rule].logicalOperator = logicalOperator;
 			}
-
 		}
 
 		return newRules;
 	}
 
+	_setDataProviderName() {
+		const newRules = this.rules;
+
+		if (this.dataProvider) {
+			for (let rule = 0; rule < newRules.length; rule++) {
+				const actions = newRules[rule].actions;
+
+				actions.forEach(
+					action => {
+						if (action.action === 'auto-fill') {
+							const dataProviderName = this._getDataProviderName(action.ddmDataProviderInstanceUUID);
+
+							action.dataProviderName = dataProviderName;
+						}
+					}
+				);
+			}
+			this.setState({rules: newRules});
+		}
+	}
+
 	prepareStateForRender(states) {
+		this._setDataProviderName();
+
 		return {
 			...states,
 			rules: states.rules.map(
@@ -230,6 +321,8 @@ class RuleList extends Component {
 
 	created() {
 		this._eventHandler = new EventHandler();
+
+		this._fetchDataProvider();
 
 		const newRules = this.rules;
 
