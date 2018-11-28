@@ -91,7 +91,7 @@ class RuleEditor extends Component {
 				},
 				{
 					label: 'Autofill',
-					value: 'autofill'
+					value: 'auto-fill'
 				},
 				{
 					label: 'Calculate',
@@ -146,6 +146,7 @@ class RuleEditor extends Component {
 					operands: Config.arrayOf(
 						Config.shapeOf(
 							{
+								dataType: Config.string(),
 								label: Config.string(),
 								repeatable: Config.bool(),
 								type: Config.string(),
@@ -243,6 +244,8 @@ class RuleEditor extends Component {
 				)
 			}
 		),
+
+		invalidRule: Config.bool().value(true),
 
 		logicalOperator: Config.string().internal().value('or'),
 
@@ -344,6 +347,16 @@ class RuleEditor extends Component {
 		this._fetchFunctionsURL();
 	}
 
+	disposed() {
+		this.setState(
+			{
+				actions: [],
+				conditions: [],
+				logicalOperator: ''
+			}
+		);
+	}
+
 	prepareStateForRender(state) {
 		const conditions = state.conditions.map(
 			condition => {
@@ -352,9 +365,9 @@ class RuleEditor extends Component {
 				let operators = [];
 
 				if (fieldName) {
-					const type = this._getFieldTypeByFieldName(fieldName);
+					const {dataType} = this._getFieldTypeByFieldName(fieldName);
 
-					operators = this._getOperatorsByFieldType(type);
+					operators = this._getOperatorsByFieldType(dataType);
 
 					firstOperandOptions = this.getFieldOptions(fieldName);
 				}
@@ -372,6 +385,14 @@ class RuleEditor extends Component {
 			...state,
 			conditions
 		};
+	}
+
+	willUpdate() {
+		this.setState(
+			{
+				invalidRule: !this._validateConditionsFilling() || !this._validateActionsFilling()
+			}
+		);
 	}
 
 	getFieldOptions(fieldName) {
@@ -523,7 +544,10 @@ class RuleEditor extends Component {
 		newActions[index] = {
 			action: '',
 			calculatorFields: [],
+			expression: '',
+			inputs: [],
 			label: '',
+			outputs: [],
 			target: ''
 		};
 
@@ -645,8 +669,17 @@ class RuleEditor extends Component {
 		).then(
 			responseData => {
 				if (!this.isDisposed()) {
-					actions[index].inputs = responseData.inputs;
-					actions[index].outputs = responseData.outputs;
+					const newInput = {
+						...responseData.inputs[0],
+						[responseData.inputs[0].name]: ''
+					};
+					const newOutput = {
+						...responseData.outputs[0],
+						[responseData.outputs[0].name]: ''
+					};
+
+					actions[index].inputs = [newInput];
+					actions[index].outputs = [newOutput];
 
 					this.setState(
 						{
@@ -770,28 +803,30 @@ class RuleEditor extends Component {
 	}
 
 	_getFieldTypeByFieldName(fieldName) {
-		let fieldType = '';
+		let dataType = '';
+		let fieldRepeatable = false;
+		let type = '';
 
 		if (fieldName === 'user') {
-			fieldType = 'user';
+			dataType = 'user';
 		}
 		else {
 			const selectedField = this.fieldOptions.find(
-				field => {
-					return field.value === fieldName;
-				}
+				field => field.value === fieldName
 			);
 
 			if (selectedField) {
-				fieldType = selectedField.type;
+				dataType = selectedField.dataType;
+				fieldRepeatable = selectedField.repeatable;
+				type = selectedField.type;
 			}
 		}
 
-		return fieldType;
+		return {dataType, fieldRepeatable, type};
 	}
 
 	_getOperatorsByFieldType(fieldType) {
-		if (fieldType === 'numeric') {
+		if (fieldType === 'integer' || fieldType === 'double') {
 			fieldType = 'number';
 		}
 
@@ -811,7 +846,7 @@ class RuleEditor extends Component {
 
 	_handleActionAdded() {
 		const {actions} = this;
-		const newAction = {action: '', calculatorFields: [], label: '', target: ''};
+		const newAction = {action: '', calculatorFields: [], expression: '', inputs: [], label: '', outputs: [], target: ''};
 
 		if (actions.length == 0) {
 			actions.push(newAction);
@@ -821,7 +856,8 @@ class RuleEditor extends Component {
 
 		this.setState(
 			{
-				actions
+				actions,
+				invalidRule: true
 			}
 		);
 	}
@@ -884,20 +920,28 @@ class RuleEditor extends Component {
 		);
 	}
 
+	_handleCancelRule(event) {
+		this.emit(
+			'ruleCancel'
+		);
+	}
+
 	_handleDataProviderInputEdited(event) {
 		const {fieldInstance, value} = event;
 		const actionIndex = this._getIndex(fieldInstance, '.action');
 		const inputIndex = this._getIndex(fieldInstance, '.container-input-field');
 		const {actions} = this;
 
-		if (value && value.length > 0 && value[0]) {
-			actions[actionIndex].inputs[inputIndex].value = value[0];
-			this.setState(
-				{
-					actions
-				}
-			);
-		}
+		const name = actions[actionIndex].inputs[inputIndex].name;
+
+		actions[actionIndex].inputs[inputIndex].value = value[0];
+		actions[actionIndex].inputs[inputIndex][name] = value[0];
+
+		this.setState(
+			{
+				actions
+			}
+		);
 	}
 
 	_handleDataProviderOutputEdited(event) {
@@ -906,14 +950,16 @@ class RuleEditor extends Component {
 		const outputIndex = this._getIndex(fieldInstance, '.container-output-field');
 		const {actions} = this;
 
-		if (value && value.length > 0 && value[0]) {
-			actions[actionIndex].outputs[outputIndex].value = value[0];
-			this.setState(
-				{
-					actions
-				}
-			);
-		}
+		const name = actions[actionIndex].outputs[outputIndex].name;
+
+		actions[actionIndex].outputs[outputIndex].value = value[0];
+		actions[actionIndex].outputs[outputIndex][name] = value[0];
+
+		this.setState(
+			{
+				actions
+			}
+		);
 	}
 
 	_handleDeleteAction(event) {
@@ -940,6 +986,42 @@ class RuleEditor extends Component {
 		);
 	}
 
+	_handleEditExpression({expression, index}) {
+		const {actions} = this;
+
+		actions[index].expression = expression;
+		this.setState({actions});
+	}
+
+	_getFieldLabel(fieldName) {
+		const pages = this.pages;
+
+		let fieldLabel;
+
+		if (pages) {
+			for (let page = 0; page < pages.length; page++) {
+				const rows = pages[page].rows;
+
+				for (let row = 0; row < rows.length; row++) {
+					const cols = rows[row].columns;
+
+					for (let col = 0; col < cols.length; col++) {
+						const fields = cols[col].fields;
+
+						for (let field = 0; field < fields.length; field++) {
+							if (pages[page].rows[row].columns[col].fields[field].fieldName === fieldName) {
+								fieldLabel = pages[page].rows[row].columns[col].fields[field].label;
+								break;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		return fieldLabel;
+	}
+
 	_handleFirstOperandFieldEdited(event) {
 		const {fieldInstance, value} = event;
 		const index = this._getIndex(fieldInstance, '.condition-if');
@@ -947,10 +1029,14 @@ class RuleEditor extends Component {
 
 		if (value && value.length > 0 && value[0]) {
 			const fieldName = value[0];
-			const type = this._getFieldTypeByFieldName(fieldName);
+			const {dataType, fieldRepeatable} = this._getFieldTypeByFieldName(fieldName);
 
-			const firstOperand = {type,
-				value: fieldName};
+			const firstOperand = {
+				label: this._getFieldLabel(fieldName),
+				repeatable: fieldRepeatable,
+				type: dataType == 'user' ? 'user' : 'field',
+				value: fieldName
+			};
 
 			if (conditions.length === 0) {
 				const operands = [firstOperand];
@@ -958,9 +1044,7 @@ class RuleEditor extends Component {
 				conditions.push({operands});
 			}
 			else {
-				const previousType = conditions[index].operands[0].type;
-
-				if (previousType !== type) {
+				if (fieldName !== conditions[index].operands[0].value) {
 					conditions[index].operator = '';
 				}
 
@@ -1062,15 +1146,33 @@ class RuleEditor extends Component {
 		);
 	}
 
+	_handleRuleAdded(event) {
+		const actions = this._removeActionInternalProperties();
+
+		const conditions = this._removeConditionInternalProperties();
+
+		this.emit(
+			'ruleAdded',
+			{
+				actions,
+				conditions,
+				['logical-operator']: this.logicalOperator
+			}
+		);
+	}
+
 	_handleSecondOperandFieldEdited(event) {
-		const {conditions} = this;
+		const {conditions, roles} = this;
 		const {fieldInstance, originalEvent, value} = event;
 
 		const {delegateTarget} = originalEvent;
 		let fieldValue = '';
 
-		if (value && value.length > 0 && value[0]) {
+		if (value && typeof (value) == 'object' && value[0]) {
 			fieldValue = value[0];
+		}
+		else if (value && typeof (value) == 'string') {
+			fieldValue = value;
 		}
 
 		let index;
@@ -1079,10 +1181,25 @@ class RuleEditor extends Component {
 			index = this._getIndex(fieldInstance, '.condition-type-value');
 		}
 
-		const secondOperand = conditions[index].operands[1];
+		let secondOperand = conditions[index].operands[1];
+
+		if (!secondOperand) {
+			secondOperand = {type: fieldValue};
+		}
+
+		let roleLabel = '';
+
+		let userType = '';
+
+		if (conditions[index].operands[0].type === 'user') {
+			roleLabel = roles.find(role => role.id === fieldValue);
+			userType = conditions[index].operands[0].type;
+		}
 
 		conditions[index].operands[1] = {
 			...secondOperand,
+			label: roleLabel ? roleLabel.label : '',
+			type: userType ? userType : secondOperand.type,
 			value: fieldValue
 		};
 
@@ -1099,26 +1216,42 @@ class RuleEditor extends Component {
 		const index = this._getIndex(fieldInstance, '.condition-type');
 		const secondOperand = conditions[index].operands[1];
 
-		if (secondOperand && secondOperand.type != value) {
-			if (secondOperand.type === 'field' || value === 'field') {
-				conditions = this._clearSecondOperandValue(conditions, index);
-			}
+		let valueType = 'field';
+
+		if (value[0] == 'value') {
+			valueType = 'string';
+		}
+
+		if (value[0] == '') {
+			conditions = this._clearSecondOperandValue(conditions, index);
+		}
+		else if (secondOperand && secondOperand.dataType != valueType) {
+			conditions = this._clearSecondOperandValue(conditions, index);
 		}
 
 		if (value && value.length > 0 && value[0]) {
-			let secondOperandType = 'field';
+			let secondOperandDataType = 'field';
+			let secondOperandType = '';
 			const selectedValue = value[0];
 
 			if (selectedValue === 'value') {
-				secondOperandType = conditions[index].operands[0].type;
+				const {dataType, type} = this._getFieldTypeByFieldName(conditions[index].operands[0].value);
+
+				secondOperandType = type;
+				secondOperandDataType = dataType;
+			}
+			else {
+				secondOperandType = 'field';
 			}
 
 			if (secondOperand) {
 				secondOperand.type = secondOperandType;
+				secondOperand.dataType = secondOperandDataType;
 			}
 			else {
 				conditions[index].operands.push(
 					{
+						dataType: secondOperandDataType,
 						type: secondOperandType
 					}
 				);
@@ -1149,7 +1282,7 @@ class RuleEditor extends Component {
 			actions[index].hasRequiredInputs = false;
 		}
 		else if (previousTarget !== id) {
-			if (this.actions[index].action == 'autofill') {
+			if (this.actions[index].action == 'auto-fill') {
 				this._fetchDataProviderParameters(id, index)
 					.then(
 						() => {
@@ -1159,6 +1292,12 @@ class RuleEditor extends Component {
 									inputs: this.formatDataProviderParameter(actions[index].inputs),
 									outputs: this.formatDataProviderParameter(actions[index].outputs)
 								};
+
+								actions[index].ddmDataProviderInstanceUUID = this.dataProvider.find(
+									data => {
+										return data.id == id;
+									}
+								).uuid;
 								actions[index].hasRequiredInputs = (actions[index].inputs)
 									.some(
 										input => {
@@ -1232,6 +1371,89 @@ class RuleEditor extends Component {
 			value === 'less-than' ||
 			value === 'less-than-equals'
 		);
+	}
+
+	_prepareAutofillInputs(action) {
+		if (Array.isArray(action.inputs)) {
+			action.inputs.forEach(
+				input => {
+					delete input.fieldOptions;
+					delete input.label;
+					delete input.name;
+					delete input.required;
+					delete input.type;
+					delete input.value;
+				}
+			);
+			action.inputs = Object.assign({}, ...action.inputs);
+		}
+
+		return action.inputs;
+	}
+
+	_prepareAutofillOutputs(action) {
+		if (Array.isArray(action.outputs)) {
+			action.outputs.forEach(
+				output => {
+					delete output.fieldOptions;
+					delete output.name;
+					delete output.type;
+					delete output.value;
+				}
+			);
+			action.outputs = Object.assign({}, ...action.outputs);
+		}
+
+		return action.outputs;
+	}
+
+	_removeConditionInternalProperties() {
+		const {conditions} = this;
+
+		conditions.forEach(
+			condition => {
+
+				if (condition.operands[0].type == 'user') {
+					condition.operands[0].label = condition.operands[0].value;
+					condition.operands[1].type = 'list';
+				}
+				if (condition.operands[1]) {
+					condition.operands[1].type = condition.operands[1].dataType;
+					condition.operands[1].label = condition.operands[1].value;
+					delete condition.operands[1].dataType;
+				}
+			}
+		);
+		return conditions;
+	}
+
+	_removeActionInternalProperties() {
+		const {actions} = this;
+
+		actions.forEach(
+			action => {
+				if (action.action == 'auto-fill') {
+					action.inputs = this._prepareAutofillInputs(action);
+					action.outputs = this._prepareAutofillOutputs(action);
+					delete action.target;
+					delete action.label;
+				}
+
+				if (action.action != 'auto-fill') {
+					delete action.inputs;
+					delete action.outputs;
+				}
+
+				if (action.action != 'calculate') {
+					delete action.expression;
+				}
+
+				delete action.calculatorFields;
+				delete action.hasRequiredInputs;
+
+			}
+		);
+		return actions;
 	}
 
 	_setActions(actions) {

@@ -83,6 +83,7 @@
 				value: string
 			]>,
 			operands: list<[
+				dataType: string,
 				type: string,
 				label: string,
 				value: string
@@ -123,20 +124,24 @@
 			value: string
 		]>
 	}
+	{@param invalidRule: bool}
 	{@param logicalOperator: string}
 	{@param readOnly: bool}
 	{@param strings: ?}
 	{@param spritemap: string}
 	{@param? _handleActionSelection: any}
 	{@param? _handleActionAdded: any}
+	{@param? _handleCancelRule: any}
 	{@param? _handleConditionAdded: any}
 	{@param? _handleDataProviderInputEdited: any}
 	{@param? _handleDataProviderOutputEdited: any}
 	{@param? _handleDeleteAction: any}
 	{@param? _handleDeleteCondition: any}
+	{@param? _handleEditExpression: any}
 	{@param? _handleFirstOperandFieldEdited: any}
 	{@param? _handleLogicalOperationChange: any}
 	{@param? _handleOperatorEdited: any}
+	{@param? _handleRuleAdded: any}
 	{@param? _handleSecondOperandFieldEdited: any}
 	{@param? _handleSecondOperandTypeEdited: any}
 	{@param? _handleTargetSelection: any}
@@ -176,7 +181,6 @@
 					{param binaryOperator: $condition.binaryOperator /}
 					{param fieldOptions: $fieldOptions /}
 					{param firstOperandType: $condition.operands[0].type /}
-					{param firstOperandOptions: $condition.firstOperandOptions /}
 					{param firstOperandValueSelected: $condition.operands[0].value /}
 					{param fixedOptions: $fixedOptions /}
 					{param index: index($condition) /}
@@ -186,6 +190,7 @@
 					{param roles: $roles /}
 					{param secondOperandFieldName: '' /}
 					{param secondOperandType: isNonnull($condition.operands[1]) ? $condition.operands[1].type : '' /}
+					{param secondOperandDataType: isNonnull($condition.operands[1]) ? $condition.operands[1].dataType : '' /}
 					{param secondOperandValue: isNonnull($condition.operands[1]) ? $condition.operands[1].value : '' /}
 					{param selectedOperator: $condition.operator /}
 					{param spritemap: $spritemap /}
@@ -211,6 +216,7 @@
 					{param _handleDataProviderInputEdited: $_handleDataProviderInputEdited /}
 					{param _handleDataProviderOutputEdited: $_handleDataProviderOutputEdited /}
 					{param _handleDeleteAction: $_handleDeleteAction /}
+					{param _handleEditExpression: $_handleEditExpression /}
 					{param _handleTargetSelection: $_handleTargetSelection /}
 					{param actionInputs: $action.inputs /}
 					{param actionOutputs: $action.outputs /}
@@ -252,6 +258,29 @@
 			{param title: $strings.deleteAction /}
 			{param type: 'Action' /}
 		{/call}
+
+		<div class="liferay-ddm-form-rule-builder-footer">
+			{call ClayButton.render}
+				{param events: [
+					'click': $_handleRuleAdded
+				] /}
+				{param disabled: $invalidRule /}
+				{param label: $strings.save /}
+				{param ref: 'save' /}
+				{param spritemap: $spritemap /}
+				{param style: 'primary' /}
+			{/call}
+
+			{call ClayButton.render}
+				{param events: [
+					'click': $_handleCancelRule
+				] /}
+				{param label: $strings.cancel /}
+				{param ref: 'cancel' /}
+				{param spritemap: $spritemap /}
+				{param style: 'secondary' /}
+			{/call}
+		</div>
 	</div>
 {/template}
 {template .renderModal}
@@ -350,6 +379,7 @@
 		theExpressionWillBeDisplayedHere: string
 	]}
 	{@param? _handleActionSelection: any}
+	{@param? _handleEditExpression: any}
 	{@param? _handleDataProviderInputEdited: any}
 	{@param? _handleDataProviderOutputEdited: any}
 	{@param? _handleDeleteAction: any}
@@ -424,7 +454,7 @@
 					</div>
 
 					{let $showTargetDefault: $actionSelected and (($actionSelected == 'show') or ($actionSelected == 'enable') or ($actionSelected == 'require')) /}
-					{let $showTargetAutofill: $actionSelected and ($actionSelected == 'autofill') /}
+					{let $showTargetAutofill: $actionSelected and ($actionSelected == 'auto-fill') /}
 					{let $showTargetCalculator: $actionSelected and ($actionSelected == 'calculate') /}
 					{let $showLabel: $showTargetAutofill or $showTargetCalculator /}
 
@@ -448,7 +478,7 @@
 							{param index: $index /}
 							{param options: $options /}
 							{param placeholder: $strings.chooseAnOption /}
-							{param ref: $ref + $index/}
+							{param ref: $ref + $index /}
 							{param spritemap: $spritemap /}
 							{param value: $targetSelected /}
 						{/call}
@@ -457,6 +487,9 @@
 
 				{if $showTargetCalculator and $targetSelected}
 					{call Calculator.render}
+						{param events: [
+							'editExpression': $_handleEditExpression
+						]/}
 						{param index: $index /}
 						{param calculatorOptions: $calculatorOptions /}
 						{param deletedFields: $deletedFields /}
@@ -581,6 +614,7 @@
 
 	{@param? secondOperandFieldName: string}
 	{@param? secondOperandType: string}
+	{@param? secondOperandDataType: string}
 	{@param? secondOperandValue: any}
 	{@param? selectedOperator: string}
 
@@ -632,8 +666,27 @@
 									{param strings: $strings /}
 								{/call}
 
+								{let $fieldHasOptions:
+									($secondOperandDataType == 'select' or
+									$secondOperandDataType == 'checkbox_multiple' or
+									$secondOperandDataType == 'radio')
+								/}
+
 								<div class="condition-type-value form-group-item" condition-type-value-index="{$index}">
-									{if $secondOperandType == 'field'}
+									{if $fieldHasOptions}
+										{delcall PageRenderer.RegisterFieldType variant="'select'"}
+											{param events: [
+												'fieldEdited': $_handleSecondOperandFieldEdited
+											] /}
+											{param name: $secondOperandFieldName /}
+											{param options: $firstOperandOptions /}
+											{param placeholder: $strings.chooseAnOption /}
+											{param readOnly: $readOnly /}
+											{param ref: 'secondOperand' + $index /}
+											{param spritemap: $spritemap /}
+											{param value: [$secondOperandValue] /}
+										{/delcall}
+									{elseif $secondOperandType == 'field'}
 										{delcall PageRenderer.RegisterFieldType variant="'select'"}
 											{param events: [
 												'fieldEdited': $_handleSecondOperandFieldEdited
@@ -644,38 +697,17 @@
 											{param spritemap: $spritemap /}
 											{param value: [$secondOperandValue] /}
 										{/delcall}
-									{elseif $firstOperandType == $secondOperandType}
-										{let $fieldHasOptions:
-											($firstOperandType == 'select' or
-											$firstOperandType == 'checkbox_multiple' or
-											$firstOperandType == 'radio')
-										/}
-
-										{if $fieldHasOptions}
-											{delcall PageRenderer.RegisterFieldType variant="'select'"}
-												{param events: [
-													'fieldEdited': $_handleSecondOperandFieldEdited
-												] /}
-												{param name: $secondOperandFieldName /}
-												{param options: $firstOperandOptions /}
-												{param placeholder: $strings.chooseAnOption /}
-												{param readOnly: $readOnly /}
-												{param ref: 'secondOperand' + $index /}
-												{param spritemap: $spritemap /}
-												{param value: [$secondOperandValue] /}
-											{/delcall}
-										{else}
-											{delcall PageRenderer.RegisterFieldType variant="$firstOperandType"}
-												{param events: [
-													'fieldEdited': $_handleSecondOperandFieldEdited
-												] /}
-												{param name: $secondOperandFieldName /}
-												{param readOnly: $readOnly /}
-												{param ref: 'secondOperand' + $index /}
-												{param spritemap: $spritemap /}
-												{param value: $secondOperandValue /}
-											{/delcall}
-										{/if}
+									{else}
+										{delcall PageRenderer.RegisterFieldType variant="$secondOperandType"}
+											{param events: [
+												'fieldEdited': $_handleSecondOperandFieldEdited
+											] /}
+											{param name: $secondOperandFieldName /}
+											{param readOnly: $readOnly /}
+											{param ref: 'secondOperand' + $index /}
+											{param spritemap: $spritemap /}
+											{param value: $secondOperandValue /}
+										{/delcall}
 									{/if}
 								</div>
 							{/if}
