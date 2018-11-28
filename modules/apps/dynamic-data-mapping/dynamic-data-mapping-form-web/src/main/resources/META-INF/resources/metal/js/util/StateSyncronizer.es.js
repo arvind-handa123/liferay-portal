@@ -43,7 +43,7 @@ class StateSyncronizer extends Component {
 			name: this._getLocalizedName(),
 			pages: layoutProvider.state.pages,
 			paginationMode: layoutProvider.state.paginationMode,
-			rules: [],
+			rules: layoutProvider.state.rules,
 			successPageSettings: layoutProvider.state.successPageSettings
 		};
 	}
