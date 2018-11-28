@@ -248,15 +248,10 @@ class RuleList extends Component {
 		const {delegateTarget} = event;
 		const {cardId} = delegateTarget.dataset;
 
-		const currentRules = this.rules;
-
-		currentRules.splice(cardId, 1);
-
-		this.rules = currentRules;
-
-		this.setState(
+		this.emit(
+			'ruleDeleted',
 			{
-				rules: currentRules
+				ruleId: cardId
 			}
 		);
 	}

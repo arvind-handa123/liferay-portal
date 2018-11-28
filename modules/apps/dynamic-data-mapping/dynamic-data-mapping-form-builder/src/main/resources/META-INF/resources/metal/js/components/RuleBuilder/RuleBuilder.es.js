@@ -228,6 +228,15 @@ class RuleBuilder extends Component {
 		this._showRuleList();
 	}
 
+	_handleRuleDeleted({ruleId}) {
+		this.emit(
+			'ruleDeleted',
+			{
+				ruleId
+			}
+		);
+	}
+
 	/**
 	 * Continues the propagation of event.
 	 * @param {!Event} event
@@ -289,7 +298,8 @@ class RuleBuilder extends Component {
 	render() {
 		const RuleBuilderEvents = {
 			ruleAdded: this._handleRuleAdded.bind(this),
-			ruleCancel: this._handleRuleCancel.bind(this)
+			ruleCancel: this._handleRuleCancel.bind(this),
+			ruleDeleted: this._handleRuleDeleted.bind(this)
 		};
 
 		const {
@@ -324,7 +334,7 @@ class RuleBuilder extends Component {
 					<RuleEditor functionsURL={functionsURL} key={'edit'} pages={pages} rules={rules} spritemap={spritemap} />
 				)}
 				{this.state.mode === 'view' && (
-					<RuleList pages={pages} rules={rules} spritemap={spritemap} />
+					<RuleList dataProviderInstancesURL={dataProviderInstancesURL} events={RuleBuilderEvents} pages={pages} rules={rules} spritemap={spritemap} />
 				)}
 			</div>
 		);
