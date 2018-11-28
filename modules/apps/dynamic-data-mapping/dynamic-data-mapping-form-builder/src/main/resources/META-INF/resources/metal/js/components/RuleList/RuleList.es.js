@@ -53,7 +53,7 @@ class RuleList extends Component {
 							}
 						)
 					),
-					logicalOperator: Config.string()
+					['logical-operator']: Config.string()
 				}
 			)
 		),
@@ -153,15 +153,22 @@ class RuleList extends Component {
 
 	_setRules(newRules) {
 		for (let rule = 0; rule < newRules.length; rule++) {
-			let actions = newRules[rule].actions;
-
-			actions = this._formatActions(actions);
+			const actions = newRules[rule].actions;
 
 			newRules[rule].actions = actions;
 
-			const logicalOperator = newRules[rule]['logical-operator'].toLowerCase();
+			let logicalOperator;
 
-			newRules[rule].logicalOperator = logicalOperator;
+			if (newRules[rule]['logical-operator']) {
+				logicalOperator = newRules[rule]['logical-operator'].toLowerCase();
+				newRules[rule].logicalOperator = logicalOperator;
+
+			}
+			else if (newRules[rule].logicalOperator) {
+				logicalOperator = newRules[rule].logicalOperator.toLowerCase();
+				newRules[rule].logicalOperator = logicalOperator;
+			}
+
 		}
 
 		return newRules;
@@ -174,6 +181,15 @@ class RuleList extends Component {
 				rule => {
 					return {
 						...rule,
+						actions: rule.actions.map(
+							actionItem => {
+								return {
+									...actionItem,
+									label: this._getFieldLabel(actionItem.target),
+									target: this._getFieldLabel(actionItem.target)
+								};
+							}
+						),
 						conditions: rule.conditions.map(
 							condition => {
 								return {
@@ -182,7 +198,7 @@ class RuleList extends Component {
 										operand => {
 											return {
 												...operand,
-												value: operand.type === 'field' ? this._getFieldLabel(operand.value) : operand.value
+												value: this._setOperandValue(operand)
 											};
 										}
 									)
@@ -193,6 +209,23 @@ class RuleList extends Component {
 				}
 			)
 		};
+	}
+
+	_setOperandValue(operand) {
+		let field = '';
+
+		if (operand.type === 'field' || operand.type != 'user') {
+			field = this._getFieldLabel(operand.value);
+		}
+		else {
+			field = operand.value;
+		}
+
+		if ((field != '') && (typeof (field) == 'undefined')) {
+			field = operand.value;
+		}
+
+		return field;
 	}
 
 	created() {

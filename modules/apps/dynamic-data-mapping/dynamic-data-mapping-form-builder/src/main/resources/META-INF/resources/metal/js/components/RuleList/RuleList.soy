@@ -79,6 +79,7 @@
 
 								{if $condition.operands[1]}
 									{call .condition}
+										{param operandLabel: $condition.operands[1].label /}
 										{param operandType: $condition.operands[1].type /}
 										{param operandValue: $condition.operands[1].value /}
 										{param strings: $strings /}
@@ -175,21 +176,28 @@
  * Prints Rules Conditions.
  */
 {template .condition}
-	{@param operandType: string}
-	{@param operandValue: string}
+	{@param? operandLabel: string}
+	{@param? operandType: string}
+	{@param? operandValue: string}
 	{@param strings: ?}
 
 	{if $operandType == 'double' or $operandType == 'integer' or $operandType == 'string'}
 		<span>{$strings.value} </span>
-		{else}
+	{else}
 		{if $operandType != 'user' and $operandType != 'list'}
 			<span>{$strings[$operandType]} </span>
 		{/if}
 	{/if}
 
-	{call .label}
-		{param content: $operandValue /}
-	{/call}
+	{if $operandLabel}
+		{call .label}
+			{param content: $operandLabel /}
+		{/call}
+	{else}
+		{call .label}
+			{param content: $operandValue /}
+		{/call}
+	{/if}
 {/template}
 
 /**
@@ -206,7 +214,6 @@
 	<span>{$strings['field']} </span>
 
 	{if $action == 'auto-fill'}
-
 		{call .label}
 			{param content: $label /}
 		{/call}
