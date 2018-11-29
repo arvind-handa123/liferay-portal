@@ -264,6 +264,52 @@ class RuleEditor extends Component {
 
 		rolesURL: Config.string(),
 
+		/**
+		 * @default 0
+		 * @instance
+		 * @memberof RuleEditor
+		 * @type {?array}
+		 */
+
+		rule: Config.shapeOf(
+			{
+				actions: Config.arrayOf(
+					Config.shapeOf(
+						{
+							action: Config.string(),
+							calculatorFields: Config.arrayOf(fieldOptionStructure).value([]),
+							ddmDataProviderInstanceUUID: Config.string(),
+							expression: Config.string(),
+							inputs: Config.object(),
+							label: Config.string(),
+							outputs: Config.object(),
+							target: Config.string()
+						}
+					)
+				),
+				conditions: Config.arrayOf(
+					Config.shapeOf(
+						{
+							operands: Config.arrayOf(
+								Config.shapeOf(
+									{
+										label: Config.string(),
+										repeatable: Config.bool(),
+										type: Config.string(),
+										value: Config.string()
+									}
+								)
+							),
+							operator: Config.string()
+						}
+					)
+				),
+				['logical-operator']: Config.string()
+			}
+		),
+
+		ruleEditedIndex: Config.number(),
+
 		secondOperandList: Config.arrayOf(
 			Config.shapeOf(
 				{
@@ -345,6 +391,24 @@ class RuleEditor extends Component {
 		this._fetchDataProvider();
 		this._fetchRoles();
 		this._fetchFunctionsURL();
+
+		if (this.rule) {
+			this._prepareRuleEditor();
+		}
+	}
+
+	_prepareRuleEditor() {
+		const {rule} = this;
+
+		const actions = this._syncActions(rule.actions);
+
+		this.setState(
+			{
+				actions,
+				conditions: rule.conditions,
+				logicalOperator: rule['logical-operator']
+			}
+		);
 	}
 
 	disposed() {
@@ -431,7 +495,8 @@ class RuleEditor extends Component {
 	}
 
 	syncPages(pages) {
-		let {actions, conditions} = this;
+		const {actions} = this;
+		let {conditions} = this;
 
 		const visitor = new PagesVisitor(pages);
 
@@ -467,6 +532,22 @@ class RuleEditor extends Component {
 			}
 		);
 
+		this.setState(
+			{
+				actions: this._syncActions(actions),
+				calculatorResultOptions: this._calculatorResultOptionsValueFn(),
+				conditions,
+				deletedFields: this._getDeletedFields(visitor),
+				fieldOptions: this._fieldOptionsValueFn()
+			}
+		);
+	}
+
+	_syncActions(actions) {
+		const {pages} = this;
+
+		const visitor = new PagesVisitor(pages);
+
 		actions.forEach(
 			(action, index) => {
 				let targetFieldExists = false;
@@ -487,15 +568,7 @@ class RuleEditor extends Component {
 			}
 		);
 
-		this.setState(
-			{
-				actions,
-				calculatorResultOptions: this._calculatorResultOptionsValueFn(),
-				conditions,
-				deletedFields: this._getDeletedFields(visitor),
-				fieldOptions: this._fieldOptionsValueFn()
-			}
-		);
+		return actions;
 	}
 
 	_getDeletedFields(visitor) {
@@ -1151,12 +1224,15 @@ class RuleEditor extends Component {
 
 		const conditions = this._removeConditionInternalProperties();
 
+		const {ruleEditedIndex} = this;
+
 		this.emit(
 			'ruleAdded',
 			{
 				actions,
 				conditions,
-				['logical-operator']: this.logicalOperator
+				['logical-operator']: this.logicalOperator,
+				ruleEditedIndex
 			}
 		);
 	}

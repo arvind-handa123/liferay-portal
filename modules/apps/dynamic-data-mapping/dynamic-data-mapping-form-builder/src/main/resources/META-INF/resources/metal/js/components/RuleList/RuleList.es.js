@@ -2,7 +2,6 @@ import 'clay-button';
 import {Config} from 'metal-state';
 import {EventHandler} from 'metal-events';
 import Component from 'metal-component';
-import dom from 'metal-dom';
 import Soy from 'metal-soy';
 import templates from './RuleList.soy.js';
 import {makeFetch} from '../../util/fetch.es';
@@ -26,6 +25,8 @@ class RuleList extends Component {
 		).internal(),
 
 		dataProviderInstancesURL: Config.string().required(),
+
+		dropdownExpanded: Config.bool().internal(),
 
 		pages: Config.array().required(),
 
@@ -185,6 +186,31 @@ class RuleList extends Component {
 		return fieldLabel;
 	}
 
+	_handleRuleCardClicked({data, target}) {
+		const cardId = target.element.closest('[data-card-id]').getAttribute('data-card-id');
+
+		if (data.item.settingsItem == 'edit') {
+			this.emit(
+				'ruleEdited',
+				{
+					ruleId: cardId
+				}
+			);
+		}
+		else if (data.item.settingsItem == 'delete') {
+			this.emit(
+				'ruleDeleted',
+				{
+					ruleId: cardId
+				}
+			);
+		}
+	}
+
+	_handleDropdownExpanded(event) {
+		this.setState({dropdownExpanded: event.newVal});
+	}
+
 	_formatActions(actions) {
 		actions.forEach(
 			action => {
@@ -242,7 +268,7 @@ class RuleList extends Component {
 		return newRules;
 	}
 
-	_setDataProviderName() {
+	_setDataProviderNames() {
 		const newRules = this.rules;
 
 		if (this.dataProvider) {
@@ -263,8 +289,23 @@ class RuleList extends Component {
 		}
 	}
 
+	_getRulesCardOptions() {
+		const rulesCardOptions = [
+			{
+				'label': Liferay.Language.get('edit'),
+				'settingsItem': 'edit'
+			},
+			{
+				'label': Liferay.Language.get('delete'),
+				'settingsItem': 'delete'
+			}
+		];
+
+		return rulesCardOptions;
+	}
+
 	prepareStateForRender(states) {
-		this._setDataProviderName();
+		this._setDataProviderNames();
 
 		return {
 			...states,
@@ -298,7 +339,8 @@ class RuleList extends Component {
 						)
 					};
 				}
-			)
+			),
+			rulesCardOptions: this._getRulesCardOptions()
 		};
 	}
 
@@ -329,24 +371,6 @@ class RuleList extends Component {
 		this._setRules(newRules);
 
 		this.setState({rules: newRules});
-	}
-
-	attached() {
-		this._eventHandler.add(
-			dom.on('.rule-card-delete', 'click', this.deleteRule.bind(this))
-		);
-	}
-
-	deleteRule(event) {
-		const {delegateTarget} = event;
-		const {cardId} = delegateTarget.dataset;
-
-		this.emit(
-			'ruleDeleted',
-			{
-				ruleId: cardId
-			}
-		);
 	}
 }
 

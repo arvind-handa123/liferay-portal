@@ -4,6 +4,7 @@
  * Prints the DDM form rule builder cotainer.
  */
 {template .render}
+	{@param? dropdownExpanded: bool}
 	{@param rules: list<[
 			conditions: list<[
 				operator: string,
@@ -25,14 +26,23 @@
 			logicalOperator: string
 		]>
 	}
+	{@param? rulesCardOptions: ?}
 	{@param strings: ?}
+	{@param spritemap: string}
+	{@param _handleDropdownExpanded: any}
+	{@param _handleRuleCardClicked: any}
 	<div class="form-builder-rule-builder-container">
 		<h1 class="form-builder-section-title text-default">{$strings.rules}</h1>
 
 		<div class="liferay-ddm-form-rule-rules-list-container">
 			{call .rule_list}
+				{param dropdownExpanded: $dropdownExpanded /}
 				{param rules: $rules /}
+				{param rulesCardOptions: $rulesCardOptions /}
 				{param strings: $strings /}
+				{param spritemap: $spritemap /}
+				{param _handleDropdownExpanded: $_handleDropdownExpanded /}
+				{param _handleRuleCardClicked: $_handleRuleCardClicked /}
 			{/call}
 		</div>
 
@@ -43,6 +53,7 @@
  * Prints the DDM form card rule.
  */
 {template .rule_list}
+	{@param? dropdownExpanded: bool}
 	{@param rules: list<[
 			conditions: list<[
 				operator: string,
@@ -64,7 +75,11 @@
 			logicalOperator: string
 		]>
 	}
+	{@param? rulesCardOptions: ?}
 	{@param strings: ?}
+	{@param spritemap: string}
+	{@param _handleDropdownExpanded: any}
+	{@param _handleRuleCardClicked: any}
 
 	<div class="form-builder-rule-list">
 		{if length($rules) > 0}
@@ -124,14 +139,18 @@
 					<div class="list-group-item-field">
 						<div class="card-col-field">
 							<div class="dropdown dropdown-action">
-								<ul class="dropdown-menu dropdown-menu-right">
-									<li class="rule-card-edit" data-card-id="{index($rule)}">
-										<a href="javascript:;">{$strings.edit}</a>
-									</li>
-									<li class="rule-card-delete" data-card-id="{index($rule)}">
-										<a href="javascript:;">{$strings.delete}</a>
-									</li>
-								</ul>
+								<div class="ddm-page-settings" data-card-id="{index($rule)}" role="group">
+									{call ClayActionsDropdown.render}
+										{param items: $rulesCardOptions /}
+										{param expanded: $dropdownExpanded /}
+										{param triggerClasses: 'component-action' /}
+										{param events: [
+											'itemClicked': $_handleRuleCardClicked,
+											'expandedChanged': $_handleDropdownExpanded
+										] /}
+										{param spritemap: $spritemap /}
+									{/call}
+								</div>
 
 								<a class="component-action dropdown-toggle" data-toggle="dropdown" href="#1">
 								</a>

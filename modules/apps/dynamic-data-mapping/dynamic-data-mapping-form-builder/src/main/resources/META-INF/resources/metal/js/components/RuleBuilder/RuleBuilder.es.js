@@ -111,6 +111,8 @@ class RuleBuilder extends Component {
 		 *
 		 */
 
+		index: Config.number(),
+
 		mode: Config.oneOf(['view', 'edit', 'create']).value('view'),
 
 		rules: Config.arrayOf(
@@ -223,8 +225,6 @@ class RuleBuilder extends Component {
 	}
 
 	_handleRuleCancel(event) {
-		this.emit('ruleCancel');
-
 		this._showRuleList();
 	}
 
@@ -235,6 +235,24 @@ class RuleBuilder extends Component {
 				ruleId
 			}
 		);
+	}
+
+	_handleRuleEdited({ruleId}) {
+		this.setState({index: parseInt(ruleId, 10)});
+
+		this._showRuleEdition();
+	}
+
+	_handleRuleSaveEdition(event) {
+		this.emit(
+			'ruleSaveEdition',
+			{
+				...event,
+				ruleId: event.ruleEditedIndex
+			}
+		);
+
+		this._showRuleList();
 	}
 
 	/**
@@ -299,7 +317,13 @@ class RuleBuilder extends Component {
 		const RuleBuilderEvents = {
 			ruleAdded: this._handleRuleAdded.bind(this),
 			ruleCancel: this._handleRuleCancel.bind(this),
-			ruleDeleted: this._handleRuleDeleted.bind(this)
+			ruleDeleted: this._handleRuleDeleted.bind(this),
+			ruleEdited: this._handleRuleEdited.bind(this)
+		};
+
+		const RuleEditionEvents = {
+			ruleAdded: this._handleRuleSaveEdition.bind(this),
+			ruleCancel: this._handleRuleCancel.bind(this)
 		};
 
 		const {
@@ -331,7 +355,19 @@ class RuleBuilder extends Component {
 					/>
 				)}
 				{this.state.mode === 'edit' && (
-					<RuleEditor functionsURL={functionsURL} key={'edit'} pages={pages} rules={rules} spritemap={spritemap} />
+					<RuleEditor
+						dataProviderInstanceParameterSettingsURL={dataProviderInstanceParameterSettingsURL}
+						dataProviderInstancesURL={dataProviderInstancesURL}
+						events={RuleEditionEvents}
+						functionsMetadata={functionsMetadata}
+						functionsURL={functionsURL}
+						key={'edit'}
+						pages={pages}
+						rolesURL={rolesURL}
+						rule={rules[this.state.index]}
+						ruleEditedIndex={this.state.index}
+						spritemap={spritemap}
+					/>
 				)}
 				{this.state.mode === 'view' && (
 					<RuleList dataProviderInstancesURL={dataProviderInstancesURL} events={RuleBuilderEvents} pages={pages} rules={rules} spritemap={spritemap} />
